@@ -8,12 +8,14 @@ import { SharedModule } from 'app/shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccionistaComponent } from './accionista/accionista.component';
 import { SeriesComponent } from './series/series.component';
+import { PersonasComponent } from './personas/personas.component';
 
 @NgModule({
     declarations: [
         DashboardComponent,
         AccionistaComponent,
-        SeriesComponent
+        SeriesComponent,
+        PersonasComponent
     ],
     imports: [
         CommonModule,

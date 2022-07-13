@@ -17,6 +17,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/beneficiario/dashboard'
             },
             {
+                id: 'beneficiario.personas',
+                title: 'Personas',
+                type: 'basic',
+                icon: 'heroicons_outline:user-group',
+                link: '/beneficiario/personas'
+            },
+            {
                 id: 'beneficiario.accionista',
                 title: 'Accionistas',
                 type: 'basic',

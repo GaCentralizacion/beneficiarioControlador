@@ -1,0 +1,19 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="square-loader">
+    <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+<div style="width: 100%;">
+    <mat-card class="col-sm-12 col-md-12 col-xl-12">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGrid" [datos]="allPersonas" [columns]="columns"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar">
+                </app-grid-component>
+            </div>
+        </div>
+        <div class="row">
+        </div>
+    </mat-card>
+
+</div>
