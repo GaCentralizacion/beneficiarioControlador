@@ -1,0 +1,32 @@
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="square-loader">
+  <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+<div class='containerAll'>
+    <mat-card>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGrid" [datos]="dataPrueba" [columns]="columns"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar"
+                    (modificar)='modificar($event.modificar.key)'
+                    (archivarCfdi)='archivarCfdi($event.archivarCfdi.key)'>
+                </app-grid-component>
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-sm-4 col-md-4 col-xl-4">
+                    <button class="btn btn-info">Boton</button>
+                </div>
+                <div class="col-sm-4 col-md-4 col-xl-4">
+                    <button class="btn btn-info" (click)="redirect('/beneficiario/accionista')">Click2</button>
+                </div>
+                <div class="col-sm-4 col-md-4 col-xl-4">Hola3</div>
+        </div>
+    </mat-card>
+
+</div>

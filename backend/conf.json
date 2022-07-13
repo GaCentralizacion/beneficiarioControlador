@@ -1,0 +1,8 @@
+{
+    "port": 2020,
+    "SQL_user": "sa",
+    "SQL_password": "S0p0rt3",
+    "SQL_server": "192.168.20.123",
+    "SQL_database": "beneficiarioControlador",
+    "SQL_connectionTimeout": 60000
+}

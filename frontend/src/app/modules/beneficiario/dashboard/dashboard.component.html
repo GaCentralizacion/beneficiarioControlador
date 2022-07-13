@@ -1,0 +1,24 @@
+<div class='containerAll'>
+    <mat-card>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGrid" [datos]="dataPrueba" [columns]="columns"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar"
+                    (modificar)='modificar($event.modificar.key)'
+                    (archivarCfdi)='archivarCfdi($event.archivarCfdi.key)'>
+                </app-grid-component>
+            </div>
+        </div>
+    </mat-card>
+    <mat-card>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-xl-4"><button class="btn btn-success" (click)="prueba1()">Click1</button>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4"><button class="btn btn-info"
+                    (click)="redirect('/beneficiario/series')">Click2</button></div>
+            <div class="col-sm-4 col-md-4 col-xl-4">Hola3</div>
+        </div>
+    </mat-card>
+</div>
