@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { BeneficiarioRoutingModule } from './beneficiario-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
@@ -9,18 +10,24 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccionistaComponent } from './accionista/accionista.component';
 import { SeriesComponent } from './series/series.component';
 import { PersonasComponent } from './personas/personas.component';
+import { ContactosComponent } from './personas/utilsPersonas/contactosPersona/contactos.component';
+
 
 @NgModule({
     declarations: [
         DashboardComponent,
         AccionistaComponent,
         SeriesComponent,
-        PersonasComponent
+        PersonasComponent,
+        ContactosComponent
     ],
     imports: [
         CommonModule,
         BeneficiarioRoutingModule,
         SharedModule
+    ],
+    providers: [
+        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' } // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER
     ]
 })
 export class BeneficiarioModule { }

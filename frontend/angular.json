@@ -53,7 +53,8 @@
                             "src/@fuse/styles/main.scss",
                             "src/styles/styles.scss",
                             "src/styles/tailwind.scss",
-                            "node_modules/devextreme/dist/css/dx.light.css"
+                            "node_modules/devextreme/dist/css/dx.light.css",
+                            "node_modules/@fortawesome/fontawesome-free/css/all.css"
                         ],
                         "scripts": []
                     },

@@ -32,6 +32,7 @@ import {
 })
 
 export class PersonasComponent implements OnInit, OnDestroy {
+    /**Grid */
     allPersonas: any;
     datosEvent: any = [];
     muestraGrid: boolean = false;
@@ -45,6 +46,40 @@ export class PersonasComponent implements OnInit, OnDestroy {
     Checkbox: ICheckbox;
     Editing: IEditing;
     Columnchooser: IColumnchooser;
+    /**Grid */
+
+    showAddPersona: boolean = false;
+    catTipoPersona: any = [];
+    catTipoMoral: any = [];
+    catSexo: any = [];
+    catPais: any = [];
+    catIdentificacion: any = [];
+    catEstadoCivil: any = [];
+    catTipoContacto: any = [];
+
+    /**array all todos los contactos */
+    arrayAllContactos: any = [];
+    currentIdContacto: string;
+    /**array all todos los contactos */
+
+    personaForm = new FormGroup({
+        idTipoPersona: new FormControl(0),
+        idTipoMor: new FormControl(0),
+        esAccionista: new FormControl(false),
+        nombre_razon: new FormControl(''),
+        apellidoPaterno: new FormControl(''),
+        apellidoMaterno: new FormControl(''),
+        alias: new FormControl(''),
+        fechaNacimiento: new FormControl(''),
+        idSexo: new FormControl(0),
+        idPais: new FormControl(0),
+        curp_registroPob: new FormControl(''),
+        idPaisFiscal: new FormControl(0),
+        idIdentificacion: new FormControl(0),
+        datoIdentificacion: new FormControl(''),
+        rfc_identificacion: new FormControl(''),
+        idEstadoCivil: new FormControl(0)
+    });
 
     constructor(
         private fb: FormBuilder,
@@ -52,7 +87,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
-        private gaService: GaService
+        private gaService: GaService,
+        private spinner: NgxSpinnerService
     ) {
 
     }
@@ -73,6 +109,50 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 Swal.fire('Error al regresar las personas', '', 'warning')
             };
         });
+    };
+
+    addPersona = () => {
+        if (!this.showAddPersona) {
+            this.getAllCatalogos();
+        } else {
+            this.showAddPersona = !this.showAddPersona;
+        };
+    };
+
+    getAllCatalogos = () => {
+        this.spinner.show();
+        this.gaService.getService('personas/allCatalogosAddPersonas').subscribe((res: any) => {
+            if (res.length > 0) {
+                this.catTipoPersona = res[0];
+                this.catTipoMoral = res[1];
+                this.catSexo = res[2];
+                this.catPais = res[3];
+                this.catIdentificacion = res[4];
+                this.catEstadoCivil = res[5];
+                this.catTipoContacto = res[6];
+
+                this.showAddPersona = true;
+                this.currentIdContacto = `contacto${this.arrayAllContactos.length + 1}`;
+                this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+            } else {
+                Swal.fire('Error al regresar los catalogos', '', 'warning')
+            };
+            this.spinner.hide();
+        });
+    };
+
+    addContacto = () => {
+        this.currentIdContacto = `contacto${this.arrayAllContactos.length + 1}`;
+        this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+    };
+
+    removeContacto = () => {
+        this.arrayAllContactos.splice(-1);
+    };
+
+    savePersona = () => {
+        console.log('personaForm', this.personaForm.value);
+        console.log('this.arrayAllContactos', this.arrayAllContactos)
     };
 
     createGrid = () => {
@@ -167,5 +247,14 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     redirect(url: string) {
         this.router.navigateByUrl(url);
+    };
+
+    shortDateForma = date => {
+        let today = new Date(date);
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+
+        return (mm + '/' + dd + '/' + yyyy);
     };
 };

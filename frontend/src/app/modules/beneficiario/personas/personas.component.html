@@ -3,7 +3,28 @@
 </ngx-spinner>
 <div style="width: 100%;">
     <mat-card class="col-sm-12 col-md-12 col-xl-12">
-        <div class="row">
+        <div class="row" [hidden]="showAddPersona">
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button class="btn btn-success pull-right" (click)="addPersona()">
+                    <label>Agregar Persona <i class="fas fa-plus"></i></label>
+                </button>
+            </div>
+        </div>
+        <div class="row" [hidden]="!showAddPersona">
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button class="btn btn-info pull-left" (click)="addPersona()">
+                    <label><i class="fas fa-arrow-alt-circle-left"></i> Regresar </label>
+                </button>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <h2>Agrear una Persona</h2>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+        </div>
+        <br>
+        <div class="row" [hidden]="showAddPersona">
             <div class="col-sm-12 col-md-12 col-xl-12">
                 <app-grid-component *ngIf="muestraGrid" [datos]="allPersonas" [columns]="columns"
                     [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
@@ -12,7 +33,199 @@
                 </app-grid-component>
             </div>
         </div>
-        <div class="row">
+        <div class="row" [hidden]="!showAddPersona">
+            <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="personaForm">
+                <div class="row justify-content-start align-items-center">
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Tipo Persona</mat-label>
+                            <mat-select formControlName="idTipoPersona">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let tipoPersona of catTipoPersona" [value]="tipoPersona.idTipoPer">
+                                    {{tipoPersona.tipoPersona}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Tipo Moral</mat-label>
+                            <mat-select formControlName="idTipoMor">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let tipoMoral of catTipoMoral" [value]="tipoMoral.idTipoMor">
+                                    {{tipoMoral.tipoMoral}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Sexo</mat-label>
+                            <mat-select formControlName="idSexo">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let sexo of catSexo" [value]="sexo.idSexo">
+                                    {{sexo.sexo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-slide-toggle color="primary" formControlName="esAccionista">
+                            Es Accionista
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+                <div class="row justify-content-start align-items-center">
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Nombre/Razon Social</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Nombre/Razon" formControlName="nombre_razon">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Apellido Paterno</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Apellido Paterno" formControlName="apellidoPaterno">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Apellido Materno</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Apellido Materno" formControlName="apellidoMaterno">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Alias</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Alias" formControlName="alias">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row justify-content-start align-items-center">
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Fecha Nacimineto</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
+                            <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Curp/Registro de población</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Curp/Registro de población" formControlName="curp_registroPob">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Rfc/Indentificación</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Rfc/Indentificación" formControlName="rfc_identificacion">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Pais</mat-label>
+                            <mat-select formControlName="idPais">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let pais of catPais" [value]="pais.idPais">
+                                    {{pais.pais}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row justify-content-start align-items-center">
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Pais Fiscal</mat-label>
+                            <mat-select formControlName="idPaisFiscal">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let pais of catPais" [value]="pais.idPais">
+                                    {{pais.pais}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Esado Civil</mat-label>
+                            <mat-select formControlName="idEstadoCivil">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let estadoCivil of catEstadoCivil"
+                                    [value]="estadoCivil.idEstadoCivil">
+                                    {{estadoCivil.estadoCivil}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Identificación</mat-label>
+                            <mat-select formControlName="idIdentificacion">
+                                <mat-option [value]="0">
+                                    Seleccione una opcion
+                                </mat-option>
+                                <mat-option *ngFor="let identificacion of catIdentificacion"
+                                    [value]="identificacion.idIdentificacion">
+                                    {{identificacion.identificacion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+                        <mat-label>Clave Indentificación</mat-label>
+                        <mat-form-field appearance="fill">
+                            <input matInput placeholder="Clave Indentificación" formControlName="datoIdentificacion">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+            <div class="row justify-content-start align-items-center">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <h5>Contactos de la persona</h5>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <button class="btn btn-success pull-right" (click)="addContacto()">
+                        <label><i class="fas fa-plus"></i></label>
+                    </button>
+                    <button class="btn btn-danger pull-right" (click)="removeContacto()">
+                        <label><i class="fas fa-minus"></i></label>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <app-contactos *ngFor="let contacto of arrayAllContactos" 
+                    [catTipoContacto]="catTipoContacto" 
+                    [arrayAllContactos]="arrayAllContactos"
+                    [currentIdContacto]="this.arrayAllContactos.length"></app-contactos>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <button class="btn btn-success pull-right" (click)="savePersona()">
+                        Guardar <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </mat-card>
 
