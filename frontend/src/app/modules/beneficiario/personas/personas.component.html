@@ -193,6 +193,8 @@
                     </div>
                 </div>
             </form>
+
+            <!-- COMPONENETE CONTACTOS -->
             <div class="row justify-content-start align-items-center">
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
@@ -215,7 +217,33 @@
                     [currentIdContacto]="this.arrayAllContactos.length"></app-contactos>
                 </div>
             </div>
+            <!-- COMPONENETE CONTACTOS -->
 
+            <!-- COMPONENETE DIRECCIONES -->
+            <div class="row justify-content-start align-items-center">
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <h5>Domicilios de la persona</h5>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                    <button class="btn btn-success pull-right" (click)="addDomicilio()">
+                        <label><i class="fas fa-plus"></i></label>
+                    </button>
+                    <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
+                        <label><i class="fas fa-minus"></i></label>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <app-domicilios *ngFor="let domicilio of arrayAllDomicilios"
+                    [catTipoDomicilio]="catTipoDomicilio"
+                    [arrayAllDomicilios]="arrayAllDomicilios"
+                    [currentIdDomicilio]="arrayAllDomicilios.length"
+                    ></app-domicilios>
+                </div>
+            </div>
+            <!-- COMPONENETE DIRECCIONES -->
 
             <div class="row">
                 <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>

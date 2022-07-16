@@ -26,7 +26,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
     });
 
     idContacto: string;
-    arrayIdContacto: number
+    arrayIdContacto: number;
 
     constructor(
         private fb: FormBuilder,
@@ -42,7 +42,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.idContacto = `contacto${this.currentIdContacto}`;
+        this.idContacto = `contacto_${this.currentIdContacto}`;
         this.contactosPersonaForm.valueChanges.subscribe(res => {
             this.arrayAllContactos.forEach((value, key) => {
                 if (value.id === this.idContacto) {

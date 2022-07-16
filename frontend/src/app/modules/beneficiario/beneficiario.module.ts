@@ -11,6 +11,7 @@ import { AccionistaComponent } from './accionista/accionista.component';
 import { SeriesComponent } from './series/series.component';
 import { PersonasComponent } from './personas/personas.component';
 import { ContactosComponent } from './personas/utilsPersonas/contactosPersona/contactos.component';
+import { DomiciliosComponent } from './personas/utilsPersonas/domiciliosPersona/domicilios.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ContactosComponent } from './personas/utilsPersonas/contactosPersona/co
         AccionistaComponent,
         SeriesComponent,
         PersonasComponent,
-        ContactosComponent
+        ContactosComponent,
+        DomiciliosComponent
     ],
     imports: [
         CommonModule,
