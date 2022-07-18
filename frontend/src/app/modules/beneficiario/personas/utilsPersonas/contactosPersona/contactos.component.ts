@@ -12,14 +12,15 @@ import { MatTable } from '@angular/material/table';
 })
 
 export class ContactosComponent implements OnInit, OnDestroy {
-    /**IMPUTUS OUTPUTS */
+    /**INPUTUS OUTPUTS */
     @Input() catTipoContacto: any[];
     @Input() arrayAllContactos: any[];
     @Input() currentIdContacto: number;
-    /**IMPUTUS OUTPUTS */
+    @Input() actualizarPersona: boolean;
+    /**INPUTUS OUTPUTS */
 
     contactosPersonaForm = new FormGroup({
-        idTipoContacto: new FormControl(''),
+        idTipCont: new FormControl(''),
         dato: new FormControl(''),
         predeterminado: new FormControl(false),
         ext: new FormControl('')
@@ -27,6 +28,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
 
     idContacto: string;
     arrayIdContacto: number;
+    stringIdContacto: string = 'contacto_';
 
     constructor(
         private fb: FormBuilder,
@@ -42,7 +44,10 @@ export class ContactosComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.idContacto = `contacto_${this.currentIdContacto}`;
+        this.idContacto = `${this.stringIdContacto}${this.currentIdContacto}`;
+        if (this.actualizarPersona) {
+            this.setDataForm(this.idContacto);
+        };
         this.contactosPersonaForm.valueChanges.subscribe(res => {
             this.arrayAllContactos.forEach((value, key) => {
                 if (value.id === this.idContacto) {
@@ -51,6 +56,17 @@ export class ContactosComponent implements OnInit, OnDestroy {
             });
             this.arrayAllContactos[this.arrayIdContacto].data = res;
         });
+    };
+
+    setDataForm = currentIdContacto => {
+        for (let contacto of this.arrayAllContactos) {
+            if (currentIdContacto === contacto?.id) {
+                this.contactosPersonaForm.controls.idTipCont.setValue(contacto.data?.idTipCont !== '' ? contacto.data?.idTipCont : 0);
+                this.contactosPersonaForm.controls.dato.setValue(contacto.data?.dato !== '' ? contacto.data?.dato : '');
+                this.contactosPersonaForm.controls.predeterminado.setValue(contacto.data?.predeterminado === 1 ? true : false);
+                this.contactosPersonaForm.controls.ext.setValue(contacto.data?.ext);
+            };
+        };
     };
 
     redirect(url: string) {

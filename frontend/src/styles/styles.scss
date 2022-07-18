@@ -7,3 +7,11 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+
+.btn-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    line-height: 1.33;
+    border-radius: 35px;
+}

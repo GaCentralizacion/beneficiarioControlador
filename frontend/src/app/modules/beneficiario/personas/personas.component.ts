@@ -61,12 +61,20 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**array all todos los contactos */
     arrayAllContactos: any = [];
     currentIdContacto: string;
+    stringIdContacto: string = 'contacto_';
     /**array all todos los contactos */
 
     /**array all todos los contactos */
     arrayAllDomicilios: any = [];
     currentIdDomicilios: string;
+    stringIdDomicilio: string = 'domicilio_';
     /**array all todos los contactos */
+
+    /**VARIABLES PARA EL UPDATE */
+    actualizarPersona: boolean = false;
+    dataPersonaUpdate: any = [];
+    gralDataPersona: any = [];
+    /**VARIABLES PARA EL UPDATE */
 
     personaForm = new FormGroup({
         idTipoPersona: new FormControl(0),
@@ -117,7 +125,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         });
     };
 
-    addPersona = () => {
+    addPersona = updPersona => {
+        this.actualizarPersona = updPersona;
         if (!this.showAddPersona) {
             this.getAllCatalogos();
             this.personaForm.reset();
@@ -142,24 +151,84 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.catTipoContacto = res[6];
                 this.catTipoDomicilio = res[7];
 
-                this.showAddPersona = true;
-                /**Agregamos el array para los contactos */
-                this.currentIdContacto = `contacto_${this.arrayAllContactos.length + 1}`;
-                this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
-                /**Agregamos el array para los contactos */
-                /**Agregamos el array para los domicilios */
-                this.currentIdDomicilios = `domicilio_${this.arrayAllDomicilios.length + 1}`;
-                this.arrayAllDomicilios.push({ id: this.currentIdDomicilios, data: {} });
-                /**Agregamos el array para los domicilios */
+                if (!this.actualizarPersona) {
+                    this.showAddPersona = true;
+                    /**Agregamos el array para los contactos */
+                    this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+                    this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+                    /**Agregamos el array para los contactos */
+                    /**Agregamos el array para los domicilios */
+                    this.currentIdDomicilios = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
+                    this.arrayAllDomicilios.push({ id: this.currentIdDomicilios, data: {} });
+                    /**Agregamos el array para los domicilios */
+
+                    this.spinner.hide();
+                } else {
+                    this.getDataPersonaById();
+                };
             } else {
-                Swal.fire('Error al regresar los catalogos', '', 'warning')
+                this.spinner.hide();
+                Swal.fire('Error al regresar los catalogos', '', 'warning');
             };
-            this.spinner.hide();
         });
     };
 
+    getDataPersonaById = () => {
+        const data = {
+            idPersona: this.dataPersonaUpdate.idPersona
+        };
+        this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
+            if (res[0][0].success === 1) {
+                this.gralDataPersona = res[1][0];
+                this.showAddPersona = true;
+                this.setDataForms(res[2], res[3]);
+            } else {
+                Swal.fire('Alto', res[0][0].msg, 'error');
+            };
+        });
+    };
+
+    setDataForms = (contactos: any, domicilios: any) => {
+        //Seteamos los valores generales de la persona
+        this.personaForm.controls.idTipoPersona.setValue(this.gralDataPersona.idTipoPersona);
+        this.personaForm.controls.idTipoMor.setValue(this.gralDataPersona.idTipoMor);
+        this.personaForm.controls.esAccionista.setValue(this.gralDataPersona.esAccionista === 1 ? true : false);
+        this.personaForm.controls.nombre_razon.setValue(this.gralDataPersona.nombres_razon);
+        this.personaForm.controls.apellidoPaterno.setValue(this.gralDataPersona.apellidoPaterno);
+        this.personaForm.controls.apellidoMaterno.setValue(this.gralDataPersona.apellidoMaterno);
+        this.personaForm.controls.alias.setValue(this.gralDataPersona.alias);
+        this.personaForm.controls.fechaNacimiento.setValue(this.gralDataPersona.fechaNac_constitucion);
+        this.personaForm.controls.idSexo.setValue(this.gralDataPersona.idSexo);
+        this.personaForm.controls.idPais.setValue(this.gralDataPersona.idPais);
+        this.personaForm.controls.curp_registroPob.setValue(this.gralDataPersona.curp_registroPob);
+        this.personaForm.controls.idPaisFiscal.setValue(this.gralDataPersona.idPaisFiscal);
+        this.personaForm.controls.idIdentificacion.setValue(this.gralDataPersona.idIdentificacion);
+        this.personaForm.controls.datoIdentificacion.setValue(this.gralDataPersona.datoIdentificacion);
+        this.personaForm.controls.rfc_identificacion.setValue(this.gralDataPersona.rfc_identificacion);
+        this.personaForm.controls.idEstadoCivil.setValue(this.gralDataPersona.idEstCivil);
+
+        //Seteamos los contactos de la persona
+        for (let contacto of contactos) {
+            setTimeout(() => {
+                this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+                this.arrayAllContactos.push({ id: this.currentIdContacto, data: contacto });
+            }, 200);
+        };
+
+        //Seteamos los domicilios de la persona
+        for (let domicilio of domicilios) {
+            setTimeout(() => {
+                this.currentIdContacto = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
+                this.arrayAllDomicilios.push({ id: this.currentIdContacto, data: domicilio });
+            }, 200);
+        };
+
+        // Una vez cargado todo cocultamos el spinner
+        this.spinner.hide();
+    };
+
     addContacto = () => {
-        this.currentIdContacto = `contacto_${this.arrayAllContactos.length + 1}`;
+        this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
         this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
     };
     removeContacto = () => {
@@ -167,7 +236,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     addDomicilio = () => {
-        this.currentIdDomicilios = `domicilio_${this.arrayAllDomicilios.length + 1}`;
+        this.currentIdDomicilios = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
         this.arrayAllDomicilios.push({ id: this.currentIdDomicilios, data: {} });
     };
     removeDomicilio = () => {
@@ -193,18 +262,18 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         let xmlCotactos = '<contactos>';
         for (let arrayContacto of this.arrayAllContactos) {
-            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipoContacto}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
         };
         xmlCotactos += '</contactos>';
 
         let xmlDomicilio = '<domicilios>';
         for (let arrayDomicilio of this.arrayAllDomicilios) {
-            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipoDomicilio}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
         };
         xmlDomicilio += '</domicilios>';
 
         Swal.fire({
-            title: '¿Quieres guardar a la persona',
+            title: `¿Quieres guardar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Guardar',
@@ -239,7 +308,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     if (res[0][0].success === 1) {
                         Swal.fire(res[0][0].msg, '', 'success');
                         setTimeout(() => {
-                            this.addPersona();
+                            this.addPersona(false);
                         }, 1000);
                     } else if (res[0][0].success === 2) {
                         Swal.fire(res[0][0].msg, '', 'warning');
@@ -251,6 +320,116 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 Swal.fire('No se guardo la informacion', '', 'info')
             };
         });
+    };
+
+    updatePersona = () => {
+        const validaPersona = this.validaFormPersona();
+        if (validaPersona.success === 0) {
+            Swal.fire(validaPersona.msg, '', 'warning');
+            return
+        };
+        const validaContactosPersona = this.validaFormsContactos();
+        if (validaContactosPersona.success === 0) {
+            Swal.fire(validaContactosPersona.msg, '', 'warning');
+            return
+        };
+        const validaDomicilioPeronsa = this.validaFormsDomicilios();
+        if (validaDomicilioPeronsa.success === 0) {
+            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
+            return
+        };
+
+        let xmlCotactos = '<contactos>';
+        for (let arrayContacto of this.arrayAllContactos) {
+            console.log('arrayContacto', arrayContacto)
+            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+        };
+        xmlCotactos += '</contactos>';
+
+        let xmlDomicilio = '<domicilios>';
+        for (let arrayDomicilio of this.arrayAllDomicilios) {
+            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+        };
+        xmlDomicilio += '</domicilios>';
+
+        Swal.fire({
+            title: `¿Quieres actualizar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
+            showDenyButton: true,
+            // showCancelButton: true,
+            confirmButtonText: 'Actualizar',
+            denyButtonText: `Cancelar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.spinner.show();
+
+                const jsonPersona = {
+                    idPersona: this.dataPersonaUpdate.idPersona,
+                    idTipoPersona: this.personaForm.controls.idTipoPersona.value,
+                    idTipoMor: this.personaForm.controls.idTipoMor.value,
+                    esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
+                    nombres_razon: this.personaForm.controls.nombre_razon.value,
+                    apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
+                    apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
+                    alias: this.personaForm.controls.alias.value,
+                    fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
+                    idSexo: this.personaForm.controls.idSexo.value,
+                    idPais: this.personaForm.controls.idPais.value,
+                    curp_registroPob: this.personaForm.controls.curp_registroPob.value,
+                    idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
+                    idIdentificacion: this.personaForm.controls.idIdentificacion.value,
+                    datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
+                    rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
+                    idEstCivil: this.personaForm.controls.idEstadoCivil.value,
+                    xmlContacto: xmlCotactos,
+                    xmlDomicilio: xmlDomicilio
+                };
+
+                this.gaService.postService('personas/updPersona', jsonPersona).subscribe((res: any) => {
+                    Swal.fire(res[0][0].msg, '', res[0][0].success === 1 ? 'success' : 'error');
+                    this.spinner.hide();
+                    setTimeout(() => {
+                        this.addPersona(false);
+                    }, 1000);
+                });
+
+            } else if (result.isDenied) {
+                Swal.fire('No se guardo la informacion', '', 'info')
+            };
+        });
+    };
+
+    crudPersona = e => {
+        const { proceso, data } = e;
+        if (proceso === 1) {
+            this.dataPersonaUpdate = [];
+            this.dataPersonaUpdate = data;
+            this.addPersona(true);
+        } else {
+            Swal.fire({
+                title: `¿Quieres eliminar a ${data.nombre}?`,
+                showDenyButton: true,
+                // showCancelButton: true,
+                confirmButtonText: 'Eliminar',
+                denyButtonText: `Cancelar`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const dataSend = {
+                        idPersona: data.idPersona
+                    };
+                    this.gaService.postService('personas/delPersona', dataSend).subscribe((res: any) => {
+                        if (res[0][0].success === 1) {
+                            Swal.fire('Listo', res[0][0].msg, 'success');
+                            this.getAllPersonas();
+                        } else {
+                            Swal.fire('Alto', res[0][0].msg, 'error')
+                            this.getAllPersonas();
+                        };
+                    });
+                } else {
+                    Swal.fire('', 'No se realizo ninguna accion.', 'success')
+                }
+            });
+        };
     };
 
     createGrid = () => {
@@ -295,6 +474,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
             {
                 caption: 'Estado Civil',
                 dataField: 'estadoCivil'
+            },
+            {
+                caption: '',
+                allowEditing: false,
+                cellTemplate: 'crudPersonas'
             }
         ];
         /*
@@ -311,7 +495,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
         this.Checkbox = { checkboxmode: 'multiple' };  // *desactivar con none*/
         // ******************PARAMETROS DE PARA EDITAR GRID**************** */
-        this.Editing = { allowupdate: false }; // *cambiar a batch para editar varias celdas a la vez*/
+        this.Editing = { allowupdate: true, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
         // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
         this.Columnchooser = { columnchooser: true };
 
@@ -423,13 +607,13 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     if (arrayContacto.data.predeterminado) {
                         totalDatoPredeterminado += 1;
                     };
-                    if (arrayContacto.data.idTipoContacto === null || arrayContacto.data.idTipoContacto === undefined || arrayContacto.data.idTipoContacto === 0) {
+                    if (arrayContacto.data.idTipCont === null || arrayContacto.data.idTipCont === undefined || arrayContacto.data.idTipCont === 0) {
                         return { success: 0, msg: `Debe seleccionar el tipo de contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}` };
                     };
                     if (arrayContacto.data.dato === null || arrayContacto.data.dato === undefined || arrayContacto.data.dato === '') {
                         return { success: 0, msg: `Debe insertar el dato para contactar en el formulario contactos #${arrayContacto.id.split("_").pop()}` };
                     };
-                    if (arrayContacto.data.idTipoContacto === 1) {
+                    if (arrayContacto.data.idTipCont === 1) {
                         if (!arrayContacto.data.dato.match(validRegex)) {
                             return { success: 0, msg: `Debe insertar un email valido para el contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}` };
                         };
@@ -458,7 +642,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     if (arrayDomicilio.data.esFiscal) {
                         totalDomicilioFiscal += 1;
                     };
-                    if (arrayDomicilio.data.idTipoDomicilio === null || arrayDomicilio.data.idTipoDomicilio === undefined || arrayDomicilio.data.idTipoDomicilio === 0) {
+                    if (arrayDomicilio.data.idTipDom === null || arrayDomicilio.data.idTipDom === undefined || arrayDomicilio.data.idTipDom === 0) {
                         return { success: 0, msg: `Debe seleccionar el tipo de domicilio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
                     };
                     if (arrayDomicilio.data.calle === null || arrayDomicilio.data.calle === undefined || arrayDomicilio.data.calle === '') {

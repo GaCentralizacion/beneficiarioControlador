@@ -13,12 +13,15 @@ import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
 })
 
 export class DomiciliosComponent implements OnInit, OnDestroy {
+    /**INPUTUS OUTPUTS */
     @Input() catTipoDomicilio: any[]
     @Input() arrayAllDomicilios: any[]
     @Input() currentIdDomicilio: number;
+    @Input() actualizarPersona: boolean;
+    /**INPUTUS OUTPUTS */
 
     domicilioPersonaForm = new FormGroup({
-        idTipoDomicilio: new FormControl(0),
+        idTipDom: new FormControl(0),
         esFiscal: new FormControl(false),
         calle: new FormControl(''),
         numExt: new FormControl(''),
@@ -32,8 +35,9 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
         calle2: new FormControl('')
     });
 
-    idDomicilio: String;
+    idDomicilio: string;
     arrayIdDomicilio: number;
+    stringIdDomicilio: string = 'domicilio_';
 
     constructor(
         private fb: FormBuilder,
@@ -49,7 +53,10 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.idDomicilio = `domicilio_${this.currentIdDomicilio}`;
+        this.idDomicilio = `${this.stringIdDomicilio}${this.currentIdDomicilio}`;
+        if (this.actualizarPersona) {
+            this.setDataForm(this.idDomicilio);
+        };
         this.domicilioPersonaForm.valueChanges.subscribe(res => {
             this.arrayAllDomicilios.forEach((value, key) => {
                 if (value.id === this.idDomicilio) {
@@ -58,6 +65,25 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             });
             this.arrayAllDomicilios[this.arrayIdDomicilio].data = res;
         });
+    };
+
+    setDataForm = currentIdDomicilio => {
+        for (let domicilio of this.arrayAllDomicilios) {
+            if (currentIdDomicilio === domicilio?.id) {
+                this.domicilioPersonaForm.controls.idTipDom.setValue(domicilio.data?.idTipDom)
+                this.domicilioPersonaForm.controls.esFiscal.setValue(domicilio.data?.esFiscal)
+                this.domicilioPersonaForm.controls.calle.setValue(domicilio.data?.calle)
+                this.domicilioPersonaForm.controls.numExt.setValue(domicilio.data?.numExt)
+                this.domicilioPersonaForm.controls.numInt.setValue(domicilio.data?.numInt)
+                this.domicilioPersonaForm.controls.cp.setValue(domicilio.data?.cp)
+                this.domicilioPersonaForm.controls.colonia_asentamiento.setValue(domicilio.data?.colonia_asentamiento)
+                this.domicilioPersonaForm.controls.delegacion_municipio.setValue(domicilio.data?.delegacion_municipio)
+                this.domicilioPersonaForm.controls.ciudad_estado.setValue(domicilio.data?.ciudad_estado)
+                this.domicilioPersonaForm.controls.pais.setValue(domicilio.data?.pais)
+                this.domicilioPersonaForm.controls.calle1.setValue(domicilio.data?.calle1)
+                this.domicilioPersonaForm.controls.calle2.setValue(domicilio.data?.calle2)
+            };
+        };
     };
 
     redirect(url: string) {
