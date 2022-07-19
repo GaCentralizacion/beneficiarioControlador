@@ -167,7 +167,7 @@ personas.prototype.post_updPersona = function (req, res, next) {
         { name: 'xmlContacto', value: xmlContacto, type: self.model.types.XML },
         { name: 'xmlDomicilio', value: xmlDomicilio, type: self.model.types.XML },
     ];
-    console.log()
+
     this.model.queryAllRecordSet('[operacion].[UPD_PERSONA_SP]', params, function (error, result) {
         self.view.expositor(res, {
             error: error,
