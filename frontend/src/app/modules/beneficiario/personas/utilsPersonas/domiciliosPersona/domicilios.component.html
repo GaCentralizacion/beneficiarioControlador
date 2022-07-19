@@ -1,0 +1,86 @@
+<form [formGroup]="domicilioPersonaForm" class="flex-col p-3">
+    <div class="row justify-content-start align-items-center">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-form-field appearance="fill">
+                <mat-label>Tipo Domicilio</mat-label>
+                <mat-select formControlName="idTipDom">
+                    <mat-option [value]="0">
+                        Seleccione una opcion
+                    </mat-option>
+                    <mat-option *ngFor="let tipoDomicilio of catTipoDomicilio" [value]="tipoDomicilio.idTipoDom">
+                        {{tipoDomicilio.tipoDomicilio}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Calle</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Calle" formControlName="calle">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Número Exteriror</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Numero Exteriror" formControlName="numExt">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Número Interiror</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Número Interiror" formControlName="numInt">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row justify-content-start align-items-center">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Codigo Postal</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Codigo Postal" formControlName="cp">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Colonia/Asentamiento</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Colonia/Asentamiento" formControlName="colonia_asentamiento">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Delegacion/Municipio</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Delegacion/Municipio" formControlName="delegacion_municipio">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Ciudad/Estado</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Ciudad/Estado" formControlName="ciudad_estado">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row justify-content-start align-items-center">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>País</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="País" formControlName="pais">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Entre Calle 1</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Entre Calle 1" formControlName="calle1">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Entre Calle 2</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Entre Calle 3" formControlName="calle2">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-slide-toggle color="primary" formControlName="esFiscal">
+                Domicilio Fiscal
+            </mat-slide-toggle>
+        </div>
+    </div>
+</form>

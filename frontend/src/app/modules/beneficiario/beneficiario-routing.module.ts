@@ -4,11 +4,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccionistaComponent } from './accionista/accionista.component';
 import { SeriesComponent } from './series/series.component';
+import { PersonasComponent } from './personas/personas.component';
 
 const routes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent,
+    },
+    {
+        path: 'personas',
+        component: PersonasComponent,
     },
     {
         path: 'accionista',
