@@ -221,7 +221,8 @@
 				<dxi-column *ngFor="let column of columnsdetail" [dataField]="column.dataField"
 					[caption]="column.caption" [width]="column.width" [groupIndex]="column.groupIndex"
 					[cellTemplate]="column.cellTemplate" [hidingPriority]="column.hiddingPriority"
-					[allowEditing]="column.allowEditing" [dataType]="column.dataType" [format]="column.format">
+					[allowEditing]="column.allowEditing" [dataType]="column.dataType" [format]="column.format"
+					[cssClass]="column.cssClass">
 					<!--dxi-validation-rule *ngIf="column.allowEditing === true"
             type="pattern"
             [pattern]="column.pattern"

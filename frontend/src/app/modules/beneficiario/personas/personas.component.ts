@@ -37,7 +37,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     datosEvent: any = [];
     muestraGrid: boolean = false;
     gridOptions: IGridOptions;
-    columns: IColumns[];
+    columns = [];
     exportExcel: IExportExcel;
     searchPanel: ISearchPanel;
     scroll: IScroll;
@@ -437,7 +437,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.columns = [
             {
                 caption: 'Nombre / Razon',
-                dataField: 'nombre'
+                dataField: 'nombre',
+                cssClass: 'asignacion2'
             },
             {
                 caption: 'Alias',
