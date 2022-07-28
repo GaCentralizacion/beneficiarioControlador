@@ -53,6 +53,9 @@
                                 {{tipoPersona.tipoPersona}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un tipo de persona
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -66,6 +69,9 @@
                                 {{tipoMoral.tipoMoral}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un tipo moral
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -79,6 +85,9 @@
                                 {{sexo.sexo}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un el sexo
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -92,24 +101,36 @@
                     <mat-label>Nombre/Razon Social</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Nombre/Razon" formControlName="nombre_razon">
+                        <mat-error>
+                            Ingrese el nombre o razon
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <mat-label>Apellido Paterno</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Apellido Paterno" formControlName="apellidoPaterno">
+                        <mat-error>
+                            Ingrese el apellido paterno
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <mat-label>Apellido Materno</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Apellido Materno" formControlName="apellidoMaterno">
+                        <mat-error>
+                            Ingrese el apellido materno
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <mat-label>Alias</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Alias" formControlName="alias">
+                        <mat-error>
+                            Ingrese el alias
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -121,18 +142,27 @@
                         <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
+                        <mat-error>
+                            Seleccione una fecha
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <mat-label>Curp/Registro de población</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Curp/Registro de población" formControlName="curp_registroPob">
+                        <mat-error>
+                            Ingrese el curp o registro de poblacion
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <mat-label>Rfc/Indentificación</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Rfc/Indentificación" formControlName="rfc_identificacion">
+                        <mat-error>
+                            Ingrese el rfc o identificadcion
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -146,6 +176,9 @@
                                 {{pais.pais}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un pais
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -161,6 +194,9 @@
                                 {{pais.pais}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un pais fiscal
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -174,6 +210,9 @@
                                 {{estadoCivil.estadoCivil}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un estado civil
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -188,12 +227,18 @@
                                 {{identificacion.identificacion}}
                             </mat-option>
                         </mat-select>
+                        <mat-error>
+                            Seleccione un tipo de identificacion
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
                     <mat-label>Clave Indentificación</mat-label>
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Clave Indentificación" formControlName="datoIdentificacion">
+                        <mat-error>
+                            Ingrese la clave de la identificacion
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>

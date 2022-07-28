@@ -7,6 +7,7 @@ import { MatTable } from '@angular/material/table';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
+import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.component';
 
 /**IMPORTS GRID */
 import {
@@ -32,6 +33,8 @@ import {
 })
 
 export class PersonasComponent implements OnInit, OnDestroy {
+    @ViewChild(ContactosComponent) contactoComponent: ContactosComponent;
+
     /**Grid */
     allPersonas: any;
     datosEvent: any = [];
@@ -76,24 +79,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     gralDataPersona: any = [];
     /**VARIABLES PARA EL UPDATE */
 
-    personaForm = new FormGroup({
-        idTipoPersona: new FormControl(0),
-        idTipoMor: new FormControl(0),
-        esAccionista: new FormControl(false),
-        nombre_razon: new FormControl(''),
-        apellidoPaterno: new FormControl(''),
-        apellidoMaterno: new FormControl(''),
-        alias: new FormControl(''),
-        fechaNacimiento: new FormControl(''),
-        idSexo: new FormControl(0),
-        idPais: new FormControl(0),
-        curp_registroPob: new FormControl(''),
-        idPaisFiscal: new FormControl(0),
-        idIdentificacion: new FormControl(0),
-        datoIdentificacion: new FormControl(''),
-        rfc_identificacion: new FormControl(''),
-        idEstadoCivil: new FormControl(0)
-    });
+    personaForm: FormGroup;
 
     constructor(
         private fb: FormBuilder,
@@ -111,6 +97,24 @@ export class PersonasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.personaForm = this._formBuilder.group({
+            idTipoPersona: ([0, Validators.required]),
+            idTipoMor: ([0, Validators.required]),
+            esAccionista: (false),
+            nombre_razon: (['', Validators.required]),
+            apellidoPaterno: (['', Validators.required]),
+            apellidoMaterno: (['', Validators.required]),
+            alias: (['', Validators.required]),
+            fechaNacimiento: (['', Validators.required]),
+            idSexo: ([0, Validators.required]),
+            idPais: ([0, Validators.required]),
+            curp_registroPob: (['', Validators.required]),
+            idPaisFiscal: ([0, Validators.required]),
+            idIdentificacion: ([0, Validators.required]),
+            datoIdentificacion: (['', Validators.required]),
+            rfc_identificacion: (['', Validators.required]),
+            idEstadoCivil: ([0, Validators.required])
+        })
         this.getAllPersonas();
     };
 
@@ -244,82 +248,97 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     savePersona = () => {
-        const validaPersona = this.validaFormPersona();
-        if (validaPersona.success === 0) {
-            Swal.fire(validaPersona.msg, '', 'warning');
-            return
-        };
+        // if (this.personaForm.invalid) {
+        //     Swal.fire({
+        //         title: '¡Alto!',
+        //         text: 'Completa los campos obligatorios de la persona',
+        //         icon: 'warning',
+        //         confirmButtonText: 'Cerrar'
+        //     });
+        //     this.personaForm.markAllAsTouched();
+        //     return;
+        // };
+        // const validaPersona = this.validaFormPersona();
+        // if (validaPersona.success === 0) {
+        //     Swal.fire(validaPersona.msg, '', 'warning');
+        //     return
+        // };
+
         const validaContactosPersona = this.validaFormsContactos();
         if (validaContactosPersona.success === 0) {
             Swal.fire(validaContactosPersona.msg, '', 'warning');
-            return
-        };
-        const validaDomicilioPeronsa = this.validaFormsDomicilios();
-        if (validaDomicilioPeronsa.success === 0) {
-            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
-            return
-        };
-
-        let xmlCotactos = '<contactos>';
-        for (let arrayContacto of this.arrayAllContactos) {
-            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
-        };
-        xmlCotactos += '</contactos>';
-
-        let xmlDomicilio = '<domicilios>';
-        for (let arrayDomicilio of this.arrayAllDomicilios) {
-            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
-        };
-        xmlDomicilio += '</domicilios>';
-
-        Swal.fire({
-            title: `¿Quieres guardar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
-            showDenyButton: true,
-            // showCancelButton: true,
-            confirmButtonText: 'Guardar',
-            denyButtonText: `Cancelar`,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.spinner.show();
-
-                const jsonPersona = {
-                    idTipoPersona: this.personaForm.controls.idTipoPersona.value,
-                    idTipoMor: this.personaForm.controls.idTipoMor.value,
-                    esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
-                    nombres_razon: this.personaForm.controls.nombre_razon.value,
-                    apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
-                    apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
-                    alias: this.personaForm.controls.alias.value,
-                    fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
-                    idSexo: this.personaForm.controls.idSexo.value,
-                    idPais: this.personaForm.controls.idPais.value,
-                    curp_registroPob: this.personaForm.controls.curp_registroPob.value,
-                    idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
-                    idIdentificacion: this.personaForm.controls.idIdentificacion.value,
-                    datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
-                    rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
-                    idEstCivil: this.personaForm.controls.idEstadoCivil.value,
-                    xmlContacto: xmlCotactos,
-                    xmlDomicilio: xmlDomicilio
-                };
-
-                this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
-                    this.spinner.hide();
-                    if (res[0][0].success === 1) {
-                        Swal.fire(res[0][0].msg, '', 'success');
-                        setTimeout(() => {
-                            this.addPersona(false);
-                        }, 1000);
-                    } else if (res[0][0].success === 2) {
-                        Swal.fire(res[0][0].msg, '', 'warning');
-                    } else {
-                        Swal.fire('Ocurrio un error al guardar la persona, intentelo mas tarde, si el problema continua contacte al administrador.', '', 'warning');
-                    };
-                });
-            } else if (result.isDenied) {
-                Swal.fire('No se guardo la informacion', '', 'info')
+            if (validaContactosPersona?.currentIdContacto !== '') {
+                this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
             };
-        });
+            return
+        };
+
+        // const validaDomicilioPeronsa = this.validaFormsDomicilios();
+        // if (validaDomicilioPeronsa.success === 0) {
+        //     Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
+        //     return
+        // };
+
+        // let xmlCotactos = '<contactos>';
+        // for (let arrayContacto of this.arrayAllContactos) {
+        //     xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+        // };
+        // xmlCotactos += '</contactos>';
+
+        // let xmlDomicilio = '<domicilios>';
+        // for (let arrayDomicilio of this.arrayAllDomicilios) {
+        //     xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+        // };
+        // xmlDomicilio += '</domicilios>';
+
+        // Swal.fire({
+        //     title: `¿Quieres guardar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
+        //     showDenyButton: true,
+        //     // showCancelButton: true,
+        //     confirmButtonText: 'Guardar',
+        //     denyButtonText: `Cancelar`,
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         this.spinner.show();
+
+        //         const jsonPersona = {
+        //             idTipoPersona: this.personaForm.controls.idTipoPersona.value,
+        //             idTipoMor: this.personaForm.controls.idTipoMor.value,
+        //             esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
+        //             nombres_razon: this.personaForm.controls.nombre_razon.value,
+        //             apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
+        //             apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
+        //             alias: this.personaForm.controls.alias.value,
+        //             fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
+        //             idSexo: this.personaForm.controls.idSexo.value,
+        //             idPais: this.personaForm.controls.idPais.value,
+        //             curp_registroPob: this.personaForm.controls.curp_registroPob.value,
+        //             idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
+        //             idIdentificacion: this.personaForm.controls.idIdentificacion.value,
+        //             datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
+        //             rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
+        //             idEstCivil: this.personaForm.controls.idEstadoCivil.value,
+        //             xmlContacto: xmlCotactos,
+        //             xmlDomicilio: xmlDomicilio
+        //         };
+
+        //         this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
+        //             this.spinner.hide();
+        //             if (res[0][0].success === 1) {
+        //                 Swal.fire(res[0][0].msg, '', 'success');
+        //                 setTimeout(() => {
+        //                     this.addPersona(false);
+        //                 }, 1000);
+        //             } else if (res[0][0].success === 2) {
+        //                 Swal.fire(res[0][0].msg, '', 'warning');
+        //             } else {
+        //                 Swal.fire('Ocurrio un error al guardar la persona, intentelo mas tarde, si el problema continua contacte al administrador.', '', 'warning');
+        //             };
+        //         });
+        //     } else if (result.isDenied) {
+        //         Swal.fire('No se guardo la informacion', '', 'info')
+        //     };
+        // });
     };
 
     updatePersona = () => {
@@ -599,33 +618,33 @@ export class PersonasComponent implements OnInit, OnDestroy {
         let totalDatoPredeterminado: number = 0;
         const validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (this.arrayAllContactos.length === 0) {
-            return { success: 0, msg: 'Ingrese un medio de contacto de la persona.' }
+            return { success: 0, msg: 'Ingrese un medio de contacto de la persona.', currentIdContacto: '', idError: '' }
         } else {
             for (let arrayContacto of this.arrayAllContactos) {
                 if (JSON.stringify(arrayContacto.data) === '{}') {
-                    return { success: 0, msg: `Los datos del contacto no pueden ir vacios en el formulario #${arrayContacto.id.split("_").pop()}` }
+                    return { success: 0, msg: `Los datos del contacto no pueden ir vacios en el formulario #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: '' }
                 } else {
                     if (arrayContacto.data.predeterminado) {
                         totalDatoPredeterminado += 1;
                     };
-                    if (arrayContacto.data.idTipCont === null || arrayContacto.data.idTipCont === undefined || arrayContacto.data.idTipCont === 0) {
-                        return { success: 0, msg: `Debe seleccionar el tipo de contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}` };
+                    if (arrayContacto.data.idTipCont === null || arrayContacto.data.idTipCont === undefined || arrayContacto.data.idTipCont === 0 || arrayContacto.data.idTipCont === '') {
+                        return { success: 0, msg: `Debe seleccionar el tipo de contacto #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_tipo`, textDiv: 'Seleccione un tipo de contacto' };
                     };
                     if (arrayContacto.data.dato === null || arrayContacto.data.dato === undefined || arrayContacto.data.dato === '') {
-                        return { success: 0, msg: `Debe insertar el dato para contactar en el formulario contactos #${arrayContacto.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar el dato para contactar en el formulario contactos #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_dato`, textDiv: 'Ingrese el dato de contacto' };
                     };
                     if (arrayContacto.data.idTipCont === 1) {
                         if (!arrayContacto.data.dato.match(validRegex)) {
-                            return { success: 0, msg: `Debe insertar un email valido para el contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}` };
+                            return { success: 0, msg: `Debe insertar un email valido para el contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_dato`, textDiv: 'Ingrese un email valido' };
                         };
                     };
                 };
             };
             if (totalDatoPredeterminado === 0) {
-                return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.` };
+                return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.`, currentIdContacto: '', idError: '' };
             };
             if (totalDatoPredeterminado > 1) {
-                return { success: 0, msg: `Solo puede tener 1 medio de contacto como predeterminado.` };
+                return { success: 0, msg: `Solo puede tener 1 medio de contacto como predeterminado.`, currentIdContacto: '', idError: '' };
             };
             return { success: 1, msg: `` }
         };

@@ -1,6 +1,7 @@
-<form [formGroup]="contactosPersonaForm" class="flex-col p-3">
+<label>Contacto {{idContacto.split("_").pop()}}</label>
+<form id="{{idContacto}}" [formGroup]="contactosPersonaForm" class="flex-col p-3">
     <div class="row justify-content-start align-items-center">
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validaFormTipo}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-form-field appearance="fill">
                 <mat-label>Tipo Contacto</mat-label>
                 <mat-select formControlName="idTipCont">
@@ -11,13 +12,17 @@
                         {{tipoContacto.tipoContacto}}
                     </mat-option>
                 </mat-select>
+                <mat-error>
+                </mat-error>
             </mat-form-field>
         </div>
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validaFormDato}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Numero/Mail</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Numero/Mail" formControlName="dato">
-            </mat-form-field>
+                <mat-error>
+                </mat-error>
+            </mat-form-field>            
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Extencion*</mat-label>
