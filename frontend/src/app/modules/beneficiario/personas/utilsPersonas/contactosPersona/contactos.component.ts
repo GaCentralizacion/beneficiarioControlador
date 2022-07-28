@@ -24,7 +24,6 @@ export class ContactosComponent implements OnInit, OnDestroy {
     idContacto: string;
     arrayIdContacto: number;
     stringIdContacto: string = 'contacto_';
-    errorForm: string = '';
     validaFormTipo: string = '';
     validaFormDato: string = '';
     validaFormEmail: string = '';
@@ -91,7 +90,6 @@ export class ContactosComponent implements OnInit, OnDestroy {
         let element = document.getElementById(currentIdContacto);
         element.classList.add('errorForm');
         if (idError !== '') {
-            this.errorForm = idError;
             if (!document.getElementById('divError')) {
                 const errorDiv = document.createElement('div');
                 errorDiv.setAttribute('id', 'divError');

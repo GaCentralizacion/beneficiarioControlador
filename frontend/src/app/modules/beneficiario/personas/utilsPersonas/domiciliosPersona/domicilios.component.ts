@@ -20,24 +20,19 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     @Input() actualizarPersona: boolean;
     /**INPUTUS OUTPUTS */
 
-    domicilioPersonaForm = new FormGroup({
-        idTipDom: new FormControl(0),
-        esFiscal: new FormControl(false),
-        calle: new FormControl(''),
-        numExt: new FormControl(''),
-        numInt: new FormControl(''),
-        cp: new FormControl(''),
-        colonia_asentamiento: new FormControl(''),
-        delegacion_municipio: new FormControl(''),
-        ciudad_estado: new FormControl(''),
-        pais: new FormControl(''),
-        calle1: new FormControl(''),
-        calle2: new FormControl('')
-    });
+    domicilioPersonaForm: FormGroup;
 
     idDomicilio: string;
     arrayIdDomicilio: number;
     stringIdDomicilio: string = 'domicilio_';
+
+    validFormTipoDom: string = '';
+    validFormCalle: string = '';
+    validFormNumExt: string = '';
+    validFormCp: string = '';
+    validFormColonia_asentamiento: string = '';
+    validFormDelegacion_municipio: string = '';
+    validFormCiudad_estado: string = '';
 
     constructor(
         private fb: FormBuilder,
@@ -53,13 +48,43 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.domicilioPersonaForm = this._formBuilder.group({
+            idTipDom: [0, Validators.min(1)],
+            esFiscal: false,
+            calle: ['', Validators.required],
+            numExt: ['', Validators.required],
+            numInt: [''],
+            cp: ['', Validators.required],
+            colonia_asentamiento: ['', Validators.required],
+            delegacion_municipio: ['', Validators.required],
+            ciudad_estado: ['', Validators.required],
+            pais: ['', Validators.required],
+            calle1: [''],
+            calle2: ['']
+        });
+
         this.idDomicilio = `${this.stringIdDomicilio}${this.currentIdDomicilio}`;
+
+        this.validFormTipoDom = `${this.stringIdDomicilio}${this.currentIdDomicilio}_tipoDom`;
+        this.validFormCalle = `${this.stringIdDomicilio}${this.currentIdDomicilio}_calle`;
+        this.validFormNumExt = `${this.stringIdDomicilio}${this.currentIdDomicilio}_numExt`;
+        this.validFormCp = `${this.stringIdDomicilio}${this.currentIdDomicilio}_cp`;
+        this.validFormColonia_asentamiento = `${this.stringIdDomicilio}${this.currentIdDomicilio}_colonia_asentamiento`;
+        this.validFormDelegacion_municipio = `${this.stringIdDomicilio}${this.currentIdDomicilio}_delegacion_municipio`;
+        this.validFormCiudad_estado = `${this.stringIdDomicilio}${this.currentIdDomicilio}_ciudad_estado`;
+
         if (this.actualizarPersona) {
             this.setDataForm(this.idDomicilio);
         };
         this.domicilioPersonaForm.valueChanges.subscribe(res => {
             this.arrayAllDomicilios.forEach((value, key) => {
                 if (value.id === this.idDomicilio) {
+                    let element = document.getElementById(this.idDomicilio);
+                    element.classList.remove('errorForm');
+                    let dynamicDiv = document.getElementById('divError');
+                    if (dynamicDiv) {
+                        dynamicDiv.remove();
+                    };
                     this.arrayIdDomicilio = key;
                 };
             });
@@ -85,6 +110,29 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             };
         };
     };
+
+    setManualError = (currentIdDomicilio, idError, textDiv) => {
+        if (document.getElementById('divError')) {
+            document.getElementById('divError').remove();
+        };
+        let element = document.getElementById(currentIdDomicilio);
+        if (element) {
+            element.classList.add('errorForm');
+        };
+        if (idError !== '') {
+            if (!document.getElementById('divError')) {
+                const errorDiv = document.createElement('div');
+                errorDiv.setAttribute('id', 'divError');
+                errorDiv.style.marginTop = "-17px";
+                errorDiv.style.fontSize = "13px";
+                errorDiv.style.color = "#DC2626";
+                errorDiv.textContent = textDiv;
+                let elementTipo = document.getElementById(idError);
+                elementTipo.appendChild(errorDiv);
+            };
+        };
+    };
+
 
     redirect(url: string) {
         this.router.navigateByUrl(url);

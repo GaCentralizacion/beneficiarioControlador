@@ -1,6 +1,7 @@
-<form [formGroup]="domicilioPersonaForm" class="flex-col p-3">
+<label>Domicilio {{idDomicilio.split("_").pop()}}</label>
+<form id="{{idDomicilio}}" [formGroup]="domicilioPersonaForm" class="flex-col p-3">
     <div class="row justify-content-start align-items-center">
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormTipoDom}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-form-field appearance="fill">
                 <mat-label>Tipo Domicilio</mat-label>
                 <mat-select formControlName="idTipDom">
@@ -11,18 +12,21 @@
                         {{tipoDomicilio.tipoDomicilio}}
                     </mat-option>
                 </mat-select>
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormCalle}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Calle</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Calle" formControlName="calle">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormNumExt}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Número Exteriror</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Numero Exteriror" formControlName="numExt">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
@@ -33,28 +37,32 @@
         </div>
     </div>
     <div class="row justify-content-start align-items-center">
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormCp}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Codigo Postal</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Codigo Postal" formControlName="cp">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormColonia_asentamiento}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Colonia/Asentamiento</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Colonia/Asentamiento" formControlName="colonia_asentamiento">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormDelegacion_municipio}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Delegacion/Municipio</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Delegacion/Municipio" formControlName="delegacion_municipio">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
-        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+        <div id="{{validFormCiudad_estado}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Ciudad/Estado</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Ciudad/Estado" formControlName="ciudad_estado">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
     </div>
@@ -63,6 +71,7 @@
             <mat-label>País</mat-label>
             <mat-form-field appearance="fill">
                 <input matInput placeholder="País" formControlName="pais">
+                <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">

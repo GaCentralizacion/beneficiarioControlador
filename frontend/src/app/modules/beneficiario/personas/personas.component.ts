@@ -8,6 +8,7 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.component';
+import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
 
 /**IMPORTS GRID */
 import {
@@ -34,6 +35,7 @@ import {
 
 export class PersonasComponent implements OnInit, OnDestroy {
     @ViewChild(ContactosComponent) contactoComponent: ContactosComponent;
+    @ViewChild(DomiciliosComponent) domicilioComponent: DomiciliosComponent;
 
     /**Grid */
     allPersonas: any;
@@ -248,16 +250,16 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     savePersona = () => {
-        // if (this.personaForm.invalid) {
-        //     Swal.fire({
-        //         title: '¡Alto!',
-        //         text: 'Completa los campos obligatorios de la persona',
-        //         icon: 'warning',
-        //         confirmButtonText: 'Cerrar'
-        //     });
-        //     this.personaForm.markAllAsTouched();
-        //     return;
-        // };
+        if (this.personaForm.invalid) {
+            Swal.fire({
+                title: '¡Alto!',
+                text: 'Completa los campos obligatorios de la persona',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.personaForm.markAllAsTouched();
+            return;
+        };
         // const validaPersona = this.validaFormPersona();
         // if (validaPersona.success === 0) {
         //     Swal.fire(validaPersona.msg, '', 'warning');
@@ -273,72 +275,75 @@ export class PersonasComponent implements OnInit, OnDestroy {
             return
         };
 
-        // const validaDomicilioPeronsa = this.validaFormsDomicilios();
-        // if (validaDomicilioPeronsa.success === 0) {
-        //     Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
-        //     return
-        // };
+        const validaDomicilioPeronsa = this.validaFormsDomicilios();
+        if (validaDomicilioPeronsa.success === 0) {
+            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
+            if (validaDomicilioPeronsa?.currentIdDom !== '') {
+                this.domicilioComponent.setManualError(validaDomicilioPeronsa?.currentIdDom, validaDomicilioPeronsa?.idError, validaDomicilioPeronsa?.textDiv);
+            };
+            return
+        };
 
-        // let xmlCotactos = '<contactos>';
-        // for (let arrayContacto of this.arrayAllContactos) {
-        //     xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
-        // };
-        // xmlCotactos += '</contactos>';
+        let xmlCotactos = '<contactos>';
+        for (let arrayContacto of this.arrayAllContactos) {
+            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+        };
+        xmlCotactos += '</contactos>';
 
-        // let xmlDomicilio = '<domicilios>';
-        // for (let arrayDomicilio of this.arrayAllDomicilios) {
-        //     xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
-        // };
-        // xmlDomicilio += '</domicilios>';
+        let xmlDomicilio = '<domicilios>';
+        for (let arrayDomicilio of this.arrayAllDomicilios) {
+            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+        };
+        xmlDomicilio += '</domicilios>';
 
-        // Swal.fire({
-        //     title: `¿Quieres guardar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
-        //     showDenyButton: true,
-        //     // showCancelButton: true,
-        //     confirmButtonText: 'Guardar',
-        //     denyButtonText: `Cancelar`,
-        // }).then((result) => {
-        //     if (result.isConfirmed) {
-        //         this.spinner.show();
+        Swal.fire({
+            title: `¿Quieres guardar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
+            showDenyButton: true,
+            // showCancelButton: true,
+            confirmButtonText: 'Guardar',
+            denyButtonText: `Cancelar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.spinner.show();
 
-        //         const jsonPersona = {
-        //             idTipoPersona: this.personaForm.controls.idTipoPersona.value,
-        //             idTipoMor: this.personaForm.controls.idTipoMor.value,
-        //             esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
-        //             nombres_razon: this.personaForm.controls.nombre_razon.value,
-        //             apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
-        //             apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
-        //             alias: this.personaForm.controls.alias.value,
-        //             fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
-        //             idSexo: this.personaForm.controls.idSexo.value,
-        //             idPais: this.personaForm.controls.idPais.value,
-        //             curp_registroPob: this.personaForm.controls.curp_registroPob.value,
-        //             idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
-        //             idIdentificacion: this.personaForm.controls.idIdentificacion.value,
-        //             datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
-        //             rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
-        //             idEstCivil: this.personaForm.controls.idEstadoCivil.value,
-        //             xmlContacto: xmlCotactos,
-        //             xmlDomicilio: xmlDomicilio
-        //         };
+                const jsonPersona = {
+                    idTipoPersona: this.personaForm.controls.idTipoPersona.value,
+                    idTipoMor: this.personaForm.controls.idTipoMor.value,
+                    esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
+                    nombres_razon: this.personaForm.controls.nombre_razon.value,
+                    apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
+                    apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
+                    alias: this.personaForm.controls.alias.value,
+                    fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
+                    idSexo: this.personaForm.controls.idSexo.value,
+                    idPais: this.personaForm.controls.idPais.value,
+                    curp_registroPob: this.personaForm.controls.curp_registroPob.value,
+                    idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
+                    idIdentificacion: this.personaForm.controls.idIdentificacion.value,
+                    datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
+                    rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
+                    idEstCivil: this.personaForm.controls.idEstadoCivil.value,
+                    xmlContacto: xmlCotactos,
+                    xmlDomicilio: xmlDomicilio
+                };
 
-        //         this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
-        //             this.spinner.hide();
-        //             if (res[0][0].success === 1) {
-        //                 Swal.fire(res[0][0].msg, '', 'success');
-        //                 setTimeout(() => {
-        //                     this.addPersona(false);
-        //                 }, 1000);
-        //             } else if (res[0][0].success === 2) {
-        //                 Swal.fire(res[0][0].msg, '', 'warning');
-        //             } else {
-        //                 Swal.fire('Ocurrio un error al guardar la persona, intentelo mas tarde, si el problema continua contacte al administrador.', '', 'warning');
-        //             };
-        //         });
-        //     } else if (result.isDenied) {
-        //         Swal.fire('No se guardo la informacion', '', 'info')
-        //     };
-        // });
+                this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
+                    this.spinner.hide();
+                    if (res[0][0].success === 1) {
+                        Swal.fire(res[0][0].msg, '', 'success');
+                        setTimeout(() => {
+                            this.addPersona(false);
+                        }, 1000);
+                    } else if (res[0][0].success === 2) {
+                        Swal.fire(res[0][0].msg, '', 'warning');
+                    } else {
+                        Swal.fire('Ocurrio un error al guardar la persona, intentelo mas tarde, si el problema continua contacte al administrador.', '', 'warning');
+                    };
+                });
+            } else if (result.isDenied) {
+                Swal.fire('No se guardo la informacion', '', 'info')
+            };
+        });
     };
 
     updatePersona = () => {
@@ -653,43 +658,43 @@ export class PersonasComponent implements OnInit, OnDestroy {
     validaFormsDomicilios = () => {
         let totalDomicilioFiscal: number = 0;
         if (this.arrayAllDomicilios.length === 0) {
-            return { success: 0, msg: 'Debe agregar al menos 1 domicilio para la persona.' };
+            return { success: 0, msg: 'Debe agregar al menos 1 domicilio para la persona.', currentIdDom: '', idError: '' };
         } else {
             for (let arrayDomicilio of this.arrayAllDomicilios) {
                 if (JSON.stringify(arrayDomicilio.data) === '{}') {
-                    return { success: 0, msg: `Los datos del domicilio no pueden ir vacios en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                    return { success: 0, msg: `Los datos del domicilio no pueden ir vacios en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: '' };
                 } else {
                     if (arrayDomicilio.data.esFiscal) {
                         totalDomicilioFiscal += 1;
                     };
                     if (arrayDomicilio.data.idTipDom === null || arrayDomicilio.data.idTipDom === undefined || arrayDomicilio.data.idTipDom === 0) {
-                        return { success: 0, msg: `Debe seleccionar el tipo de domicilio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe seleccionar el tipo de domicilio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_tipoDom`, textDiv: 'Seleccione el tipo de domicilio' };
                     };
                     if (arrayDomicilio.data.calle === null || arrayDomicilio.data.calle === undefined || arrayDomicilio.data.calle === '') {
-                        return { success: 0, msg: `Debe insertar la calle en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar la calle en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_calle`, textDiv: 'Inserte la calle' };
                     };
                     if (arrayDomicilio.data.numExt === null || arrayDomicilio.data.numExt === undefined || arrayDomicilio.data.numExt === '') {
-                        return { success: 0, msg: `Debe insertar el numero exterior en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar el numero exterior en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_numExt`, textDiv: 'Inserte el numero exteriror' };
                     };
                     if (arrayDomicilio.data.cp === null || arrayDomicilio.data.cp === undefined || arrayDomicilio.data.cp === '') {
-                        return { success: 0, msg: `Debe insertar el codigo postal en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar el codigo postal en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_cp`, textDiv: 'Inserte el codigo postal' };
                     };
                     if (arrayDomicilio.data.colonia_asentamiento === null || arrayDomicilio.data.colonia_asentamiento === undefined || arrayDomicilio.data.colonia_asentamiento === '') {
-                        return { success: 0, msg: `Debe insertar la colonia o asentamiento en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar la colonia o asentamiento en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_colonia_asentamiento`, textDiv: 'Inserte la colonia o asentamiento' };
                     };
                     if (arrayDomicilio.data.delegacion_municipio === null || arrayDomicilio.data.delegacion_municipio === undefined || arrayDomicilio.data.delegacion_municipio === '') {
-                        return { success: 0, msg: `Debe insertar la delegacion o monucipio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar la delegacion o monucipio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_delegacion_municipio`, textDiv: 'Inserte la delegacion o municipio' };
                     };
                     if (arrayDomicilio.data.ciudad_estado === null || arrayDomicilio.data.ciudad_estado === undefined || arrayDomicilio.data.ciudad_estado === '') {
-                        return { success: 0, msg: `Debe insertar la ciudad o el estado en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}` };
+                        return { success: 0, msg: `Debe insertar la ciudad o el estado en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_ciudad_estado`, textDiv: 'Inserte la ciudad o el estado' };
                     };
                 };
             };
             if (totalDomicilioFiscal === 0) {
-                return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.` };
+                return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.`, currentIdDom: '', idError: '' };
             };
             if (totalDomicilioFiscal > 1) {
-                return { success: 0, msg: `Solo puede tener 1 domicilio fiscal` };
+                return { success: 0, msg: `Solo puede tener 1 domicilio fiscal`, currentIdDom: '', idError: '' };
             };
             return { success: 1, msg: '' };
         };
