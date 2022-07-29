@@ -347,22 +347,39 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     updatePersona = () => {
-        const validaPersona = this.validaFormPersona();
-        if (validaPersona.success === 0) {
-            Swal.fire(validaPersona.msg, '', 'warning');
-            return
+        if (this.personaForm.invalid) {
+            Swal.fire({
+                title: '¡Alto!',
+                text: 'Completa los campos obligatorios de la persona',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.personaForm.markAllAsTouched();
+            return;
         };
+        // const validaPersona = this.validaFormPersona();
+        // if (validaPersona.success === 0) {
+        //     Swal.fire(validaPersona.msg, '', 'warning');
+        //     return
+        // };
+
         const validaContactosPersona = this.validaFormsContactos();
         if (validaContactosPersona.success === 0) {
             Swal.fire(validaContactosPersona.msg, '', 'warning');
-            return
-        };
-        const validaDomicilioPeronsa = this.validaFormsDomicilios();
-        if (validaDomicilioPeronsa.success === 0) {
-            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
+            if (validaContactosPersona?.currentIdContacto !== '') {
+                this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
+            };
             return
         };
 
+        const validaDomicilioPeronsa = this.validaFormsDomicilios();
+        if (validaDomicilioPeronsa.success === 0) {
+            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
+            if (validaDomicilioPeronsa?.currentIdDom !== '') {
+                this.domicilioComponent.setManualError(validaDomicilioPeronsa?.currentIdDom, validaDomicilioPeronsa?.idError, validaDomicilioPeronsa?.textDiv);
+            };
+            return
+        };
         let xmlCotactos = '<contactos>';
         for (let arrayContacto of this.arrayAllContactos) {
             console.log('arrayContacto', arrayContacto)
