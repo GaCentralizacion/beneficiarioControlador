@@ -20,11 +20,11 @@ login.prototype.post_loginUser = function (req, res, next) {
 
     const { usuario, pass } = req.body;
     var params = [
-        { name: 'usuario', value: usuario, type: self.model.types.STRING },
-        { name: 'pass', value: pass, type: self.model.types.STRING }
+        { name: 'UserName', value: usuario, type: self.model.types.STRING },
+        { name: 'Password', value: pass, type: self.model.types.STRING }
     ];
-    console.log('loginUser en la back ga', params)
-    this.model.queryAllRecordSet('[SEL_USUARIOS_SP]', params, function (error, result) {
+
+    this.model.queryAllRecordSet('[dbo].[Sis_Login]', params, function (error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
@@ -32,4 +32,19 @@ login.prototype.post_loginUser = function (req, res, next) {
     });
 };
 
+login.prototype.post_menuApp = function (req, res, next) {
+    var self = this;
+
+    const { idRol } = req.body;
+    var params = [
+        { name: 'idRol', value: idRol, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_MenuApp]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 module.exports = login;

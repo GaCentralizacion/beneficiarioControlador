@@ -53,7 +53,7 @@ export class UserComponent implements OnInit, OnDestroy {
         const dataUser = JSON.parse(localStorage.getItem('user'));
 
         if (dataUser) {
-            this.user.email = dataUser.userName;
+            this.user.email = dataUser.Nombre;
         } else {
             this.signOut();
         };
