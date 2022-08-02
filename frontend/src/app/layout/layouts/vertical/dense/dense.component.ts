@@ -9,6 +9,11 @@ import { NavigationService } from 'app/core/navigation/navigation.service';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 
+/**VARIABLES PARA REVISION DE SESION */
+const MINUTES_UNITL_AUTO_LOGOUT = 1; // in mins
+const CHECK_INTERVAL = 1000; // in ms
+const STORE_KEY = 'sesionTimer';
+/**VARIABLES PARA REVISION DE SESION */
 
 @Component({
     selector: 'dense-layout',
@@ -21,6 +26,8 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
     navigationAppearance: 'default' | 'dense' = 'dense';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public dataUser: any;
+    globalInterval: NodeJS.Timeout;;
+
 
     /**
      * Constructor
@@ -33,6 +40,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
         private _fuseNavigationService: FuseNavigationService,
         private _gaService: GaService
     ) {
+        this.setLastAction(Date.now());
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -54,6 +62,11 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+        if (this.globalInterval !== undefined) {
+            clearInterval(this.globalInterval);
+        };
+        this.initEventListener();
+        this.initInterval();
 
         this.dataUser = JSON.parse(localStorage.getItem('user'));
         if (!this.dataUser) {
@@ -75,11 +88,52 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
             });
+    };
+
+    initEventListener() {
+        document.body.addEventListener('click', () => this.reset());
+        document.body.addEventListener('mouseover', () => this.reset());
+        document.body.addEventListener('mouseout', () => this.reset());
+        document.body.addEventListener('keydown', () => this.reset());
+        document.body.addEventListener('keyup', () => this.reset());
+        document.body.addEventListener('keypress', () => this.reset());
+    };
+
+    reset() {
+        this.setLastAction(Date.now());
+    };
+
+    public setLastAction(lastAction: number) {
+        localStorage.setItem(STORE_KEY, lastAction.toString());
+    };
+
+    public getLastAction() {
+        // tslint:disable-next-line: radix
+        return parseInt(localStorage.getItem(STORE_KEY));
     }
+
+    initInterval() {
+        this.globalInterval = setInterval(() => {
+            this.checkInterval();
+        }, CHECK_INTERVAL);
+    };
+
+    checkInterval = () => {
+        if (this._router.url !== '/sign-in') {
+            const now = Date.now();
+            const timeleft = this.getLastAction() + MINUTES_UNITL_AUTO_LOGOUT * 60 * 1000;
+            const diff = timeleft - now
+            const isTimeout = diff < 0;
+
+            if (isTimeout) {
+                this._router.navigateByUrl('sign-in')
+            };
+        };
+    };
 
     createMenu = () => {
         const data = {
-            idRol: 2
+            idRol: this.dataUser.idRol
         };
 
         this._gaService.postService('login/menuApp', data).subscribe(res => {

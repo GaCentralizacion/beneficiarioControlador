@@ -81,6 +81,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
     gralDataPersona: any = [];
     /**VARIABLES PARA EL UPDATE */
 
+    /**VARIABLES LOCALSTORAGE */
+    accionesUsuario: any;
+
     personaForm: FormGroup;
 
     constructor(
@@ -90,7 +93,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
         private gaService: GaService,
-        private spinner: NgxSpinnerService
+        private spinner: NgxSpinnerService,
+        private _router: Router
     ) {
 
     }
@@ -99,6 +103,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.accionesUsuario = JSON.parse(localStorage.getItem('accionesUser'));
+        if (!this.accionesUsuario) {
+            Swal.fire({
+                title: '¡Error!',
+                text: '[AccionesError]',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+            this._router.navigateByUrl('sign-in');
+        };
+
         this.personaForm = this._formBuilder.group({
             idTipoPersona: ([0, Validators.required]),
             idTipoMor: ([0, Validators.required]),

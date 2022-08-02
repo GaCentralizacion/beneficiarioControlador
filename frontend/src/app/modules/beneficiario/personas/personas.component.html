@@ -7,7 +7,7 @@
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4">
-                <button class="btn btn-success pull-right" (click)="addPersona(false)">
+                <button *ngIf="accionesUsuario.AgregarPersonas === 1" class="btn btn-success pull-right" (click)="addPersona(false)">
                     <label>Agregar Persona <i class="fas fa-plus"></i></label>
                 </button>
             </div>
@@ -298,10 +298,10 @@
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                <button class="btn btn-success pull-right" (click)="savePersona()" [hidden]="actualizarPersona">
+                <button *ngIf="accionesUsuario.AgregarPersonas === 1" class="btn btn-success pull-right" (click)="savePersona()" [hidden]="actualizarPersona">
                     Guardar <i class="fa-solid fa-floppy-disk"></i>
                 </button>
-                <button class="btn btn-success pull-right" (click)="updatePersona()" [hidden]="!actualizarPersona">
+                <button *ngIf="accionesUsuario.ActualizarPersonas === 1" class="btn btn-success pull-right" (click)="updatePersona()" [hidden]="!actualizarPersona">
                     Actualizar <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
             </div>

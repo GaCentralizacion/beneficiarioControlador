@@ -72,12 +72,14 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	DataSourceStorage: any;
 	public newInnerWidth: number;
 	justDeselected: any;
+	accionesUsuario: any;
 
 	constructor(private element: ElementRef, private renderer: Renderer2, public dialog: MatDialog) {
 		this.DataSourceStorage = [];
 	}
 
 	ngAfterViewInit() {
+		this.accionesUsuario = JSON.parse(localStorage.getItem('accionesUser'));
 		const div = this.grid.nativeElement.querySelector('.dx-datagrid-filter-panel');
 		const parent = this.grid.nativeElement.querySelector('.dx-datagrid');
 		const refChild = this.element.nativeElement.querySelector('.dx-datagrid-headers');
