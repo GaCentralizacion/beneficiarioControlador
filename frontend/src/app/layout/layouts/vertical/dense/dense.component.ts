@@ -8,6 +8,7 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
+import { environment } from 'environments/environment';
 
 /**VARIABLES PARA REVISION DE SESION */
 const MINUTES_UNITL_AUTO_LOGOUT = 30; // in mins
@@ -25,9 +26,12 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
     navigationAppearance: 'default' | 'dense' = 'dense';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    public dataUser: any;
-    globalInterval: NodeJS.Timeout;;
+    globalInterval: NodeJS.Timeout;
 
+    /**VARIABLES LOCAL STORAGE */
+    public dataUser: any;
+    public menuApp: any;
+    /**VARIABLES LOCAL STORAGE */
 
     /**
      * Constructor
@@ -68,8 +72,9 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
         this.initEventListener();
         this.initInterval();
 
-        this.dataUser = JSON.parse(localStorage.getItem('user'));
-        if (!this.dataUser) {
+        this.dataUser = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
+        this.menuApp = JSON.parse(localStorage.getItem(environment._varsLocalStorage.menuApp));
+        if (!this.dataUser || !this.menuApp) {
             this._router.navigateByUrl('sign-in')
         };
         this.createMenu();
@@ -132,73 +137,27 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
     };
 
     createMenu = () => {
-        const data = {
-            idRol: this.dataUser.idRol
+        let _default: FuseNavigationItem[] = [];
+        let childrenData: FuseNavigationItem[] = [];
+        for (let data of this.menuApp) {
+            const itemNav: FuseNavigationItem = {
+                id: data.IdMenu.toString(),
+                title: data.Title,
+                type: data.Type,
+                icon: data.Icon,
+                link: data.Link,
+            };
+            childrenData.push(itemNav)
         };
 
-        const _default: FuseNavigationItem[] = [
-            {
-                id: 'beneficiario',
-                title: 'Beneficiario Controlador',
-                subtitle: '',
-                type: 'group',
-                icon: 'heroicons_outline:home',
-                children: [
-                    {
-                        id: 'beneficiario.dashboard',
-                        title: 'Dashboard',
-                        type: 'basic',
-                        icon: 'heroicons_outline:clipboard-check',
-                        link: '/beneficiario/dashboard'
-                    },
-                    {
-                        id: 'beneficiario.personas',
-                        title: 'Personas',
-                        type: 'basic',
-                        icon: 'heroicons_outline:user-group',
-                        link: '/beneficiario/personas'
-                    },
-                    {
-                        id: 'beneficiario.accionista',
-                        title: 'Accionistas',
-                        type: 'basic',
-                        icon: 'heroicons_outline:currency-dollar',
-                        link: '/beneficiario/accionista'
-                    },
-                    {
-                        id: 'beneficiario.series',
-                        title: 'Series',
-                        type: 'basic',
-                        icon: 'heroicons_outline:cash',
-                        link: '/beneficiario/series'
-                    }
-                ]
-            }
-        ];
-
-        // this._gaService.postService('login/menuApp', data).subscribe(res => {
-        //     if (res[0].length > 0) {
-        //         let _default: FuseNavigationItem[] = [];
-        //         let childrenData: FuseNavigationItem[] = [];
-        //         for (let data of res[0]) {
-        //             const itemNav: FuseNavigationItem = {
-        //                 id: data.idMenu.toString(),
-        //                 title: data.Title,
-        //                 type: data.Type,
-        //                 icon: data.Icon,
-        //                 link: data.Link,
-        //             };
-        //             childrenData.push(itemNav)
-        //         };
-
-        //         _default.push({
-        //             id: 'beneficiario',
-        //             title: 'Beneficiario Controlador',
-        //             subtitle: '',
-        //             type: 'group',
-        //             icon: 'heroicons_outline:home',
-        //             children: childrenData
-        //         });
+        _default.push({
+            id: 'beneficiario',
+            title: 'Beneficiario Controlador',
+            subtitle: '',
+            type: 'group',
+            icon: 'heroicons_outline:home',
+            children: childrenData
+        });
 
         this.navigation = {
             default: _default,
@@ -206,24 +165,6 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
             futuristic: [],
             horizontal: []
         };
-        //     } else {
-        //         Swal.fire({
-        //             title: '¡Error!',
-        //             text: '[MenuError]',
-        //             icon: 'error',
-        //             confirmButtonText: 'Cerrar'
-        //         });
-        //         this._router.navigateByUrl('sign-in')
-        //     };
-        // }, (error: any) => {
-        //     Swal.fire({
-        //         title: '¡Error!',
-        //         text: '[MenuError]',
-        //         icon: 'error',
-        //         confirmButtonText: 'Cerrar'
-        //     });
-        //     this._router.navigateByUrl('sign-in')
-        // });
     };
 
     /**

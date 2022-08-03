@@ -37,6 +37,24 @@ personas.prototype.get_allCatalogosAddPersonas = function (req, res, next) {
     });
 };
 
+personas.prototype.post_allFormOptions = function (req, res, next) {
+    var self = this;
+
+    const { IdMenuApp, IdTipoPer } = req.body;
+
+    var params = [
+        { name: 'IdMenuApp', value: IdMenuApp, type: self.model.types.INT },
+        { name: 'IdTipoPer', value: IdTipoPer, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('Sel_CamposObligatorios', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 personas.prototype.post_insPersona = function (req, res, next) {
     var self = this;
 

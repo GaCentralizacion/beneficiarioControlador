@@ -5,7 +5,12 @@
 export const environment = {
     production: false,
     serviceUrl: 'http://localhost:2020/api/',
-    envName: 'develop'
+    envName: 'develop',
+    _varsLocalStorage: {
+        dataUsuario: "user",
+        menuApp: 'menuApp',
+        accionesUser: "accionesUser"
+    }
 };
 
 /*

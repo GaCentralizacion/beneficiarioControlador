@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.component';
 import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
+import { environment } from 'environments/environment';
 
 /**IMPORTS GRID */
 import {
@@ -36,6 +37,7 @@ import {
 export class PersonasComponent implements OnInit, OnDestroy {
     @ViewChild(ContactosComponent) contactoComponent: ContactosComponent;
     @ViewChild(DomiciliosComponent) domicilioComponent: DomiciliosComponent;
+    idMenuApp: number = 0;
 
     /**Grid */
     allPersonas: any;
@@ -53,6 +55,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     Columnchooser: IColumnchooser;
     /**Grid */
 
+    /**Variables para catalogos */
     showAddPersona: boolean = false;
     catTipoPersona: any = [];
     catTipoMoral: any = [];
@@ -64,6 +67,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     catTipoDomicilio: any = [];
     catRelacionFamiliar: any = [];
     catTipoPatrimonial: any = [];
+    /**Variables para catalogos */
 
     /**array all todos los contactos */
     arrayAllContactos: any = [];
@@ -71,11 +75,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
     stringIdContacto: string = 'contacto_';
     /**array all todos los contactos */
 
-    /**array all todos los contactos */
+    /**array all todos los domicilios */
     arrayAllDomicilios: any = [];
     currentIdDomicilios: string;
     stringIdDomicilio: string = 'domicilio_';
-    /**array all todos los contactos */
+    /**array all todos los domicilios */
 
     /**VARIABLES PARA EL UPDATE */
     actualizarPersona: boolean = false;
@@ -83,11 +87,14 @@ export class PersonasComponent implements OnInit, OnDestroy {
     gralDataPersona: any = [];
     /**VARIABLES PARA EL UPDATE */
 
-    /**VARIABLES LOCALSTORAGE */
+    /**VARIABLES PARA EL UPDATE */
     accionesUsuario: any;
+    menuApp: any;
+    /**VARIABLES LOCALSTORAGE */
 
     personaForm: FormGroup;
     focusTabs: number = 0;
+    IdTipoMoralOption: any;
 
     constructor(
         private fb: FormBuilder,
@@ -125,7 +132,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
             idEstadoCivil: [0, Validators.min(1)]
         });
 
-        this.accionesUsuario = JSON.parse(localStorage.getItem('accionesUser'));
+        this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
+        this.menuApp = JSON.parse(localStorage.getItem(environment._varsLocalStorage.menuApp));
         if (!this.accionesUsuario) {
             Swal.fire({
                 title: '¡Error!',
@@ -136,6 +144,13 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this._router.navigateByUrl('sign-in');
         };
         this.getAllPersonas();
+
+        for (let menuApp of this.menuApp) {
+            if (menuApp.Link ===
+                this._router.url) {
+                this.idMenuApp = menuApp.IdMenuApp;
+            };
+        };
     };
 
     getAllPersonas = () => {
@@ -199,7 +214,34 @@ export class PersonasComponent implements OnInit, OnDestroy {
             };
         }, (error: any) => {
             this.spinner.hide();
-            Swal.fire('Error al regresar los catalogos, favor de contactat el administrador. ' + error.error.text, '', 'warning');
+            Swal.fire('Error', 'Error al regresar los catalogos, favor de contactat el administrador. ' + error.error.text, 'warning');
+        });
+    };
+
+    getCamposForm = tipoPersona => {
+        this.IdTipoMoralOption = [];
+        this.spinner.show();
+        const data = {
+            IdMenuApp: this.idMenuApp,
+            IdTipoPer: tipoPersona
+        };
+
+        this.gaService.postService('personas/allFormOptions', data).subscribe((res: any) => {
+            if (res[0].length > 0) {
+                for (let data of res[0]) {
+                    if (data.Campo === 'IdTipoMoral') {
+                        this.IdTipoMoralOption = data;
+                    };
+                };
+                console.log('IdTipoMoralOption', this.IdTipoMoralOption)
+            } else {
+                Swal.fire('Alto', 'No se obtuvo la regla del fomulario', 'error');
+            };
+            this.spinner.hide();
+
+        }, (error: any) => {
+            Swal.fire('Error', 'Error al regresar la regla del formulario, favor de contactat el administrador. ' + error.error.text, 'warning');
+            this.spinner.hide();
         });
     };
 

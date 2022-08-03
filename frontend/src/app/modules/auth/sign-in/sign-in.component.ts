@@ -7,6 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { GaService } from '../../../services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'auth-sign-in',
@@ -53,8 +54,7 @@ export class AuthSignInComponent implements OnInit {
 	};
 
 	deleteAllLocalStorages = () => {
-		localStorage.removeItem('user');
-		localStorage.removeItem('accionesUser');
+		localStorage.clear();
 	};
 
 	// -----------------------------------------------------------------------------------------------------
@@ -86,13 +86,15 @@ export class AuthSignInComponent implements OnInit {
 		this.signInForm.reset();
 
 		this.gaService.postService(`login/loginUser`, data).subscribe((res: any) => {
+			console.log('res', res)
 			if (res.err) {
 				this.spinner.hide();
 			} else {
 				if (res[0][0].Codigo >= 1) {
 					this.spinner.hide();
-					localStorage.setItem('accionesUser', JSON.stringify({ "AgregarPersonas": 1, "ActualizarPersonas": 1, "EliminarPersonas": 1 }));
-					localStorage.setItem('user', JSON.stringify({ idRol: res[0][0].IdRol, Nombre: res[0][0].Nombre, IdUsuario: res[0][0].IdUsuario }));
+					localStorage.setItem(environment._varsLocalStorage.dataUsuario, JSON.stringify({ idRol: res[0][0].IdRol, Nombre: res[0][0].Nombre, IdUsuario: res[0][0].IdUsuario }));
+					localStorage.setItem(environment._varsLocalStorage.menuApp, JSON.stringify(res[1]));
+					localStorage.setItem(environment._varsLocalStorage.accionesUser, JSON.stringify({ "AgregarPersonas": 1, "ActualizarPersonas": 1, "EliminarPersonas": 1 }));
 					this._router.navigateByUrl('/beneficiario/dashboard');
 				} else {
 					this.spinner.hide();

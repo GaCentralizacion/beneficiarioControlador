@@ -31,20 +31,4 @@ login.prototype.post_loginUser = function (req, res, next) {
         });
     });
 };
-
-login.prototype.post_menuApp = function (req, res, next) {
-    var self = this;
-
-    const { idRol } = req.body;
-    var params = [
-        { name: 'idRol', value: idRol, type: self.model.types.INT }
-    ];
-
-    this.model.queryAllRecordSet('[dbo].[Sel_MenuApp]', params, function (error, result) {
-        self.view.expositor(res, {
-            error: error,
-            result: result
-        });
-    });
-};
 module.exports = login;
