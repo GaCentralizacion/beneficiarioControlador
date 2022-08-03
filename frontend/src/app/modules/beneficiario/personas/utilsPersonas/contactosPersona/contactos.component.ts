@@ -46,10 +46,10 @@ export class ContactosComponent implements OnInit, OnDestroy {
         this.validaFormDato = `${this.stringIdContacto}${this.currentIdContacto}_dato`;
 
         this.contactosPersonaForm = this._formBuilder.group({
-            idTipCont: (['', Validators.required]),
-            dato: (['', Validators.required]),
-            predeterminado: (false),
-            ext: ('')
+            idTipCont: [0, Validators.min(1)],
+            dato: ['', Validators.required],
+            predeterminado: false,
+            ext: ''
         });
 
         if (this.actualizarPersona) {

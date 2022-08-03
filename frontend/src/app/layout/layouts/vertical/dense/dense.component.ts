@@ -10,7 +10,7 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 
 /**VARIABLES PARA REVISION DE SESION */
-const MINUTES_UNITL_AUTO_LOGOUT = 1; // in mins
+const MINUTES_UNITL_AUTO_LOGOUT = 30; // in mins
 const CHECK_INTERVAL = 1000; // in ms
 const STORE_KEY = 'sesionTimer';
 /**VARIABLES PARA REVISION DE SESION */
@@ -110,7 +110,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
     public getLastAction() {
         // tslint:disable-next-line: radix
         return parseInt(localStorage.getItem(STORE_KEY));
-    }
+    };
 
     initInterval() {
         this.globalInterval = setInterval(() => {
@@ -136,96 +136,94 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
             idRol: this.dataUser.idRol
         };
 
-        this._gaService.postService('login/menuApp', data).subscribe(res => {
-            if (res[0].length > 0) {
-                let _default: FuseNavigationItem[] = [];
-                let childrenData: FuseNavigationItem[] = [];
-                for (let data of res[0]) {
-                    const itemNav: FuseNavigationItem = {
-                        id: data.idMenu.toString(),
-                        title: data.Title,
-                        type: data.Type,
-                        icon: data.Icon,
-                        link: data.Link,
-                    };
-                    childrenData.push(itemNav)
-                };
+        const _default: FuseNavigationItem[] = [
+            {
+                id: 'beneficiario',
+                title: 'Beneficiario Controlador',
+                subtitle: '',
+                type: 'group',
+                icon: 'heroicons_outline:home',
+                children: [
+                    {
+                        id: 'beneficiario.dashboard',
+                        title: 'Dashboard',
+                        type: 'basic',
+                        icon: 'heroicons_outline:clipboard-check',
+                        link: '/beneficiario/dashboard'
+                    },
+                    {
+                        id: 'beneficiario.personas',
+                        title: 'Personas',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user-group',
+                        link: '/beneficiario/personas'
+                    },
+                    {
+                        id: 'beneficiario.accionista',
+                        title: 'Accionistas',
+                        type: 'basic',
+                        icon: 'heroicons_outline:currency-dollar',
+                        link: '/beneficiario/accionista'
+                    },
+                    {
+                        id: 'beneficiario.series',
+                        title: 'Series',
+                        type: 'basic',
+                        icon: 'heroicons_outline:cash',
+                        link: '/beneficiario/series'
+                    }
+                ]
+            }
+        ];
 
-                _default.push({
-                    id: 'beneficiario',
-                    title: 'Beneficiario Controlador',
-                    subtitle: '',
-                    type: 'group',
-                    icon: 'heroicons_outline:home',
-                    children: childrenData
-                });
+        // this._gaService.postService('login/menuApp', data).subscribe(res => {
+        //     if (res[0].length > 0) {
+        //         let _default: FuseNavigationItem[] = [];
+        //         let childrenData: FuseNavigationItem[] = [];
+        //         for (let data of res[0]) {
+        //             const itemNav: FuseNavigationItem = {
+        //                 id: data.idMenu.toString(),
+        //                 title: data.Title,
+        //                 type: data.Type,
+        //                 icon: data.Icon,
+        //                 link: data.Link,
+        //             };
+        //             childrenData.push(itemNav)
+        //         };
 
-                this.navigation = {
-                    default: _default,
-                    compact: [],
-                    futuristic: [],
-                    horizontal: []
-                };
-            } else {
-                Swal.fire({
-                    title: '¡Error!',
-                    text: '[MenuError]',
-                    icon: 'error',
-                    confirmButtonText: 'Cerrar'
-                });
-                this._router.navigateByUrl('sign-in')
-            };
+        //         _default.push({
+        //             id: 'beneficiario',
+        //             title: 'Beneficiario Controlador',
+        //             subtitle: '',
+        //             type: 'group',
+        //             icon: 'heroicons_outline:home',
+        //             children: childrenData
+        //         });
 
-
-            // const _default: FuseNavigationItem[] = [
-            //     {
-            //         id: 'beneficiario',
-            //         title: 'Beneficiario Controlador',
-            //         subtitle: '',
-            //         type: 'group',
-            //         icon: 'heroicons_outline:home',
-            //         children: [
-            //             {
-            //                 id: 'beneficiario.dashboard',
-            //                 title: 'Dashboard',
-            //                 type: 'basic',
-            //                 icon: 'heroicons_outline:clipboard-check',
-            //                 link: '/beneficiario/dashboard'
-            //             },
-            //             {
-            //                 id: 'beneficiario.personas',
-            //                 title: 'Personas',
-            //                 type: 'basic',
-            //                 icon: 'heroicons_outline:user-group',
-            //                 link: '/beneficiario/personas'
-            //             },
-            //             {
-            //                 id: 'beneficiario.accionista',
-            //                 title: 'Accionistas',
-            //                 type: 'basic',
-            //                 icon: 'heroicons_outline:currency-dollar',
-            //                 link: '/beneficiario/accionista'
-            //             },
-            //             {
-            //                 id: 'beneficiario.series',
-            //                 title: 'Series',
-            //                 type: 'basic',
-            //                 icon: 'heroicons_outline:cash',
-            //                 link: '/beneficiario/series'
-            //             }
-            //         ]
-            //     }
-            // ];
-
-        }, (error: any) => {
-            Swal.fire({
-                title: '¡Error!',
-                text: '[MenuError]',
-                icon: 'error',
-                confirmButtonText: 'Cerrar'
-            });
-            this._router.navigateByUrl('sign-in')
-        });
+        this.navigation = {
+            default: _default,
+            compact: [],
+            futuristic: [],
+            horizontal: []
+        };
+        //     } else {
+        //         Swal.fire({
+        //             title: '¡Error!',
+        //             text: '[MenuError]',
+        //             icon: 'error',
+        //             confirmButtonText: 'Cerrar'
+        //         });
+        //         this._router.navigateByUrl('sign-in')
+        //     };
+        // }, (error: any) => {
+        //     Swal.fire({
+        //         title: '¡Error!',
+        //         text: '[MenuError]',
+        //         icon: 'error',
+        //         confirmButtonText: 'Cerrar'
+        //     });
+        //     this._router.navigateByUrl('sign-in')
+        // });
     };
 
     /**

@@ -62,6 +62,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     catEstadoCivil: any = [];
     catTipoContacto: any = [];
     catTipoDomicilio: any = [];
+    catRelacionFamiliar: any = [];
+    catTipoPatrimonial: any = [];
 
     /**array all todos los contactos */
     arrayAllContactos: any = [];
@@ -103,6 +105,25 @@ export class PersonasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.personaForm = this._formBuilder.group({
+            idTipoPersona: [0, Validators.min(1)],
+            idTipoMor: [0, Validators.min(1)],
+            esAccionista: false,
+            nombre_razon: ['', Validators.required],
+            apellidoPaterno: ['', Validators.required],
+            apellidoMaterno: ['', Validators.required],
+            alias: ['', Validators.required],
+            fechaNacimiento: ['', Validators.required],
+            idSexo: [0, Validators.min(1)],
+            idPais: [0, Validators.min(1)],
+            curp_registroPob: ['', Validators.min(1)],
+            idPaisFiscal: [0, Validators.min(1)],
+            idIdentificacion: [0, Validators.min(1)],
+            datoIdentificacion: ['', Validators.required],
+            rfc_identificacion: ['', Validators.required],
+            idEstadoCivil: [0, Validators.min(1)]
+        });
+
         this.accionesUsuario = JSON.parse(localStorage.getItem('accionesUser'));
         if (!this.accionesUsuario) {
             Swal.fire({
@@ -113,25 +134,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
             });
             this._router.navigateByUrl('sign-in');
         };
-
-        this.personaForm = this._formBuilder.group({
-            idTipoPersona: ([0, Validators.required]),
-            idTipoMor: ([0, Validators.required]),
-            esAccionista: (false),
-            nombre_razon: (['', Validators.required]),
-            apellidoPaterno: (['', Validators.required]),
-            apellidoMaterno: (['', Validators.required]),
-            alias: (['', Validators.required]),
-            fechaNacimiento: (['', Validators.required]),
-            idSexo: ([0, Validators.required]),
-            idPais: ([0, Validators.required]),
-            curp_registroPob: (['', Validators.required]),
-            idPaisFiscal: ([0, Validators.required]),
-            idIdentificacion: ([0, Validators.required]),
-            datoIdentificacion: (['', Validators.required]),
-            rfc_identificacion: (['', Validators.required]),
-            idEstadoCivil: ([0, Validators.required])
-        })
         this.getAllPersonas();
     };
 
@@ -171,7 +173,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.catEstadoCivil = res[5];
                 this.catTipoContacto = res[6];
                 this.catTipoDomicilio = res[7];
+                this.catRelacionFamiliar = res[8];
+                this.catTipoPatrimonial = res[9];
 
+                this.initVarFormPersona();
                 if (!this.actualizarPersona) {
                     this.showAddPersona = true;
                     /**Agregamos el array para los contactos */
@@ -191,6 +196,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.spinner.hide();
                 Swal.fire('Error al regresar los catalogos', '', 'warning');
             };
+        }, (error: any) => {
+            this.spinner.hide();
+            Swal.fire('Error al regresar los catalogos, favor de contactat el administrador. ' + error.error.text, '', 'warning');
         });
     };
 
@@ -734,5 +742,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**
     * #REGION VALIDA FORMULARIOS
     */
+
+    /**INICIALIZA VARIABLES DEL FORMULARIO */
+    initVarFormPersona = () => {
+        this.personaForm.controls.idTipoPersona.setValue(0);
+        this.personaForm.controls.idTipoMor.setValue(0);
+        this.personaForm.controls.idSexo.setValue(0);
+        this.personaForm.controls.idPais.setValue(0);
+        this.personaForm.controls.idPaisFiscal.setValue(0);
+        this.personaForm.controls.idIdentificacion.setValue(0);
+        this.personaForm.controls.idEstadoCivil.setValue(0);
+    };
+    /**INICIALIZA VARIABLES DEL FORMULARIO */
 
 };

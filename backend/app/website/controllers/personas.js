@@ -29,7 +29,7 @@ personas.prototype.get_allPersonas = function (req, res, next) {
 personas.prototype.get_allCatalogosAddPersonas = function (req, res, next) {
     var self = this;
 
-    this.model.queryAllRecordSet('[catalogos].[SEL_CATALOGOS_ADD_PERSONAS_SP]', [], function (error, result) {
+    this.model.queryAllRecordSet('[dbo].[Sel_Catalogos]', [], function (error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

@@ -91,11 +91,7 @@ export class AuthSignInComponent implements OnInit {
 			} else {
 				if (res[0][0].Codigo >= 1) {
 					this.spinner.hide();
-					if (res[0][0].IdRol === 1) {
-						localStorage.setItem('accionesUser', JSON.stringify({ "AgregarPersonas": 1, "ActualizarPersonas": 1, "EliminarPersonas": 1 }));
-					} else {
-						localStorage.setItem('accionesUser', JSON.stringify({ "AgregarPersonas": 0, "ActualizarPersonas": 0, "EliminarPersonas": 0 }));
-					};
+					localStorage.setItem('accionesUser', JSON.stringify({ "AgregarPersonas": 1, "ActualizarPersonas": 1, "EliminarPersonas": 1 }));
 					localStorage.setItem('user', JSON.stringify({ idRol: res[0][0].IdRol, Nombre: res[0][0].Nombre, IdUsuario: res[0][0].IdUsuario }));
 					this._router.navigateByUrl('/beneficiario/dashboard');
 				} else {
