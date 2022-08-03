@@ -87,6 +87,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     accionesUsuario: any;
 
     personaForm: FormGroup;
+    focusTabs: number = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -280,6 +281,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar'
             });
+            this.focusTabs = 0;
             this.personaForm.markAllAsTouched();
             return;
         };
@@ -291,6 +293,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         const validaContactosPersona = this.validaFormsContactos();
         if (validaContactosPersona.success === 0) {
+            this.focusTabs = 1;
             Swal.fire(validaContactosPersona.msg, '', 'warning');
             if (validaContactosPersona?.currentIdContacto !== '') {
                 this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
@@ -300,6 +303,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         const validaDomicilioPeronsa = this.validaFormsDomicilios();
         if (validaDomicilioPeronsa.success === 0) {
+            this.focusTabs = 2;
             Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
             if (validaDomicilioPeronsa?.currentIdDom !== '') {
                 this.domicilioComponent.setManualError(validaDomicilioPeronsa?.currentIdDom, validaDomicilioPeronsa?.idError, validaDomicilioPeronsa?.textDiv);
@@ -678,7 +682,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     if (arrayContacto.data.dato === null || arrayContacto.data.dato === undefined || arrayContacto.data.dato === '') {
                         return { success: 0, msg: `Debe insertar el dato para contactar en el formulario contactos #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_dato`, textDiv: 'Ingrese el dato de contacto' };
                     };
-                    if (arrayContacto.data.idTipCont === 1) {
+                    if (arrayContacto.data.idTipCont === 2) {
                         if (!arrayContacto.data.dato.match(validRegex)) {
                             return { success: 0, msg: `Debe insertar un email valido para el contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_dato`, textDiv: 'Ingrese un email valido' };
                         };

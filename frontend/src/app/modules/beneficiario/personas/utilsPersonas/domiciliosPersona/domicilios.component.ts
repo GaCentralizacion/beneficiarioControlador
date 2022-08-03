@@ -112,25 +112,27 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     };
 
     setManualError = (currentIdDomicilio, idError, textDiv) => {
-        if (document.getElementById('divError')) {
-            document.getElementById('divError').remove();
-        };
-        let element = document.getElementById(currentIdDomicilio);
-        if (element) {
-            element.classList.add('errorForm');
-        };
-        if (idError !== '') {
-            if (!document.getElementById('divError')) {
-                const errorDiv = document.createElement('div');
-                errorDiv.setAttribute('id', 'divError');
-                errorDiv.style.marginTop = "-17px";
-                errorDiv.style.fontSize = "13px";
-                errorDiv.style.color = "#DC2626";
-                errorDiv.textContent = textDiv;
-                let elementTipo = document.getElementById(idError);
-                elementTipo.appendChild(errorDiv);
+        setTimeout(() => {
+            if (document.getElementById('divError')) {
+                document.getElementById('divError').remove();
             };
-        };
+            let element = document.getElementById(currentIdDomicilio);
+            if (element) {
+                element.classList.add('errorForm');
+            };
+            if (idError !== '') {
+                if (!document.getElementById('divError')) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.setAttribute('id', 'divError');
+                    errorDiv.style.marginTop = "-17px";
+                    errorDiv.style.fontSize = "13px";
+                    errorDiv.style.color = "#DC2626";
+                    errorDiv.textContent = textDiv;
+                    let elementTipo = document.getElementById(idError);
+                    elementTipo.appendChild(errorDiv);
+                };
+            };
+        }, 50);
     };
 
 

@@ -29,7 +29,7 @@
 
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
-        <mat-tab-group class="sm:px-2" [animationDuration]="'0'">
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs">
             <!-- Datos Generales -->
             <mat-tab label="Datos Persona">
                 <mat-card>
