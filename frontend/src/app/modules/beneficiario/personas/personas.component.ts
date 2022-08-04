@@ -11,6 +11,8 @@ import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.c
 import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
 import { environment } from 'environments/environment';
 
+const REGEX_RFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+
 /**IMPORTS GRID */
 import {
     IGridOptions,
@@ -94,7 +96,25 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     personaForm: FormGroup;
     focusTabs: number = 0;
+    hiddenForm: boolean = true;
+
+    /**VARIABLES OPTIONCES */
+    // IdTipoPer
     IdTipoMoralOption: any;
+    EsAccionista: any;
+    RFC: any;
+    Nombre_RazonSocial: any;
+    APaterno: any;
+    AMaterno: any;
+    Alias: any;
+    IdPais: any;
+    Fecha_nacimiento_Constitucion: any;
+    IdTipoSexo: any;
+    Registro_de_poblacion: any;
+    IdTipoIdentificacion: any;
+    Identificiacion: any;
+    IdEstadoCivil: any;
+    /**VARIABLES OPTIONCES */
 
     constructor(
         private fb: FormBuilder,
@@ -125,7 +145,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
             idSexo: [0, Validators.min(1)],
             idPais: [0, Validators.min(1)],
             curp_registroPob: ['', Validators.min(1)],
-            idPaisFiscal: [0, Validators.min(1)],
             idIdentificacion: [0, Validators.min(1)],
             datoIdentificacion: ['', Validators.required],
             rfc_identificacion: ['', Validators.required],
@@ -219,30 +238,31 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getCamposForm = tipoPersona => {
-        this.IdTipoMoralOption = [];
-        this.spinner.show();
-        const data = {
-            IdMenuApp: this.idMenuApp,
-            IdTipoPer: tipoPersona
-        };
-
-        this.gaService.postService('personas/allFormOptions', data).subscribe((res: any) => {
-            if (res[0].length > 0) {
-                for (let data of res[0]) {
-                    if (data.Campo === 'IdTipoMoral') {
-                        this.IdTipoMoralOption = data;
-                    };
-                };
-                console.log('IdTipoMoralOption', this.IdTipoMoralOption)
-            } else {
-                Swal.fire('Alto', 'No se obtuvo la regla del fomulario', 'error');
+        if (tipoPersona === 0) {
+            Swal.fire('Informacion', 'Debe seleccionar el tipo de persona', 'info');
+            this.hiddenForm = true;
+        } else {
+            this.spinner.show();
+            this.hiddenForm = true;
+            this.resetVariablesOpciones();
+            const data = {
+                IdMenuApp: this.idMenuApp,
+                IdTipoPer: tipoPersona
             };
-            this.spinner.hide();
+            this.gaService.postService('personas/allFormOptions', data).subscribe((res: any) => {
+                if (res[0].length > 0) {
+                    this.setVariablesForm(res[0]);
+                    this.hiddenForm = false;
+                } else {
+                    Swal.fire('Alto', 'No se obtuvo la regla del fomulario', 'error');
+                };
+                this.spinner.hide();
 
-        }, (error: any) => {
-            Swal.fire('Error', 'Error al regresar la regla del formulario, favor de contactat el administrador. ' + error.error.text, 'warning');
-            this.spinner.hide();
-        });
+            }, (error: any) => {
+                Swal.fire('Error', 'Error al regresar la regla del formulario, favor de contactat el administrador. ' + error.error.text, 'warning');
+                this.spinner.hide();
+            });
+        };
     };
 
     getDataPersonaById = () => {
@@ -273,7 +293,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.idSexo.setValue(this.gralDataPersona.idSexo);
         this.personaForm.controls.idPais.setValue(this.gralDataPersona.idPais);
         this.personaForm.controls.curp_registroPob.setValue(this.gralDataPersona.curp_registroPob);
-        this.personaForm.controls.idPaisFiscal.setValue(this.gralDataPersona.idPaisFiscal);
         this.personaForm.controls.idIdentificacion.setValue(this.gralDataPersona.idIdentificacion);
         this.personaForm.controls.datoIdentificacion.setValue(this.gralDataPersona.datoIdentificacion);
         this.personaForm.controls.rfc_identificacion.setValue(this.gralDataPersona.rfc_identificacion);
@@ -316,17 +335,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     savePersona = () => {
-        if (this.personaForm.invalid) {
-            Swal.fire({
-                title: '¡Alto!',
-                text: 'Completa los campos obligatorios de la persona',
-                icon: 'warning',
-                confirmButtonText: 'Cerrar'
-            });
-            this.focusTabs = 0;
-            this.personaForm.markAllAsTouched();
-            return;
-        };
+        // if (this.personaForm.invalid) {
+        //     Swal.fire({
+        //         title: '¡Alto!',
+        //         text: 'Completa los campos obligatorios de la persona',
+        //         icon: 'warning',
+        //         confirmButtonText: 'Cerrar'
+        //     });
+        //     this.focusTabs = 0;
+        //     this.personaForm.markAllAsTouched();
+        //     return;
+        // };
         // const validaPersona = this.validaFormPersona();
         // if (validaPersona.success === 0) {
         //     Swal.fire(validaPersona.msg, '', 'warning');
@@ -387,7 +406,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     idSexo: this.personaForm.controls.idSexo.value,
                     idPais: this.personaForm.controls.idPais.value,
                     curp_registroPob: this.personaForm.controls.curp_registroPob.value,
-                    idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
                     idIdentificacion: this.personaForm.controls.idIdentificacion.value,
                     datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
                     rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
@@ -485,7 +503,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     idSexo: this.personaForm.controls.idSexo.value,
                     idPais: this.personaForm.controls.idPais.value,
                     curp_registroPob: this.personaForm.controls.curp_registroPob.value,
-                    idPaisFiscal: this.personaForm.controls.idPaisFiscal.value,
                     idIdentificacion: this.personaForm.controls.idIdentificacion.value,
                     datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
                     rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
@@ -686,9 +703,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
         if (this.personaForm.controls.curp_registroPob.value === null || this.personaForm.controls.curp_registroPob.value === undefined || this.personaForm.controls.curp_registroPob.value === '') {
             return { success: 0, msg: 'Debes insertar el curp o registro de poblacion del usuario' }
         };
-        if (this.personaForm.controls.idPaisFiscal.value === null || this.personaForm.controls.idPaisFiscal.value === undefined || this.personaForm.controls.idPaisFiscal.value === 0) {
-            return { success: 0, msg: 'Debes seleccionar el pais fiscal de personas' }
-        };
         if (this.personaForm.controls.idIdentificacion.value === null || this.personaForm.controls.idIdentificacion.value === undefined || this.personaForm.controls.idIdentificacion.value === 0) {
             return { success: 0, msg: 'Debes seleccionar el tipo de identificacion de personas' }
         };
@@ -791,14 +805,179 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     /**INICIALIZA VARIABLES DEL FORMULARIO */
     initVarFormPersona = () => {
+        //mat-select
         this.personaForm.controls.idTipoPersona.setValue(0);
         this.personaForm.controls.idTipoMor.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
         this.personaForm.controls.idPais.setValue(0);
-        this.personaForm.controls.idPaisFiscal.setValue(0);
         this.personaForm.controls.idIdentificacion.setValue(0);
         this.personaForm.controls.idEstadoCivil.setValue(0);
+        //Switch
+        this.personaForm.controls.esAccionista.setValue(false);
+        //Inputs
+        this.personaForm.controls.nombre_razon.setValue('');
+        this.personaForm.controls.apellidoPaterno.setValue('');
+        this.personaForm.controls.apellidoMaterno.setValue('');
+        this.personaForm.controls.alias.setValue('');
+        this.personaForm.controls.fechaNacimiento.setValue('');
+        this.personaForm.controls.curp_registroPob.setValue('');
+        this.personaForm.controls.datoIdentificacion.setValue('');
+        this.personaForm.controls.rfc_identificacion.setValue('');
     };
     /**INICIALIZA VARIABLES DEL FORMULARIO */
+
+    /**RESET VARIABLES DE OPCIONES */
+    resetVariablesOpciones = () => {
+        this.IdTipoMoralOption = [];
+        this.EsAccionista = [];
+        this.RFC = [];
+        this.Nombre_RazonSocial = [];
+        this.APaterno = [];
+        this.AMaterno = [];
+        this.Alias = [];
+        this.IdPais = [];
+        this.Fecha_nacimiento_Constitucion = [];
+        this.IdTipoSexo = [];
+        this.Registro_de_poblacion = [];
+        this.IdTipoIdentificacion = [];
+        this.Identificiacion = [];
+        this.IdEstadoCivil = [];
+
+        //mat-select
+        this.personaForm.controls.idTipoMor.reset();
+        this.personaForm.controls.idSexo.reset();
+        this.personaForm.controls.idPais.reset();
+        this.personaForm.controls.idIdentificacion.reset();
+        this.personaForm.controls.idEstadoCivil.reset();
+        //Switch
+        this.personaForm.controls.esAccionista.reset();
+        //Inputs
+        this.personaForm.controls.nombre_razon.reset();
+        this.personaForm.controls.apellidoPaterno.reset();
+        this.personaForm.controls.apellidoMaterno.reset();
+        this.personaForm.controls.alias.reset();
+        this.personaForm.controls.fechaNacimiento.reset();
+        this.personaForm.controls.curp_registroPob.reset();
+        this.personaForm.controls.datoIdentificacion.reset();
+        this.personaForm.controls.rfc_identificacion.reset();
+
+        //mat-select
+        this.personaForm.controls.idTipoMor.setValue(0);
+        this.personaForm.controls.idSexo.setValue(0);
+        this.personaForm.controls.idPais.setValue(0);
+        this.personaForm.controls.idIdentificacion.setValue(0);
+        this.personaForm.controls.idEstadoCivil.setValue(0);
+        //Switch
+        this.personaForm.controls.esAccionista.setValue(false);
+        //Inputs
+        this.personaForm.controls.nombre_razon.setValue('');
+        this.personaForm.controls.apellidoPaterno.setValue('');
+        this.personaForm.controls.apellidoMaterno.setValue('');
+        this.personaForm.controls.alias.setValue('');
+        this.personaForm.controls.fechaNacimiento.setValue('');
+        this.personaForm.controls.curp_registroPob.setValue('');
+        this.personaForm.controls.datoIdentificacion.setValue('');
+        this.personaForm.controls.rfc_identificacion.setValue('');
+    };
+    /**RESET VARIABLES DE OPCIONES */
+
+    /**SET VARIABLES FORMULARIO*/
+    setVariablesForm = dataBd => {
+        this.arrayAllContactos = [];
+        this.arrayAllDomicilios = [];
+        for (let data of dataBd) {
+            if (data.Campo === 'IdTipoMoral') {
+                this.IdTipoMoralOption = data;
+            };
+            if (data.Campo === 'EsAccionista') {
+                this.EsAccionista = data;
+            };
+            if (data.Campo === 'RFC') {
+                this.RFC = data;
+            };
+            if (data.Campo === 'Nombre_RazonSocial') {
+                this.Nombre_RazonSocial = data;
+            };
+            if (data.Campo === 'APaterno') {
+                this.APaterno = data;
+            };
+            if (data.Campo === 'AMaterno') {
+                this.AMaterno = data;
+            };
+            if (data.Campo === 'Alias') {
+                this.Alias = data;
+            };
+            if (data.Campo === 'IdPais') {
+                this.IdPais = data;
+            };
+            if (data.Campo === 'Fecha_nacimiento_Constitucion') {
+                this.Fecha_nacimiento_Constitucion = data;
+            };
+            if (data.Campo === 'IdTipoSexo') {
+                this.IdTipoSexo = data;
+            };
+            if (data.Campo === 'Registro_de_poblacion') {
+                this.Registro_de_poblacion = data;
+            };
+            if (data.Campo === 'IdTipoIdentificacion') {
+                this.IdTipoIdentificacion = data;
+            };
+            if (data.Campo === 'Identificiacion') {
+                this.Identificiacion = data;
+            };
+            if (data.Campo === 'IdEstadoCivil') {
+                this.IdEstadoCivil = data;
+            };
+        };
+
+        this.IdTipoMoralOption?.Obligatorio ? this.personaForm.controls['idTipoMor'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.get('idTipoMor').clearValidators();
+        this.personaForm.controls['idTipoMor'].updateValueAndValidity();
+
+        this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+        this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+
+        this.Nombre_RazonSocial?.Obligatorio ? this.personaForm.controls['nombre_razon'].addValidators([Validators.required]) : this.personaForm.controls['nombre_razon'].clearValidators()
+        this.personaForm.controls['nombre_razon'].updateValueAndValidity();
+
+        this.APaterno?.Obligatorio ? this.personaForm.controls['apellidoPaterno'].addValidators([Validators.required]) : this.personaForm.controls['apellidoPaterno'].clearValidators()
+        this.personaForm.controls['apellidoPaterno'].updateValueAndValidity();
+
+        this.AMaterno?.Obligatorio ? this.personaForm.controls['apellidoMaterno'].addValidators([Validators.required]) : this.personaForm.controls['apellidoMaterno'].clearValidators()
+        this.personaForm.controls['apellidoMaterno'].updateValueAndValidity();
+
+        this.Alias?.Obligatorio ? this.personaForm.controls['alias'].addValidators([Validators.required]) : this.personaForm.controls['alias'].clearValidators()
+        this.personaForm.controls['alias'].updateValueAndValidity();
+
+        this.IdPais?.Obligatorio ? this.personaForm.controls['idPais'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['idPais'].clearValidators()
+        this.personaForm.controls['idPais'].updateValueAndValidity();
+
+        this.Fecha_nacimiento_Constitucion?.Obligatorio ? this.personaForm.controls['fechaNacimiento'].addValidators(Validators.required) : this.personaForm.controls['fechaNacimiento'].clearValidators()
+        this.personaForm.controls['fechaNacimiento'].updateValueAndValidity();
+
+        this.IdTipoSexo?.Obligatorio ? this.personaForm.controls['idSexo'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['idSexo'].clearValidators()
+        this.personaForm.controls['idSexo'].updateValueAndValidity();
+
+        this.Registro_de_poblacion?.Obligatorio ? this.personaForm.controls['curp_registroPob'].addValidators([Validators.required]) : this.personaForm.controls['curp_registroPob'].clearValidators()
+        this.personaForm.controls['curp_registroPob'].updateValueAndValidity();
+
+        this.IdTipoIdentificacion?.Obligatorio ? this.personaForm.controls['idIdentificacion'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['idIdentificacion'].clearValidators()
+        this.personaForm.controls['idIdentificacion'].updateValueAndValidity();
+
+        this.Identificiacion?.Obligatorio ? this.personaForm.controls['datoIdentificacion'].addValidators([Validators.required]) : this.personaForm.controls['datoIdentificacion'].clearValidators()
+        this.personaForm.controls['datoIdentificacion'].updateValueAndValidity();
+
+        this.IdEstadoCivil?.Obligatorio ? this.personaForm.controls['idEstadoCivil'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['idEstadoCivil'].clearValidators()
+        this.personaForm.controls['idEstadoCivil'].updateValueAndValidity();
+
+        /**Agregamos el array para los contactos */
+        this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+        this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+        /**Agregamos el array para los contactos */
+        /**Agregamos el array para los domicilios */
+        this.currentIdDomicilios = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
+        this.arrayAllDomicilios.push({ id: this.currentIdDomicilios, data: {} });
+        /**Agregamos el array para los domicilios */
+
+    };
 
 };
