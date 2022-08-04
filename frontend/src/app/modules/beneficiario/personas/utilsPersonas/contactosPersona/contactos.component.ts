@@ -6,6 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable } from '@angular/material/table';
 import { promises, resolve } from 'dns';
 
+const VALID_REGEX_MAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 @Component({
     selector: 'app-contactos',
     templateUrl: './contactos.component.html',
@@ -60,16 +62,11 @@ export class ContactosComponent implements OnInit, OnDestroy {
         this.contactosPersonaForm.valueChanges.subscribe(res => {
             this.arrayAllContactos.forEach((value, key) => {
                 if (value.id === this.idContacto) {
-                    let element = document.getElementById(this.idContacto);
-                    element.classList.remove('errorForm');
-                    let dynamicDiv = document.getElementById('divError');
-                    if (dynamicDiv) {
-                        dynamicDiv.remove();
-                    };
                     this.arrayIdContacto = key;
                 };
             });
             this.arrayAllContactos[this.arrayIdContacto].data = res;
+            this.removeDivError(this.arrayIdContacto);
         });
     };
 
@@ -109,6 +106,11 @@ export class ContactosComponent implements OnInit, OnDestroy {
                     if (contacto.data.idTipCont === 0 || contacto.data.idTipCont === undefined || contacto.data.idTipCont === null) {
                         await this.createAndEmbebedDivError(idDivTipo, `${contacto.id}_tipo`, idComponentPadreTipo, 'Selecciona el tipo de contacto');
                     };
+                    if (contacto.data.idTipCont === 2) {
+                        if (!contacto.data.dato.match(VALID_REGEX_MAIL)) {
+                            await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un mail valido');
+                        };
+                    };
                     if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
                         await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa el dato');
                     };
@@ -136,6 +138,35 @@ export class ContactosComponent implements OnInit, OnDestroy {
 
             resolve({ success: 1 })
         });
+    };
+
+    removeDivError = idComponent => {
+        let component = this.arrayAllContactos[idComponent];
+        let idDivTipo = `${component.id}_divTipo`;
+        let idDivDato = `${component.id}_divDato`;
+        let idComponentPadreTipo = `${component.id}_tipo_component`;
+        let idComponentPadreDato = `${component.id}_dato_component`;
+        console
+        if (component.data.idTipCont === 0 || component.data.idTipCont === undefined || component.data.idTipCont === null) {
+        } else {
+            let dynamicDivTipo = document.getElementById(idDivTipo);
+            if (dynamicDivTipo) {
+                dynamicDivTipo.remove();
+            };
+            let dinamicIdComponentPadreTipo = document.getElementById(idComponentPadreTipo);
+            dinamicIdComponentPadreTipo.classList.remove('mat-form-field-invalid');
+            dinamicIdComponentPadreTipo.classList.remove('ng-touched');
+        };
+        if (component.data.dato === '' || component.data.dato === undefined || component.data.dato === null) {
+        } else {
+            let dynamicDivDato = document.getElementById(idDivDato);
+            if (dynamicDivDato) {
+                dynamicDivDato.remove();
+            };
+            let dinamicIdComponentPadreDato = document.getElementById(idComponentPadreDato);
+            dinamicIdComponentPadreDato.classList.remove('mat-form-field-invalid');
+            dinamicIdComponentPadreDato.classList.remove('ng-touched');
+        };
     };
 
     redirect(url: string) {
