@@ -2,7 +2,7 @@
 <form id="{{idContacto}}" [formGroup]="contactosPersonaForm" class="flex-col p-3">
     <div class="row justify-content-start align-items-center">
         <div id="{{validaFormTipo}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validaFormTipo}}_component" appearance="fill">
                 <mat-label>Tipo Contacto</mat-label>
                 <mat-select formControlName="idTipCont">
                     <mat-option [value]="0">
@@ -18,7 +18,7 @@
         </div>
         <div id="{{validaFormDato}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Numero/Mail</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validaFormDato}}_component" appearance="fill">
                 <input matInput placeholder="Numero/Mail" formControlName="dato">
                 <mat-error>
                 </mat-error>

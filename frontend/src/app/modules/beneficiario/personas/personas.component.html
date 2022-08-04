@@ -240,7 +240,7 @@
             <!-- Datos Generales -->
 
             <!-- COMPONENETE CONTACTOS -->
-            <mat-tab label="Contactos Persona">
+            <mat-tab *ngIf="!hiddenForm" label="Contactos Persona">
                 <mat-card>
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
@@ -269,7 +269,7 @@
             <!-- COMPONENETE CONTACTOS -->
 
             <!-- COMPONENETE DIRECCIONES -->
-            <mat-tab label="Domicilios Persona">
+            <mat-tab *ngIf="!hiddenForm" label="Domicilios Persona">
                 <mat-card>
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
