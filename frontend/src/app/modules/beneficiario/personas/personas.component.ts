@@ -352,15 +352,15 @@ export class PersonasComponent implements OnInit, OnDestroy {
         //     return
         // };
 
-        const validaContactosPersona = this.validaFormsContactos();
-        if (validaContactosPersona.success === 0) {
-            this.focusTabs = 1;
-            Swal.fire(validaContactosPersona.msg, '', 'warning');
-            if (validaContactosPersona?.currentIdContacto !== '') {
-                this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
-            };
-            return
-        };
+        // const validaContactosPersona = this.validaFormsContactos();
+        // if (validaContactosPersona.success === 0) {
+        //     this.focusTabs = 1;
+        //     Swal.fire(validaContactosPersona.msg, '', 'warning');
+        //     if (validaContactosPersona?.currentIdContacto !== '') {
+        //         this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
+        //     };
+        //     return
+        // };
 
         const validaDomicilioPeronsa = this.validaFormsDomicilios();
         if (validaDomicilioPeronsa.success === 0) {

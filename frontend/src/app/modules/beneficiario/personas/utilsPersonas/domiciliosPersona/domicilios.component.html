@@ -2,7 +2,7 @@
 <form id="{{idDomicilio}}" [formGroup]="domicilioPersonaForm" class="flex-col p-3">
     <div class="row justify-content-start align-items-center">
         <div id="{{validFormTipoDom}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormTipoDom}}_component" appearance="fill">
                 <mat-label>Tipo Domicilio</mat-label>
                 <mat-select formControlName="idTipDom">
                     <mat-option [value]="0">
@@ -17,14 +17,14 @@
         </div>
         <div id="{{validFormCalle}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Calle</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormCalle}}_component" appearance="fill">
                 <input matInput placeholder="Calle" formControlName="calle">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormNumExt}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Número Exteriror</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormNumExt}}_component" appearance="fill">
                 <input matInput placeholder="Numero Exteriror" formControlName="numExt">
                 <mat-error></mat-error>
             </mat-form-field>
@@ -39,28 +39,28 @@
     <div class="row justify-content-start align-items-center">
         <div id="{{validFormCp}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Codigo Postal</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormCp}}_component" appearance="fill">
                 <input matInput placeholder="Codigo Postal" formControlName="cp">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormColonia_asentamiento}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Colonia/Asentamiento</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormColonia_asentamiento}}_component" appearance="fill">
                 <input matInput placeholder="Colonia/Asentamiento" formControlName="colonia_asentamiento">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormDelegacion_municipio}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Delegacion/Municipio</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormDelegacion_municipio}}_component" appearance="fill">
                 <input matInput placeholder="Delegacion/Municipio" formControlName="delegacion_municipio">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormCiudad_estado}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Ciudad/Estado</mat-label>
-            <mat-form-field appearance="fill">
+            <mat-form-field id="{{validFormCiudad_estado}}_component" appearance="fill">
                 <input matInput placeholder="Ciudad/Estado" formControlName="ciudad_estado">
                 <mat-error></mat-error>
             </mat-form-field>
