@@ -86,7 +86,6 @@ export class AuthSignInComponent implements OnInit {
 		this.signInForm.reset();
 
 		this.gaService.postService(`login/loginUser`, data).subscribe((res: any) => {
-			console.log('res', res)
 			if (res.err) {
 				this.spinner.hide();
 			} else {

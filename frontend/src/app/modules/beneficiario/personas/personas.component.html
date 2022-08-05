@@ -139,7 +139,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"[hidden]="Fecha_nacimiento_Constitucion?.length === 0">
                                 <mat-label>{{Fecha_nacimiento_Constitucion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
+                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="Selecciona una fecha">
                                     <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>

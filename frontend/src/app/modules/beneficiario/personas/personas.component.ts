@@ -37,6 +37,7 @@ import {
 })
 
 export class PersonasComponent implements OnInit, OnDestroy {
+    today = new Date();
     @ViewChild(ContactosComponent) contactoComponent: ContactosComponent;
     @ViewChild(DomiciliosComponent) domicilioComponent: DomiciliosComponent;
     idMenuApp: number = 0;
@@ -92,6 +93,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**VARIABLES PARA EL UPDATE */
     accionesUsuario: any;
     menuApp: any;
+    userData: any;
     /**VARIABLES LOCALSTORAGE */
 
     personaForm: FormGroup;
@@ -153,6 +155,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.menuApp = JSON.parse(localStorage.getItem(environment._varsLocalStorage.menuApp));
+        this.userData = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
+
         if (!this.accionesUsuario) {
             Swal.fire({
                 title: '¡Error!',
@@ -335,54 +339,67 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     savePersona = () => {
-        // if (this.personaForm.invalid) {
-        //     Swal.fire({
-        //         title: '¡Alto!',
-        //         text: 'Completa los campos obligatorios de la persona',
-        //         icon: 'warning',
-        //         confirmButtonText: 'Cerrar'
-        //     });
-        //     this.focusTabs = 0;
-        //     this.personaForm.markAllAsTouched();
-        //     return;
-        // };
+        if (this.personaForm.invalid) {
+            Swal.fire({
+                title: '¡Alto!',
+                text: 'Completa los campos obligatorios de la persona',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.focusTabs = 0;
+            this.personaForm.markAllAsTouched();
+            return;
+        };
         // const validaPersona = this.validaFormPersona();
         // if (validaPersona.success === 0) {
         //     Swal.fire(validaPersona.msg, '', 'warning');
         //     return
         // };
 
-        // const validaContactosPersona = this.validaFormsContactos();
-        // if (validaContactosPersona.success === 0) {
-        //     this.focusTabs = 1;
-        //     Swal.fire(validaContactosPersona.msg, '', 'warning');
-        //     if (validaContactosPersona?.currentIdContacto !== '') {
-        //         this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
-        //     };
-        //     return
-        // };
+        const validaContactosPersona = this.validaFormsContactos();
+        if (validaContactosPersona.success === 0) {
+            this.focusTabs = 1;
+            Swal.fire({
+                title: '¡Alto!',
+                text: validaContactosPersona.msg,
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.contactoComponent.setManualError();
+            return
+        };
 
         const validaDomicilioPeronsa = this.validaFormsDomicilios();
         if (validaDomicilioPeronsa.success === 0) {
             this.focusTabs = 2;
-            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
-            if (validaDomicilioPeronsa?.currentIdDom !== '') {
-                this.domicilioComponent.setManualError(validaDomicilioPeronsa?.currentIdDom, validaDomicilioPeronsa?.idError, validaDomicilioPeronsa?.textDiv);
-            };
+            Swal.fire({
+                title: '¡Alto!',
+                text: validaDomicilioPeronsa.msg,
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.domicilioComponent.setManualError();
             return
         };
 
-        let xmlCotactos = '<contactos>';
-        for (let arrayContacto of this.arrayAllContactos) {
-            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+        let xmlCotactos = ''
+        if (this.arrayAllContactos.length > 0) {
+            xmlCotactos = '<contactos>';
+            for (let arrayContacto of this.arrayAllContactos) {
+                xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+            };
+            xmlCotactos += '</contactos>';
         };
-        xmlCotactos += '</contactos>';
 
-        let xmlDomicilio = '<domicilios>';
-        for (let arrayDomicilio of this.arrayAllDomicilios) {
-            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+        let xmlDomicilio = '';
+        if (this.arrayAllDomicilios.length > 0) {
+            xmlDomicilio = '<domicilios>';
+            for (let arrayDomicilio of this.arrayAllDomicilios) {
+                xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+                xmlDomicilio += '</domicilios>';
+            };
+
         };
-        xmlDomicilio += '</domicilios>';
 
         Swal.fire({
             title: `¿Quieres guardar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
@@ -398,34 +415,57 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     idTipoPersona: this.personaForm.controls.idTipoPersona.value,
                     idTipoMor: this.personaForm.controls.idTipoMor.value,
                     esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
+                    rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
                     nombres_razon: this.personaForm.controls.nombre_razon.value,
                     apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
                     apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
                     alias: this.personaForm.controls.alias.value,
+                    idPais: this.personaForm.controls.idPais.value,
                     fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
                     idSexo: this.personaForm.controls.idSexo.value,
-                    idPais: this.personaForm.controls.idPais.value,
                     curp_registroPob: this.personaForm.controls.curp_registroPob.value,
                     idIdentificacion: this.personaForm.controls.idIdentificacion.value,
                     datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
-                    rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
                     idEstCivil: this.personaForm.controls.idEstadoCivil.value,
+                    idUsuario: this.userData.IdUsuario,
                     xmlContacto: xmlCotactos,
                     xmlDomicilio: xmlDomicilio
                 };
 
                 this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
                     this.spinner.hide();
-                    if (res[0][0].success === 1) {
-                        Swal.fire(res[0][0].msg, '', 'success');
-                        setTimeout(() => {
-                            this.addPersona(false);
-                        }, 1000);
-                    } else if (res[0][0].success === 2) {
-                        Swal.fire(res[0][0].msg, '', 'warning');
+                    if (res.err) {
+                        this.spinner.hide();
+                        Swal.fire({
+                            title: '¡Error!',
+                            text: res[0][0].Mensaje,
+                            icon: 'error',
+                            confirmButtonText: 'Cerrar'
+                        });
                     } else {
-                        Swal.fire('Ocurrio un error al guardar la persona, intentelo mas tarde, si el problema continua contacte al administrador.', '', 'warning');
+                        if (res[0][0].Codigo >= 1) {
+                            this.spinner.hide();
+                            Swal.fire({
+                                title: 'Existo!',
+                                text: res[0][0].Mensaje,
+                                icon: 'success',
+                                confirmButtonText: 'Cerrar'
+                            });
+                            setTimeout(() => {
+                                this.addPersona(false);
+                            }, 1000);
+                        } else {
+                            this.spinner.hide();
+                            Swal.fire({
+                                title: '¡Error!',
+                                text: res[0][0].Mensaje,
+                                icon: 'error',
+                                confirmButtonText: 'Cerrar'
+                            });
+                        };
                     };
+                }, (error: any) => {
+                    console.log('error', error)
                 });
             } else if (result.isDenied) {
                 Swal.fire('No se guardo la informacion', '', 'info')
@@ -452,19 +492,25 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         const validaContactosPersona = this.validaFormsContactos();
         if (validaContactosPersona.success === 0) {
-            Swal.fire(validaContactosPersona.msg, '', 'warning');
-            if (validaContactosPersona?.currentIdContacto !== '') {
-                this.contactoComponent.setManualError(validaContactosPersona?.currentIdContacto, validaContactosPersona?.idError, validaContactosPersona?.textDiv);
-            };
+            Swal.fire({
+                title: '¡Alto!',
+                text: 'Completa los campos obligatorios de los contactos',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.contactoComponent.setManualError();
             return
         };
 
         const validaDomicilioPeronsa = this.validaFormsDomicilios();
         if (validaDomicilioPeronsa.success === 0) {
-            Swal.fire(validaDomicilioPeronsa.msg, '', 'warning');
-            if (validaDomicilioPeronsa?.currentIdDom !== '') {
-                this.domicilioComponent.setManualError(validaDomicilioPeronsa?.currentIdDom, validaDomicilioPeronsa?.idError, validaDomicilioPeronsa?.textDiv);
-            };
+            Swal.fire({
+                title: '¡Alto!',
+                text: 'Completa los campos obligatorios de los domicilios',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar'
+            });
+            this.domicilioComponent.setManualError();
             return
         };
         let xmlCotactos = '<contactos>';
@@ -491,22 +537,22 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.spinner.show();
 
                 const jsonPersona = {
-                    idPersona: this.dataPersonaUpdate.idPersona,
-                    idTipoPersona: this.personaForm.controls.idTipoPersona.value,
-                    idTipoMor: this.personaForm.controls.idTipoMor.value,
-                    esAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
+                    idTipoPersona: this.dataPersonaUpdate.idPersona,
+                    idTipoMor: this.personaForm.controls.idTipoPersona.value,
+                    esAccionista: this.personaForm.controls.idTipoMor.value,
+                    rfc_identificacion: this.personaForm.controls.esAccionista.value ? 1 : 0,
                     nombres_razon: this.personaForm.controls.nombre_razon.value,
                     apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
                     apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
                     alias: this.personaForm.controls.alias.value,
-                    fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
-                    idSexo: this.personaForm.controls.idSexo.value,
-                    idPais: this.personaForm.controls.idPais.value,
+                    idPais: this.personaForm.controls.fechaNacimiento.value,
+                    fechaNac_constitucion: this.personaForm.controls.idSexo.value,
+                    idSexo: this.personaForm.controls.idPais.value,
                     curp_registroPob: this.personaForm.controls.curp_registroPob.value,
                     idIdentificacion: this.personaForm.controls.idIdentificacion.value,
                     datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
-                    rfc_identificacion: this.personaForm.controls.rfc_identificacion.value,
-                    idEstCivil: this.personaForm.controls.idEstadoCivil.value,
+                    idEstCivil: this.personaForm.controls.rfc_identificacion.value,
+                    idUsuario: this.personaForm.controls.idEstadoCivil.value,
                     xmlContacto: xmlCotactos,
                     xmlDomicilio: xmlDomicilio
                 };
@@ -723,33 +769,33 @@ export class PersonasComponent implements OnInit, OnDestroy {
         let totalDatoPredeterminado: number = 0;
         const validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (this.arrayAllContactos.length === 0) {
-            return { success: 0, msg: 'Ingrese un medio de contacto de la persona.', currentIdContacto: '', idError: '' }
+            return { success: 1, msg: '' }
         } else {
             for (let arrayContacto of this.arrayAllContactos) {
                 if (JSON.stringify(arrayContacto.data) === '{}') {
-                    return { success: 0, msg: `Los datos del contacto no pueden ir vacios en el formulario #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: '' }
+                    return { success: 0, msg: 'Completa los campos obligatorios del contacto' }
                 } else {
                     if (arrayContacto.data.predeterminado) {
                         totalDatoPredeterminado += 1;
                     };
                     if (arrayContacto.data.idTipCont === null || arrayContacto.data.idTipCont === undefined || arrayContacto.data.idTipCont === 0 || arrayContacto.data.idTipCont === '') {
-                        return { success: 0, msg: `Debe seleccionar el tipo de contacto #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_tipo`, textDiv: 'Seleccione un tipo de contacto' };
+                        return { success: 0, msg: 'Completa los campos obligatorios del contacto' };
                     };
                     if (arrayContacto.data.dato === null || arrayContacto.data.dato === undefined || arrayContacto.data.dato === '') {
-                        return { success: 0, msg: `Debe insertar el dato para contactar en el formulario contactos #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_dato`, textDiv: 'Ingrese el dato de contacto' };
+                        return { success: 0, msg: 'Completa los campos obligatorios del contacto' };
                     };
                     if (arrayContacto.data.idTipCont === 2) {
                         if (!arrayContacto.data.dato.match(validRegex)) {
-                            return { success: 0, msg: `Debe insertar un email valido para el contacto en el formulario contactos #${arrayContacto.id.split("_").pop()}`, currentIdContacto: `${arrayContacto.id}`, idError: `${arrayContacto.id}_dato`, textDiv: 'Ingrese un email valido' };
+                            return { success: 0, msg: 'Completa los campos obligatorios del contacto' };
                         };
                     };
                 };
             };
             if (totalDatoPredeterminado === 0) {
-                return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.`, currentIdContacto: '', idError: '' };
+                return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.` };
             };
             if (totalDatoPredeterminado > 1) {
-                return { success: 0, msg: `Solo puede tener 1 medio de contacto como predeterminado.`, currentIdContacto: '', idError: '' };
+                return { success: 0, msg: `Solo puede tener 1 medio de contacto como predeterminado.` };
             };
             return { success: 1, msg: `` }
         };
@@ -758,43 +804,43 @@ export class PersonasComponent implements OnInit, OnDestroy {
     validaFormsDomicilios = () => {
         let totalDomicilioFiscal: number = 0;
         if (this.arrayAllDomicilios.length === 0) {
-            return { success: 0, msg: 'Debe agregar al menos 1 domicilio para la persona.', currentIdDom: '', idError: '' };
+            return { success: 1, msg: '' };
         } else {
             for (let arrayDomicilio of this.arrayAllDomicilios) {
                 if (JSON.stringify(arrayDomicilio.data) === '{}') {
-                    return { success: 0, msg: `Los datos del domicilio no pueden ir vacios en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: '' };
+                    return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                 } else {
                     if (arrayDomicilio.data.esFiscal) {
                         totalDomicilioFiscal += 1;
                     };
                     if (arrayDomicilio.data.idTipDom === null || arrayDomicilio.data.idTipDom === undefined || arrayDomicilio.data.idTipDom === 0) {
-                        return { success: 0, msg: `Debe seleccionar el tipo de domicilio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_tipoDom`, textDiv: 'Seleccione el tipo de domicilio' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                     if (arrayDomicilio.data.calle === null || arrayDomicilio.data.calle === undefined || arrayDomicilio.data.calle === '') {
-                        return { success: 0, msg: `Debe insertar la calle en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_calle`, textDiv: 'Inserte la calle' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                     if (arrayDomicilio.data.numExt === null || arrayDomicilio.data.numExt === undefined || arrayDomicilio.data.numExt === '') {
-                        return { success: 0, msg: `Debe insertar el numero exterior en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_numExt`, textDiv: 'Inserte el numero exteriror' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                     if (arrayDomicilio.data.cp === null || arrayDomicilio.data.cp === undefined || arrayDomicilio.data.cp === '') {
-                        return { success: 0, msg: `Debe insertar el codigo postal en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_cp`, textDiv: 'Inserte el codigo postal' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                     if (arrayDomicilio.data.colonia_asentamiento === null || arrayDomicilio.data.colonia_asentamiento === undefined || arrayDomicilio.data.colonia_asentamiento === '') {
-                        return { success: 0, msg: `Debe insertar la colonia o asentamiento en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_colonia_asentamiento`, textDiv: 'Inserte la colonia o asentamiento' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                     if (arrayDomicilio.data.delegacion_municipio === null || arrayDomicilio.data.delegacion_municipio === undefined || arrayDomicilio.data.delegacion_municipio === '') {
-                        return { success: 0, msg: `Debe insertar la delegacion o monucipio en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_delegacion_municipio`, textDiv: 'Inserte la delegacion o municipio' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                     if (arrayDomicilio.data.ciudad_estado === null || arrayDomicilio.data.ciudad_estado === undefined || arrayDomicilio.data.ciudad_estado === '') {
-                        return { success: 0, msg: `Debe insertar la ciudad o el estado en el formulario de domicilio #${arrayDomicilio.id.split("_").pop()}`, currentIdDom: arrayDomicilio.id, idError: `${arrayDomicilio.id}_ciudad_estado`, textDiv: 'Inserte la ciudad o el estado' };
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
                 };
             };
             if (totalDomicilioFiscal === 0) {
-                return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.`, currentIdDom: '', idError: '' };
+                return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.` };
             };
             if (totalDomicilioFiscal > 1) {
-                return { success: 0, msg: `Solo puede tener 1 domicilio fiscal`, currentIdDom: '', idError: '' };
+                return { success: 0, msg: `Solo puede tener 1 domicilio fiscal` };
             };
             return { success: 1, msg: '' };
         };

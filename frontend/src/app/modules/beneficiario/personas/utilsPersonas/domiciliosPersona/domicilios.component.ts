@@ -6,6 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable } from '@angular/material/table';
 import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
 
+const REGEX_CP = /^[0-9]{5}$/;
+
 @Component({
     selector: 'app-domicilios',
     templateUrl: './domicilios.component.html',
@@ -54,7 +56,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             calle: ['', Validators.required],
             numExt: ['', Validators.required],
             numInt: [''],
-            cp: ['', Validators.required],
+            cp: ['', (Validators.required, Validators.pattern(REGEX_CP))],
             colonia_asentamiento: ['', Validators.required],
             delegacion_municipio: ['', Validators.required],
             ciudad_estado: ['', Validators.required],
@@ -106,7 +108,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
         };
     };
 
-    setManualError = (currentIdDomicilio, idError, textDiv) => {
+    setManualError = () => {
         setTimeout(async () => {
             for (let domicilio of this.arrayAllDomicilios) {
                 /**DIV QUE SE ENBEBE */

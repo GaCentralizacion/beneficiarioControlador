@@ -30,6 +30,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
     validaFormTipo: string = '';
     validaFormDato: string = '';
     validaFormEmail: string = '';
+    datoType: string = 'text'
 
     constructor(
         private fb: FormBuilder,
@@ -81,7 +82,16 @@ export class ContactosComponent implements OnInit, OnDestroy {
         };
     };
 
-    setManualError = (currentIdContacto, idError, textDiv) => {
+    selectContacto = e => {
+        this.contactosPersonaForm.controls.dato.setValue('');
+        if (e === 2) {
+            this.datoType = 'text';
+        } else {
+            this.datoType = 'number';
+        };
+    };
+
+    setManualError = () => {
         setTimeout(async () => {
             for (let contacto of this.arrayAllContactos) {
                 let idDivTipo = `${contacto.id}_divTipo`;
