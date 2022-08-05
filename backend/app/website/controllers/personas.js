@@ -18,7 +18,14 @@ var personas = function (conf) {
 personas.prototype.get_allPersonas = function (req, res, next) {
     var self = this;
 
-    this.model.queryAllRecordSet('[operacion].[SEL_ALL_PERSONAS_SP]', [], function (error, result) {
+    const { opcion, usuario } = req.query;
+
+    var params = [
+        { name: 'Opcion', value: opcion, type: self.model.types.INT },
+        { name: 'Usuario', value: usuario, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_Persona]', params, function (error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

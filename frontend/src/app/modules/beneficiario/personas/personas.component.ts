@@ -177,7 +177,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getAllPersonas = () => {
-        this.gaService.getService('personas/allPersonas').subscribe((res: any) => {
+        this.gaService.getService(`personas/allPersonas?opcion=1&usuario=${this.userData.IdUsuario}`).subscribe((res: any) => {
+            console.log('res', res)
             // if (res[0].length > 0) {
             this.allPersonas = res[0];
             this.createGrid();
@@ -609,45 +610,29 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.toolbar = [];
         this.columns = [
             {
+                caption: 'RFC',
+                dataField: 'RFC'
+            },
+            {
                 caption: 'Nombre / Razon',
-                dataField: 'nombre',
+                dataField: 'Nombre',
                 cssClass: 'asignacion2'
             },
             {
-                caption: 'Alias',
-                dataField: 'alias'
+                caption: 'Tipo Persona',
+                dataField: 'TipoPer'
             },
             {
-                caption: 'Tipo Persona',
-                dataField: 'tipoPersona'
+                caption: 'Tipo Empresa',
+                dataField: 'TipoMor'
             },
             {
                 caption: 'Es accionista',
-                dataField: 'esAccionista'
+                dataField: 'EsAccionista'
             },
             {
-                caption: 'Sexo',
-                dataField: 'sexo'
-            },
-            {
-                caption: 'Pais',
-                dataField: 'pais'
-            },
-            {
-                caption: 'Curp / Registro',
-                dataField: 'curpRegistro'
-            },
-            {
-                caption: 'Pais Fiscal',
-                dataField: 'paisFiscal'
-            },
-            {
-                caption: 'Identificacion',
-                dataField: 'identificacion'
-            },
-            {
-                caption: 'Estado Civil',
-                dataField: 'estadoCivil'
+                caption: 'Alias',
+                dataField: 'Alias'
             },
             {
                 caption: '',
