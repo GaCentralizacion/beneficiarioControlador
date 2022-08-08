@@ -76,7 +76,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
             if (currentIdContacto === contacto?.id) {
                 this.contactosPersonaForm.controls.idTipCont.setValue(contacto.data?.idTipCont !== '' ? contacto.data?.idTipCont : 0);
                 this.contactosPersonaForm.controls.dato.setValue(contacto.data?.dato !== '' ? contacto.data?.dato : '');
-                this.contactosPersonaForm.controls.predeterminado.setValue(contacto.data?.predeterminado === 1 ? true : false);
+                this.contactosPersonaForm.controls.predeterminado.setValue(contacto.data?.predeterminado);
                 this.contactosPersonaForm.controls.ext.setValue(contacto.data?.ext);
             };
         };

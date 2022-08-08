@@ -128,6 +128,27 @@ personas.prototype.post_insPersona = function (req, res, next) {
     });
 };
 
+personas.prototype.post_selPersona = function (req, res, next) {
+    var self = this;
+
+    const { Opcion,
+        Usuario,
+        IdPersona } = req.body
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_Persona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 personas.prototype.post_delPersona = function (req, res, next) {
     var self = this;
 
@@ -145,70 +166,54 @@ personas.prototype.post_delPersona = function (req, res, next) {
     });
 };
 
-personas.prototype.post_selPersona = function (req, res, next) {
-    var self = this;
-
-    const { idPersona } = req.body
-
-    var params = [
-        { name: 'idPersona', value: idPersona, type: self.model.types.INT },
-    ];
-
-    this.model.queryAllRecordSet('[operacion].[SEL_PERSONA_BY_ID_SP]', params, function (error, result) {
-        self.view.expositor(res, {
-            error: error,
-            result: result
-        });
-    });
-};
-
 personas.prototype.post_updPersona = function (req, res, next) {
     var self = this;
 
     const {
-        idPersona,
-        idTipoPersona,
-        idTipoMor,
-        esAccionista,
-        nombres_razon,
-        apellidoPaterno,
-        apellidoMaterno,
-        alias,
-        fechaNac_constitucion,
-        idSexo,
-        idPais,
-        curp_registroPob,
-        idPaisFiscal,
-        idIdentificacion,
-        datoIdentificacion,
-        rfc_identificacion,
-        idEstCivil,
-        xmlContacto,
-        xmlDomicilio } = req.body
+        IdPersona,
+        IdTipoPer,
+        IdTipoMoral,
+        EsAccionista,
+        RFC,
+        Nombre_RazonSocial,
+        APaterno,
+        AMaterno,
+        Alias,
+        IdPais,
+        Fecha_nacimiento_Constitucion,
+        IdTipoSexo,
+        Registro_de_poblacion,
+        IdTipoIdentificacion,
+        Identificiacion,
+        IdEstadoCivil,
+        idUsuario,
+        XMLContacto,
+        XMLDomicilio
+    } = req.body;
 
     var params = [
-        { name: 'idPersona', value: idPersona, type: self.model.types.INT },
-        { name: 'idTipoPersona', value: idTipoPersona, type: self.model.types.INT },
-        { name: 'idTipoMor', value: idTipoMor, type: self.model.types.INT },
-        { name: 'esAccionista', value: esAccionista, type: self.model.types.INT },
-        { name: 'nombres_razon', value: nombres_razon, type: self.model.types.STRING },
-        { name: 'apellidoPaterno', value: apellidoPaterno, type: self.model.types.STRING },
-        { name: 'apellidoMaterno', value: apellidoMaterno, type: self.model.types.STRING },
-        { name: 'alias', value: alias, type: self.model.types.STRING },
-        { name: 'fechaNac_constitucion', value: fechaNac_constitucion, type: self.model.types.STRING },
-        { name: 'idSexo', value: idSexo, type: self.model.types.INT },
-        { name: 'idPais', value: idPais, type: self.model.types.INT },
-        { name: 'curp_registroPob', value: curp_registroPob, type: self.model.types.STRING },
-        { name: 'idPaisFiscal', value: idPaisFiscal, type: self.model.types.INT },
-        { name: 'idIdentificacion', value: idIdentificacion, type: self.model.types.INT },
-        { name: 'datoIdentificacion', value: datoIdentificacion, type: self.model.types.STRING },
-        { name: 'rfc_identificacion', value: rfc_identificacion, type: self.model.types.STRING },
-        { name: 'idEstCivil', value: idEstCivil, type: self.model.types.INT },
-        { name: 'xmlContacto', value: xmlContacto, type: self.model.types.XML },
-        { name: 'xmlDomicilio', value: xmlDomicilio, type: self.model.types.XML },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdTipoPer', value: IdTipoPer, type: self.model.types.INT },
+        { name: 'IdTipoMoral', value: IdTipoMoral, type: self.model.types.INT },
+        { name: 'EsAccionista', value: EsAccionista, type: self.model.types.INT },
+        { name: 'RFC', value: RFC, type: self.model.types.STRING },
+        { name: 'Nombre_RazonSocial', value: Nombre_RazonSocial, type: self.model.types.STRING },
+        { name: 'APaterno', value: APaterno, type: self.model.types.STRING },
+        { name: 'AMaterno', value: AMaterno, type: self.model.types.STRING },
+        { name: 'Alias', value: Alias, type: self.model.types.STRING },
+        { name: 'IdPais', value: IdPais, type: self.model.types.INT },
+        { name: 'Fecha_nacimiento_Constitucion', value: Fecha_nacimiento_Constitucion, type: self.model.types.STRING },
+        { name: 'IdTipoSexo', value: IdTipoSexo, type: self.model.types.STRING },
+        { name: 'Registro_de_poblacion', value: Registro_de_poblacion, type: self.model.types.STRING },
+        { name: 'IdTipoIdentificacion', value: IdTipoIdentificacion, type: self.model.types.INT },
+        { name: 'Identificiacion', value: Identificiacion, type: self.model.types.STRING },
+        { name: 'IdEstadoCivil', value: IdEstadoCivil, type: self.model.types.INT },
+        { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+        { name: 'XMLContacto', value: XMLContacto, type: self.model.types.XML },
+        { name: 'XMLDomicilio', value: XMLDomicilio, type: self.model.types.XML },
     ];
 
-    this.model.queryAllRecordSet('[operacion].[UPD_PERSONA_SP]', params, function (error, result) {
+    this.model.queryAllRecordSet('[dbo].[Upd_Persona]', params, function (error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

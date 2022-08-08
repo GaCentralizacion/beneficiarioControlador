@@ -28,6 +28,7 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
+import { ThisReceiver } from '@angular/compiler';
 /**IMPORTS GRID */
 
 @Component({
@@ -272,36 +273,45 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     getDataPersonaById = () => {
         const data = {
-            idPersona: this.dataPersonaUpdate.idPersona
+            Opcion: 2,
+            Usuario: this.userData.IdUsuario,
+            IdPersona: this.dataPersonaUpdate.IdPersona
         };
         this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
-            if (res[0][0].success === 1) {
-                this.gralDataPersona = res[1][0];
+            if (res.length > 0) {
+                this.getCamposForm(res[0][0].IdTipoPer)
+                this.gralDataPersona = res[0][0];
                 this.showAddPersona = true;
-                this.setDataForms(res[2], res[3]);
+                this.setDataForms(res[1], res[2]);
             } else {
-                Swal.fire('Alto', res[0][0].msg, 'error');
+                Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona', 'error');
             };
+        }, (error: any) => {
+            Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona,' + error.error.text, 'error');
         });
     };
 
     setDataForms = (contactos: any, domicilios: any) => {
         //Seteamos los valores generales de la persona
-        this.personaForm.controls.idTipoPersona.setValue(this.gralDataPersona.idTipoPersona);
-        this.personaForm.controls.idTipoMor.setValue(this.gralDataPersona.idTipoMor);
-        this.personaForm.controls.esAccionista.setValue(this.gralDataPersona.esAccionista === 1 ? true : false);
-        this.personaForm.controls.nombre_razon.setValue(this.gralDataPersona.nombres_razon);
-        this.personaForm.controls.apellidoPaterno.setValue(this.gralDataPersona.apellidoPaterno);
-        this.personaForm.controls.apellidoMaterno.setValue(this.gralDataPersona.apellidoMaterno);
-        this.personaForm.controls.alias.setValue(this.gralDataPersona.alias);
-        this.personaForm.controls.fechaNacimiento.setValue(this.gralDataPersona.fechaNac_constitucion);
-        this.personaForm.controls.idSexo.setValue(this.gralDataPersona.idSexo);
-        this.personaForm.controls.idPais.setValue(this.gralDataPersona.idPais);
-        this.personaForm.controls.curp_registroPob.setValue(this.gralDataPersona.curp_registroPob);
-        this.personaForm.controls.idIdentificacion.setValue(this.gralDataPersona.idIdentificacion);
-        this.personaForm.controls.datoIdentificacion.setValue(this.gralDataPersona.datoIdentificacion);
-        this.personaForm.controls.rfc_identificacion.setValue(this.gralDataPersona.rfc_identificacion);
-        this.personaForm.controls.idEstadoCivil.setValue(this.gralDataPersona.idEstCivil);
+        let date = this.gralDataPersona.Fecha_nacimiento_Constitucion.split('T')[0];
+        let dateParts = date.split("/");
+        let dateObject = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+        const fechaEntregaInput = this.FechaDiaCorrecto(dateObject);
+        this.personaForm.controls.idTipoPersona.setValue(this.gralDataPersona.IdTipoPer);
+        this.personaForm.controls.idTipoMor.setValue(this.gralDataPersona.IdTipoMoral);
+        this.personaForm.controls.esAccionista.setValue(this.gralDataPersona.EsAccionista);
+        this.personaForm.controls.nombre_razon.setValue(this.gralDataPersona.Nombre_RazonSocial);
+        this.personaForm.controls.apellidoPaterno.setValue(this.gralDataPersona.APaterno);
+        this.personaForm.controls.apellidoMaterno.setValue(this.gralDataPersona.AMaterno);
+        this.personaForm.controls.alias.setValue(this.gralDataPersona.Alias);
+        this.personaForm.controls.fechaNacimiento.setValue(fechaEntregaInput);
+        this.personaForm.controls.idSexo.setValue(this.gralDataPersona.IdTipoSexo);
+        this.personaForm.controls.idPais.setValue(this.gralDataPersona.IdPais);
+        this.personaForm.controls.curp_registroPob.setValue(this.gralDataPersona.Registro_de_poblacion);
+        this.personaForm.controls.idIdentificacion.setValue(this.gralDataPersona.IdTipoIdentificacion);
+        this.personaForm.controls.datoIdentificacion.setValue(this.gralDataPersona.Identificiacion);
+        this.personaForm.controls.rfc_identificacion.setValue(this.gralDataPersona.RFC);
+        this.personaForm.controls.idEstadoCivil.setValue(this.gralDataPersona.IdEstadoCivil);
 
         //Seteamos los contactos de la persona
         for (let contacto of contactos) {
@@ -311,7 +321,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             }, 200);
         };
 
-        //Seteamos los domicilios de la persona
+        // //Seteamos los domicilios de la persona
         for (let domicilio of domicilios) {
             setTimeout(() => {
                 this.currentIdContacto = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
@@ -320,6 +330,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         };
 
         // Una vez cargado todo cocultamos el spinner
+        this.hiddenForm = false;
         this.spinner.hide();
     };
 
@@ -387,7 +398,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         if (this.arrayAllContactos.length > 0) {
             xmlCotactos = '<Contactos>';
             for (let arrayContacto of this.arrayAllContactos) {
-                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext></Contacto>`;
+                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext></Contacto>`;
             };
             xmlCotactos += '</Contactos>';
         };
@@ -396,7 +407,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         if (this.arrayAllDomicilios.length > 0) {
             xmlDomicilio = '<Domicilios>';
             for (let arrayDomicilio of this.arrayAllDomicilios) {
-                xmlDomicilio += `<Domicilio><IdTipoDomicilio>${arrayDomicilio.data.idTipDom}</IdTipoDomicilio><EsFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</EsFiscal><Calle>${arrayDomicilio.data.calle}</Calle><NumExterior>${arrayDomicilio.data.numExt}</NumExterior><NumInterior>${arrayDomicilio.data.numInt}</NumInterior><CodigoPostal>${arrayDomicilio.data.cp}</CodigoPostal><Colonia_Asentamiento>${arrayDomicilio.data.colonia_asentamiento}</Colonia_Asentamiento><Delegacion_Municipio>${arrayDomicilio.data.delegacion_municipio}</Delegacion_Municipio><Ciudad_Estado>${arrayDomicilio.data.ciudad_estado}</Ciudad_Estado><Pais>${arrayDomicilio.data.pais}</Pais><Entre_calle1>${arrayDomicilio.data.calle1}</Entre_calle1><Entre_calle2>${arrayDomicilio.data.calle2}</Entre_calle2><Predeterminado>${arrayDomicilio.data.predeterminado ? 1 : 0}</Predeterminado></Domicilio>`;
+                xmlDomicilio += `<Domicilio><IdTipoDomicilio>${arrayDomicilio.data.idTipDom}</IdTipoDomicilio><EsFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</EsFiscal><Calle>${arrayDomicilio.data.calle}</Calle><NumExterior>${arrayDomicilio.data.numExt}</NumExterior><NumInterior>${arrayDomicilio.data.numInt === undefined ? '' : arrayDomicilio.data.numInt}</NumInterior><CodigoPostal>${arrayDomicilio.data.cp}</CodigoPostal><Colonia_Asentamiento>${arrayDomicilio.data.colonia_asentamiento}</Colonia_Asentamiento><Delegacion_Municipio>${arrayDomicilio.data.delegacion_municipio}</Delegacion_Municipio><Ciudad_Estado>${arrayDomicilio.data.ciudad_estado}</Ciudad_Estado><Pais>${arrayDomicilio.data.pais === undefined ? '' : arrayDomicilio.data.pais}</Pais><Entre_calle1>${arrayDomicilio.data.calle1 === undefined ? '' : arrayDomicilio.data.calle1}</Entre_calle1><Entre_calle2>${arrayDomicilio.data.calle2 === undefined ? '' : arrayDomicilio.data.calle2}</Entre_calle2><Predeterminado>${arrayDomicilio.data.predeterminado ? 1 : 0}</Predeterminado></Domicilio>`;
             };
             xmlDomicilio += '</Domicilios>';
         };
@@ -446,7 +457,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                         if (res[0][0].Codigo >= 1) {
                             this.spinner.hide();
                             Swal.fire({
-                                title: 'Existo!',
+                                title: '¡Exito!',
                                 text: res[0][0].Mensaje,
                                 icon: 'success',
                                 confirmButtonText: 'Cerrar'
@@ -487,6 +498,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar'
             });
+            this.focusTabs = 0;
             this.personaForm.markAllAsTouched();
             return;
         };
@@ -498,9 +510,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         const validaContactosPersona = this.validaFormsContactos();
         if (validaContactosPersona.success === 0) {
+            this.focusTabs = 1;
             Swal.fire({
                 title: '¡Alto!',
-                text: 'Completa los campos obligatorios de los contactos',
+                text: validaContactosPersona.msg,
                 icon: 'warning',
                 confirmButtonText: 'Cerrar'
             });
@@ -510,27 +523,34 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         const validaDomicilioPeronsa = this.validaFormsDomicilios();
         if (validaDomicilioPeronsa.success === 0) {
+            this.focusTabs = 2;
             Swal.fire({
                 title: '¡Alto!',
-                text: 'Completa los campos obligatorios de los domicilios',
+                text: validaDomicilioPeronsa.msg,
                 icon: 'warning',
                 confirmButtonText: 'Cerrar'
             });
             this.domicilioComponent.setManualError();
             return
         };
-        let xmlCotactos = '<contactos>';
-        for (let arrayContacto of this.arrayAllContactos) {
-            console.log('arrayContacto', arrayContacto)
-            xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
-        };
-        xmlCotactos += '</contactos>';
 
-        let xmlDomicilio = '<domicilios>';
-        for (let arrayDomicilio of this.arrayAllDomicilios) {
-            xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
+        let xmlCotactos = ''
+        if (this.arrayAllContactos.length > 0) {
+            xmlCotactos = '<Contactos>';
+            for (let arrayContacto of this.arrayAllContactos) {
+                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext></Contacto>`;
+            };
+            xmlCotactos += '</Contactos>';
         };
-        xmlDomicilio += '</domicilios>';
+
+        let xmlDomicilio = '';
+        if (this.arrayAllDomicilios.length > 0) {
+            xmlDomicilio = '<Domicilios>';
+            for (let arrayDomicilio of this.arrayAllDomicilios) {
+                xmlDomicilio += `<Domicilio><IdTipoDomicilio>${arrayDomicilio.data.idTipDom}</IdTipoDomicilio><EsFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</EsFiscal><Calle>${arrayDomicilio.data.calle}</Calle><NumExterior>${arrayDomicilio.data.numExt}</NumExterior><NumInterior>${arrayDomicilio.data.numInt === undefined ? '' : arrayDomicilio.data.numInt}</NumInterior><CodigoPostal>${arrayDomicilio.data.cp}</CodigoPostal><Colonia_Asentamiento>${arrayDomicilio.data.colonia_asentamiento}</Colonia_Asentamiento><Delegacion_Municipio>${arrayDomicilio.data.delegacion_municipio}</Delegacion_Municipio><Ciudad_Estado>${arrayDomicilio.data.ciudad_estado}</Ciudad_Estado><Pais>${arrayDomicilio.data.pais === undefined ? '' : arrayDomicilio.data.pais}</Pais><Entre_calle1>${arrayDomicilio.data.calle1 === undefined ? '' : arrayDomicilio.data.calle1}</Entre_calle1><Entre_calle2>${arrayDomicilio.data.calle2 === undefined ? '' : arrayDomicilio.data.calle2}</Entre_calle2><Predeterminado>${arrayDomicilio.data.predeterminado ? 1 : 0}</Predeterminado></Domicilio>`;
+            };
+            xmlDomicilio += '</Domicilios>';
+        };
 
         Swal.fire({
             title: `¿Quieres actualizar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
@@ -543,32 +563,51 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.spinner.show();
 
                 const jsonPersona = {
-                    idTipoPersona: this.dataPersonaUpdate.idPersona,
-                    idTipoMor: this.personaForm.controls.idTipoPersona.value,
-                    esAccionista: this.personaForm.controls.idTipoMor.value,
-                    rfc_identificacion: this.personaForm.controls.esAccionista.value ? 1 : 0,
-                    nombres_razon: this.personaForm.controls.nombre_razon.value,
-                    apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
-                    apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
-                    alias: this.personaForm.controls.alias.value,
-                    idPais: this.personaForm.controls.fechaNacimiento.value,
-                    fechaNac_constitucion: this.personaForm.controls.idSexo.value,
-                    idSexo: this.personaForm.controls.idPais.value,
-                    curp_registroPob: this.personaForm.controls.curp_registroPob.value,
-                    idIdentificacion: this.personaForm.controls.idIdentificacion.value,
-                    datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
-                    idEstCivil: this.personaForm.controls.rfc_identificacion.value,
-                    idUsuario: this.personaForm.controls.idEstadoCivil.value,
-                    xmlContacto: xmlCotactos,
-                    xmlDomicilio: xmlDomicilio
+                    IdPersona: this.dataPersonaUpdate.IdPersona,
+                    IdTipoPer: this.personaForm.controls.idTipoPersona.value,
+                    IdTipoMoral: this.personaForm.controls.idTipoMor.value,
+                    EsAccionista: this.personaForm.controls.esAccionista.value ? 1 : 0,
+                    RFC: this.personaForm.controls.rfc_identificacion.value === undefined ? '' : this.personaForm.controls.rfc_identificacion.value,
+                    Nombre_RazonSocial: this.personaForm.controls.nombre_razon.value === undefined ? '' : this.personaForm.controls.nombre_razon.value,
+                    APaterno: this.personaForm.controls.apellidoPaterno.value === undefined ? '' : this.personaForm.controls.apellidoPaterno.value,
+                    AMaterno: this.personaForm.controls.apellidoMaterno.value === undefined ? '' : this.personaForm.controls.apellidoMaterno.value,
+                    Alias: this.personaForm.controls.alias.value === undefined ? '' : this.personaForm.controls.alias.value,
+                    IdPais: this.personaForm.controls.idPais.value,
+                    Fecha_nacimiento_Constitucion: this.personaForm.controls.fechaNacimiento.value,
+                    IdTipoSexo: this.personaForm.controls.idSexo.value,
+                    Registro_de_poblacion: this.personaForm.controls.curp_registroPob.value === undefined ? '' : this.personaForm.controls.curp_registroPob.value,
+                    IdTipoIdentificacion: this.personaForm.controls.idIdentificacion.value,
+                    Identificiacion: this.personaForm.controls.datoIdentificacion.value === undefined ? '' : this.personaForm.controls.datoIdentificacion.value,
+                    IdEstadoCivil: this.personaForm.controls.idEstadoCivil.value,
+                    idUsuario: this.userData.IdUsuario,
+                    XMLContacto: xmlCotactos,
+                    XMLDomicilio: xmlDomicilio
                 };
 
                 this.gaService.postService('personas/updPersona', jsonPersona).subscribe((res: any) => {
-                    Swal.fire(res[0][0].msg, '', res[0][0].success === 1 ? 'success' : 'error');
+                    if (res[0][0].Codigo > 0) {
+                        this.spinner.hide();
+                        Swal.fire({
+                            title: '¡Exito!',
+                            text: res[0][0].Mensaje,
+                            icon: 'success',
+                            confirmButtonText: 'Cerrar'
+                        });
+                        setTimeout(() => {
+                            this.addPersona(false);
+                        }, 1000);
+                    } else {
+                        this.spinner.hide();
+                        Swal.fire({
+                            title: '¡Error!',
+                            text: res[0][0].Mensaje,
+                            icon: 'error',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    };
+                }, (error: any) => {
                     this.spinner.hide();
-                    setTimeout(() => {
-                        this.addPersona(false);
-                    }, 1000);
+                    Swal.fire('Error', 'Error al actualizar la persona ' + error.error.text, 'error');
                 });
 
             } else if (result.isDenied) {
@@ -854,6 +893,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     if (arrayDomicilio.data.ciudad_estado === null || arrayDomicilio.data.ciudad_estado === undefined || arrayDomicilio.data.ciudad_estado === '') {
                         return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
                     };
+                    if (arrayDomicilio.data.pais === null || arrayDomicilio.data.pais === undefined || arrayDomicilio.data.pais === '') {
+                        return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
+                    };
                 };
             };
             if (totalDomicilioFiscal === 0) {
@@ -1047,15 +1089,21 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.IdEstadoCivil?.Obligatorio ? this.personaForm.controls['idEstadoCivil'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['idEstadoCivil'].clearValidators()
         this.personaForm.controls['idEstadoCivil'].updateValueAndValidity();
 
-        /**Agregamos el array para los contactos */
-        this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
-        this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
-        /**Agregamos el array para los contactos */
-        /**Agregamos el array para los domicilios */
-        this.currentIdDomicilios = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
-        this.arrayAllDomicilios.push({ id: this.currentIdDomicilios, data: {} });
-        /**Agregamos el array para los domicilios */
+        if (!this.actualizarPersona) {
+            /**Agregamos el array para los contactos */
+            this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+            this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+            /**Agregamos el array para los contactos */
+            /**Agregamos el array para los domicilios */
+            this.currentIdDomicilios = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
+            this.arrayAllDomicilios.push({ id: this.currentIdDomicilios, data: {} });
+            /**Agregamos el array para los domicilios */
+        };
 
     };
+
+    FechaDiaCorrecto(fecha) {
+        return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
+    }
 
 };

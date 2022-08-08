@@ -35,6 +35,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     validFormColonia_asentamiento: string = '';
     validFormDelegacion_municipio: string = '';
     validFormCiudad_estado: string = '';
+    validFormPais: string = '';
 
     constructor(
         private fb: FormBuilder,
@@ -75,6 +76,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
         this.validFormColonia_asentamiento = `${this.stringIdDomicilio}${this.currentIdDomicilio}_colonia_asentamiento`;
         this.validFormDelegacion_municipio = `${this.stringIdDomicilio}${this.currentIdDomicilio}_delegacion_municipio`;
         this.validFormCiudad_estado = `${this.stringIdDomicilio}${this.currentIdDomicilio}_ciudad_estado`;
+        this.validFormPais = `${this.stringIdDomicilio}${this.currentIdDomicilio}_pais`;
 
         if (this.actualizarPersona) {
             this.setDataForm(this.idDomicilio);
@@ -121,6 +123,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 let idDivColonia_asentamiento = `${domicilio.id}_div_colonia_asentamiento`;
                 let idDivDelegacion_municipio = `${domicilio.id}_div_delegacion_municipio`;
                 let idDivCiudad_estado = `${domicilio.id}_div_ciudad_estado`;
+                let idDivPais = `${domicilio.id}_div_pais`;
                 /**PADRE EN DONDE SE EMBEBE */
                 let idPadreValidFormTipoDom = `${domicilio.id}_tipoDom`;
                 let idPadreValidFormCalle = `${domicilio.id}_calle`;
@@ -129,6 +132,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 let idPadreValidFormColonia_asentamiento = `${domicilio.id}_colonia_asentamiento`;
                 let idPadreValidFormDelegacion_municipio = `${domicilio.id}_delegacion_municipio`;
                 let idPadreValidFormCiudad_estado = `${domicilio.id}_ciudad_estado`;
+                let idPadreValidFormPais = `${domicilio.id}_pais`;
                 /**ADD CSS CLAS ANGULAR */
                 let idComponentPadreValidFormTipoDom = `${domicilio.id}_tipoDom_component`;
                 let idComponentPadreValidFormCalle = `${domicilio.id}_calle_component`;
@@ -137,6 +141,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 let idComponentPadreValidFormColonia_asentamiento = `${domicilio.id}_colonia_asentamiento_component`;
                 let idComponentPadreValidFormDelegacion_municipio = `${domicilio.id}_delegacion_municipio_component`;
                 let idComponentPadreValidFormCiudad_estado = `${domicilio.id}_ciudad_estado_component`;
+                let idComponentPadreValidFormPais = `${domicilio.id}_pais_component`;
 
                 if (document.getElementById(idDivTipoDom)) {
                     document.getElementById(idDivTipoDom).remove();
@@ -159,6 +164,9 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 if (document.getElementById(idDivCiudad_estado)) {
                     document.getElementById(idDivCiudad_estado).remove();
                 };
+                if (document.getElementById(idDivPais)) {
+                    document.getElementById(idDivPais).remove();
+                };
 
                 if (JSON.stringify(domicilio.data) === '{}') {
                     await this.createAndEmbebedDivError(idDivTipoDom, idPadreValidFormTipoDom, idComponentPadreValidFormTipoDom, 'Selecciona el tipo de domicilio');
@@ -168,6 +176,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                     await this.createAndEmbebedDivError(idDivColonia_asentamiento, idPadreValidFormColonia_asentamiento, idComponentPadreValidFormColonia_asentamiento, 'Ingresa la colonia');
                     await this.createAndEmbebedDivError(idDivDelegacion_municipio, idPadreValidFormDelegacion_municipio, idComponentPadreValidFormDelegacion_municipio, 'Ingresa la delegacion');
                     await this.createAndEmbebedDivError(idDivCiudad_estado, idPadreValidFormCiudad_estado, idComponentPadreValidFormCiudad_estado, 'Selecciona la ciudad');
+                    await this.createAndEmbebedDivError(idDivPais, idPadreValidFormPais, idComponentPadreValidFormPais, 'Ingresa el pais');
                 } else {
                     if (domicilio.data.idTipDom === null || domicilio.data.idTipDom === undefined || domicilio.data.idTipDom === 0) {
                         await this.createAndEmbebedDivError(idDivTipoDom, idPadreValidFormTipoDom, idComponentPadreValidFormTipoDom, 'Selecciona el tipo de domicilio');
@@ -193,6 +202,9 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                     };
                     if (domicilio.data.ciudad_estado === null || domicilio.data.ciudad_estado === undefined || domicilio.data.ciudad_estado === '') {
                         await this.createAndEmbebedDivError(idDivCiudad_estado, idPadreValidFormCiudad_estado, idComponentPadreValidFormCiudad_estado, 'Selecciona la ciudad');
+                    };
+                    if (domicilio.data.pais === null || domicilio.data.pais === undefined || domicilio.data.pais === '') {
+                        await this.createAndEmbebedDivError(idDivPais, idPadreValidFormPais, idComponentPadreValidFormPais, 'Ingresa el pais');
                     };
                 };
             };
@@ -230,6 +242,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
         let idDivColonia_asentamiento = `${component.id}_div_colonia_asentamiento`;
         let idDivDelegacion_municipio = `${component.id}_div_delegacion_municipio`;
         let idDivCiudad_estado = `${component.id}_div_ciudad_estado`;
+        let idDivPais = `${component.id}_div_pais`;
         /**ADD CSS CLAS ANGULAR */
         let idComponentPadreValidFormTipoDom = `${component.id}_tipoDom_component`;
         let idComponentPadreValidFormCalle = `${component.id}_calle_component`;
@@ -238,6 +251,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
         let idComponentPadreValidFormColonia_asentamiento = `${component.id}_colonia_asentamiento_component`;
         let idComponentPadreValidFormDelegacion_municipio = `${component.id}_delegacion_municipio_component`;
         let idComponentPadreValidFormCiudad_estado = `${component.id}_ciudad_estado_component`;
+        let idComponentPadreValidFormPais = `${component.id}_pais_component`;
 
         if (component.data.idTipDom === null || component.data.idTipDom === undefined || component.data.idTipDom === 0) {
         } else {
@@ -308,6 +322,17 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             let dynamicIdComponentPadreValidFormCiudad_estado = document.getElementById(idComponentPadreValidFormCiudad_estado);
             dynamicIdComponentPadreValidFormCiudad_estado.classList.remove('mat-form-field-invalid');
             dynamicIdComponentPadreValidFormCiudad_estado.classList.remove('ng-touched');
+        };
+
+        if (component.data.pais === null || component.data.pais === undefined || component.data.pais === '') {
+        } else {
+            let dynamicIdDivPais = document.getElementById(idDivPais);
+            if (dynamicIdDivPais) {
+                dynamicIdDivPais.remove();
+            };
+            let dynamicIdComponentPadreValidFormPais = document.getElementById(idComponentPadreValidFormPais);
+            dynamicIdComponentPadreValidFormPais.classList.remove('mat-form-field-invalid');
+            dynamicIdComponentPadreValidFormPais.classList.remove('ng-touched');
         };
     };
 

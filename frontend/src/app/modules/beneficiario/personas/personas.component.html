@@ -29,16 +29,22 @@
 
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button class="btn btn-info pull-left" (click)="addPersona(false)">
+                    <label><i class="fas fa-arrow-alt-circle-left"></i> Regresar </label>
+                </button>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+        </div>
+        <br>
         <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs">
             <!-- Datos Generales -->
             <mat-tab label="Datos Persona">
                 <mat-card>
                     <div class="row">
-                        <div class="col-sm-4 col-md-4 col-xl-4">
-                            <button class="btn btn-info pull-left" (click)="addPersona(false)">
-                                <label><i class="fas fa-arrow-alt-circle-left"></i> Regresar </label>
-                            </button>
-                        </div>
+                        <div class="col-sm-4 col-md-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-xl-4">
                             <h2>Agrear una Persona</h2>
                         </div>
