@@ -178,19 +178,19 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     getAllPersonas = () => {
         this.gaService.getService(`personas/allPersonas?opcion=1&usuario=${this.userData.IdUsuario}`).subscribe((res: any) => {
-            console.log('res', res)
-            // if (res[0].length > 0) {
             this.allPersonas = res[0];
             this.createGrid();
-            // } else {
-            // Swal.fire('Error al regresar las personas', '', 'warning')
-            // };
+        }, (error: any) => {
+            Swal.fire('Error', 'Error al regresar las personas, favor de contactar el administrador. ' + error.error.text, 'warning');
         });
     };
 
     addPersona = updPersona => {
         this.actualizarPersona = updPersona;
         if (!this.showAddPersona) {
+            this.focusTabs = 0;
+            this.hiddenForm = true;
+            this.personaForm.controls.idTipoPersona.reset();
             this.getAllCatalogos();
             this.personaForm.reset();
             this.arrayAllContactos = [];
@@ -238,7 +238,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             };
         }, (error: any) => {
             this.spinner.hide();
-            Swal.fire('Error', 'Error al regresar los catalogos, favor de contactat el administrador. ' + error.error.text, 'warning');
+            Swal.fire('Error', 'Error al regresar los catalogos, favor de contactar el administrador. ' + error.error.text, 'warning');
         });
     };
 
@@ -385,21 +385,20 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         let xmlCotactos = ''
         if (this.arrayAllContactos.length > 0) {
-            xmlCotactos = '<contactos>';
+            xmlCotactos = '<Contactos>';
             for (let arrayContacto of this.arrayAllContactos) {
-                xmlCotactos += `<contacto><idTipCont>${arrayContacto.data.idTipCont}</idTipCont><dato>${arrayContacto.data.dato}</dato><predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</predeterminado><extencion>${arrayContacto.data.ext}</extencion></contacto>`;
+                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext></Contacto>`;
             };
-            xmlCotactos += '</contactos>';
+            xmlCotactos += '</Contactos>';
         };
 
         let xmlDomicilio = '';
         if (this.arrayAllDomicilios.length > 0) {
-            xmlDomicilio = '<domicilios>';
+            xmlDomicilio = '<Domicilios>';
             for (let arrayDomicilio of this.arrayAllDomicilios) {
-                xmlDomicilio += `<domicilio><idTipDom>${arrayDomicilio.data.idTipDom}</idTipDom><esFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</esFiscal><calle>${arrayDomicilio.data.calle}</calle><numExt>${arrayDomicilio.data.numExt}</numExt><numInt>${arrayDomicilio.data.numInt}</numInt><cp>${arrayDomicilio.data.cp}</cp><colonia_asentamiento>${arrayDomicilio.data.colonia_asentamiento}</colonia_asentamiento><delegacion_municipio>${arrayDomicilio.data.delegacion_municipio}</delegacion_municipio><ciudad_estado>${arrayDomicilio.data.ciudad_estado}</ciudad_estado><pais>${arrayDomicilio.data.pais}</pais><calle1>${arrayDomicilio.data.calle1}</calle1><calle2>${arrayDomicilio.data.calle2}</calle2></domicilio>`;
-                xmlDomicilio += '</domicilios>';
+                xmlDomicilio += `<Domicilio><IdTipoDomicilio>${arrayDomicilio.data.idTipDom}</IdTipoDomicilio><EsFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</EsFiscal><Calle>${arrayDomicilio.data.calle}</Calle><NumExterior>${arrayDomicilio.data.numExt}</NumExterior><NumInterior>${arrayDomicilio.data.numInt}</NumInterior><CodigoPostal>${arrayDomicilio.data.cp}</CodigoPostal><Colonia_Asentamiento>${arrayDomicilio.data.colonia_asentamiento}</Colonia_Asentamiento><Delegacion_Municipio>${arrayDomicilio.data.delegacion_municipio}</Delegacion_Municipio><Ciudad_Estado>${arrayDomicilio.data.ciudad_estado}</Ciudad_Estado><Pais>${arrayDomicilio.data.pais}</Pais><Entre_calle1>${arrayDomicilio.data.calle1}</Entre_calle1><Entre_calle2>${arrayDomicilio.data.calle2}</Entre_calle2><Predeterminado>${arrayDomicilio.data.predeterminado ? 1 : 0}</Predeterminado></Domicilio>`;
             };
-
+            xmlDomicilio += '</Domicilios>';
         };
 
         Swal.fire({
@@ -466,7 +465,13 @@ export class PersonasComponent implements OnInit, OnDestroy {
                         };
                     };
                 }, (error: any) => {
-                    console.log('error', error)
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
+                    this.spinner.hide();
                 });
             } else if (result.isDenied) {
                 Swal.fire('No se guardo la informacion', '', 'info')
@@ -751,7 +756,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     validaFormsContactos = () => {
-        let totalDatoPredeterminado: number = 0;
+        let totalDatoPredeterminadoCelular: number = 0;
+        let totalDatoPredeterminadoCorreo: number = 0;
+        let totalDatoPredeterminadoTelefono: number = 0;
         const validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (this.arrayAllContactos.length === 0) {
             return { success: 1, msg: '' }
@@ -761,7 +768,15 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     return { success: 0, msg: 'Completa los campos obligatorios del contacto' }
                 } else {
                     if (arrayContacto.data.predeterminado) {
-                        totalDatoPredeterminado += 1;
+                        if (arrayContacto.data.idTipCont === 1) {
+                            totalDatoPredeterminadoCelular += 1;
+                        };
+                        if (arrayContacto.data.idTipCont === 2) {
+                            totalDatoPredeterminadoCorreo += 1;
+                        };
+                        if (arrayContacto.data.idTipCont === 3) {
+                            totalDatoPredeterminadoTelefono += 1;
+                        };
                     };
                     if (arrayContacto.data.idTipCont === null || arrayContacto.data.idTipCont === undefined || arrayContacto.data.idTipCont === 0 || arrayContacto.data.idTipCont === '') {
                         return { success: 0, msg: 'Completa los campos obligatorios del contacto' };
@@ -776,11 +791,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                 };
             };
-            if (totalDatoPredeterminado === 0) {
+            if ((totalDatoPredeterminadoCelular + totalDatoPredeterminadoCorreo + totalDatoPredeterminadoTelefono) === 0) {
                 return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.` };
             };
-            if (totalDatoPredeterminado > 1) {
-                return { success: 0, msg: `Solo puede tener 1 medio de contacto como predeterminado.` };
+            if (totalDatoPredeterminadoCelular > 1) {
+                return { success: 0, msg: `Solo puede tener 1 celular como medio de contacto como predeterminado.` };
+            };
+            if (totalDatoPredeterminadoCorreo > 1) {
+                return { success: 0, msg: `Solo puede tener 1 correo como medio de contacto como predeterminado.` };
+            };
+            if (totalDatoPredeterminadoTelefono > 1) {
+                return { success: 0, msg: `Solo puede tener 1 Telefono como medio de contacto como predeterminado.` };
             };
             return { success: 1, msg: `` }
         };
@@ -788,6 +809,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     validaFormsDomicilios = () => {
         let totalDomicilioFiscal: number = 0;
+        let totalDomiciliosPredeterminadosOficina: number = 0;
+        let totalDomiciliosPredeterminadosOtro: number = 0;
+        let totalDomiciliosPredeterminadosParticular: number = 0;
         if (this.arrayAllDomicilios.length === 0) {
             return { success: 1, msg: '' };
         } else {
@@ -797,6 +821,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 } else {
                     if (arrayDomicilio.data.esFiscal) {
                         totalDomicilioFiscal += 1;
+                    };
+                    if (arrayDomicilio.data.predeterminado) {
+                        if (arrayDomicilio.data.idTipDom === 1) {
+                            totalDomiciliosPredeterminadosOficina += 1;
+                        };
+                        if (arrayDomicilio.data.idTipDom === 2) {
+                            totalDomiciliosPredeterminadosOtro += 1;
+                        };
+                        if (arrayDomicilio.data.idTipDom === 3) {
+                            totalDomiciliosPredeterminadosParticular += 1;
+                        };
                     };
                     if (arrayDomicilio.data.idTipDom === null || arrayDomicilio.data.idTipDom === undefined || arrayDomicilio.data.idTipDom === 0) {
                         return { success: 0, msg: 'Completa los campos obligatorios de los domicilios' };
@@ -825,7 +860,19 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.` };
             };
             if (totalDomicilioFiscal > 1) {
-                return { success: 0, msg: `Solo puede tener 1 domicilio fiscal` };
+                return { success: 0, msg: `Solo puede tener 1 domicilio fisca.` };
+            };
+            if ((totalDomiciliosPredeterminadosOficina + totalDomiciliosPredeterminadosOtro + totalDomiciliosPredeterminadosParticular) === 0) {
+                return { success: 0, msg: `Debe seleccionar 1 domicilio como predeterminado.` };
+            };
+            if (totalDomiciliosPredeterminadosOficina > 1) {
+                return { success: 0, msg: `Solo puede tener 1 oficina como domicilio predeterminado.` };
+            };
+            if (totalDomiciliosPredeterminadosOtro > 1) {
+                return { success: 0, msg: `Solo puede tener otro domicilio como predeterminado.` };
+            };
+            if (totalDomiciliosPredeterminadosParticular > 1) {
+                return { success: 0, msg: `Solo puede tener 1 domicilio particular como predeterminado.` };
             };
             return { success: 1, msg: '' };
         };

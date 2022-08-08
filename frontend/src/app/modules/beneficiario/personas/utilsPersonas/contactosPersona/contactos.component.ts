@@ -101,7 +101,6 @@ export class ContactosComponent implements OnInit, OnDestroy {
                 let idComponentPadreTipo = `${contacto.id}_tipo_component`;
                 let idComponentPadreDato = `${contacto.id}_dato_component`;
 
-
                 if (document.getElementById(idDivTipo)) {
                     document.getElementById(idDivTipo).remove();
                 };
@@ -116,13 +115,17 @@ export class ContactosComponent implements OnInit, OnDestroy {
                     if (contacto.data.idTipCont === 0 || contacto.data.idTipCont === undefined || contacto.data.idTipCont === null) {
                         await this.createAndEmbebedDivError(idDivTipo, `${contacto.id}_tipo`, idComponentPadreTipo, 'Selecciona el tipo de contacto');
                     };
-                    if (contacto.data.idTipCont === 2) {
-                        if (!contacto.data.dato.match(VALID_REGEX_MAIL)) {
-                            await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un mail valido');
-                        };
-                    };
                     if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
                         await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa el dato');
+                    };
+
+                    if (contacto.data.idTipCont === 2) {
+                        if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
+                        } else {
+                            if (!contacto.data.dato.match(VALID_REGEX_MAIL)) {
+                                await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un mail valido');
+                            };
+                        };
                     };
                 };
             };

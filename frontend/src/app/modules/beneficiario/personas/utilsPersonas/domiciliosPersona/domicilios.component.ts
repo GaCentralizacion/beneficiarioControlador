@@ -62,7 +62,8 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             ciudad_estado: ['', Validators.required],
             pais: ['', Validators.required],
             calle1: [''],
-            calle2: ['']
+            calle2: [''],
+            predeterminado: false
         });
 
         this.idDomicilio = `${this.stringIdDomicilio}${this.currentIdDomicilio}`;
@@ -92,18 +93,19 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     setDataForm = currentIdDomicilio => {
         for (let domicilio of this.arrayAllDomicilios) {
             if (currentIdDomicilio === domicilio?.id) {
-                this.domicilioPersonaForm.controls.idTipDom.setValue(domicilio.data?.idTipDom)
-                this.domicilioPersonaForm.controls.esFiscal.setValue(domicilio.data?.esFiscal)
-                this.domicilioPersonaForm.controls.calle.setValue(domicilio.data?.calle)
-                this.domicilioPersonaForm.controls.numExt.setValue(domicilio.data?.numExt)
-                this.domicilioPersonaForm.controls.numInt.setValue(domicilio.data?.numInt)
-                this.domicilioPersonaForm.controls.cp.setValue(domicilio.data?.cp)
-                this.domicilioPersonaForm.controls.colonia_asentamiento.setValue(domicilio.data?.colonia_asentamiento)
-                this.domicilioPersonaForm.controls.delegacion_municipio.setValue(domicilio.data?.delegacion_municipio)
-                this.domicilioPersonaForm.controls.ciudad_estado.setValue(domicilio.data?.ciudad_estado)
-                this.domicilioPersonaForm.controls.pais.setValue(domicilio.data?.pais)
-                this.domicilioPersonaForm.controls.calle1.setValue(domicilio.data?.calle1)
-                this.domicilioPersonaForm.controls.calle2.setValue(domicilio.data?.calle2)
+                this.domicilioPersonaForm.controls.idTipDom.setValue(domicilio.data?.idTipDom);
+                this.domicilioPersonaForm.controls.esFiscal.setValue(domicilio.data?.esFiscal);
+                this.domicilioPersonaForm.controls.calle.setValue(domicilio.data?.calle);
+                this.domicilioPersonaForm.controls.numExt.setValue(domicilio.data?.numExt);
+                this.domicilioPersonaForm.controls.numInt.setValue(domicilio.data?.numInt);
+                this.domicilioPersonaForm.controls.cp.setValue(domicilio.data?.cp);
+                this.domicilioPersonaForm.controls.colonia_asentamiento.setValue(domicilio.data?.colonia_asentamiento);
+                this.domicilioPersonaForm.controls.delegacion_municipio.setValue(domicilio.data?.delegacion_municipio);
+                this.domicilioPersonaForm.controls.ciudad_estado.setValue(domicilio.data?.ciudad_estado);
+                this.domicilioPersonaForm.controls.pais.setValue(domicilio.data?.pais);
+                this.domicilioPersonaForm.controls.calle1.setValue(domicilio.data?.calle1);
+                this.domicilioPersonaForm.controls.calle2.setValue(domicilio.data?.calle2);
+                this.domicilioPersonaForm.controls.predeterminado.setValue(domicilio.data?.predeterminado);
             };
         };
     };
@@ -178,6 +180,10 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                     };
                     if (domicilio.data.cp === null || domicilio.data.cp === undefined || domicilio.data.cp === '') {
                         await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa el codigo postal');
+                    } else {
+                        if (!domicilio.data.cp.match(REGEX_CP)) {
+                            await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa un codigo postal valido');
+                        };
                     };
                     if (domicilio.data.colonia_asentamiento === null || domicilio.data.colonia_asentamiento === undefined || domicilio.data.colonia_asentamiento === '') {
                         await this.createAndEmbebedDivError(idDivColonia_asentamiento, idPadreValidFormColonia_asentamiento, idComponentPadreValidFormColonia_asentamiento, 'Ingresa la colonia');
