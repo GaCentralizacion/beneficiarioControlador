@@ -9,6 +9,7 @@ import {
 import { DxDataGridComponent } from 'devextreme-angular';
 import { MatDialog } from '@angular/material/dialog';
 import { isEmpty } from 'lodash';
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'app-grid-component',
@@ -72,12 +73,14 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	DataSourceStorage: any;
 	public newInnerWidth: number;
 	justDeselected: any;
+	accionesUsuario: any;
 
 	constructor(private element: ElementRef, private renderer: Renderer2, public dialog: MatDialog) {
 		this.DataSourceStorage = [];
 	}
 
 	ngAfterViewInit() {
+		this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
 		const div = this.grid.nativeElement.querySelector('.dx-datagrid-filter-panel');
 		const parent = this.grid.nativeElement.querySelector('.dx-datagrid');
 		const refChild = this.element.nativeElement.querySelector('.dx-datagrid-headers');
@@ -402,7 +405,7 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 
 	/**FUNCIONES DE LAS COLUMNAS */
 	//PERONSAS
-	deletePersona = (proceso, data) => {
+	seleccionaPersona = (proceso, data) => {
 		this.crudPersona.emit({ proceso: proceso, data: data })
 	};
 	//PERONSAS

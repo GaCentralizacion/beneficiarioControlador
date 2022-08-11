@@ -4,8 +4,13 @@
 
 export const environment = {
     production: false,
-    serviceUrl: 'http://192.168.20.123:2020/api/',
-    envName: 'develop'
+    serviceUrl: 'http://localhost:2020/api/',
+    envName: 'develop',
+    _varsLocalStorage: {
+        dataUsuario: "user",
+        menuApp: 'menuApp',
+        accionesUser: "accionesUser"
+    }
 };
 
 /*

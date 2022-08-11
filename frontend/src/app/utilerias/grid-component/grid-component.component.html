@@ -83,11 +83,8 @@
 
 		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
 		<div *dxTemplate="let data of 'crudPersonas'">
-			<button class="btn btn-primary btn-circle" (click)="deletePersona(1,data.row.data)">
+			<button class="btn btn-primary btn-circle" (click)="seleccionaPersona(1, data.row.data)">
 				<i class="fa-solid fa-file-pen"></i>
-			</button>
-			<button class="btn btn-primary btn-circle" (click)="deletePersona(2,data.row.data)">
-				<i class="fa-solid fa-trash-can"></i>
 			</button>
 		</div>
 		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
@@ -221,7 +218,8 @@
 				<dxi-column *ngFor="let column of columnsdetail" [dataField]="column.dataField"
 					[caption]="column.caption" [width]="column.width" [groupIndex]="column.groupIndex"
 					[cellTemplate]="column.cellTemplate" [hidingPriority]="column.hiddingPriority"
-					[allowEditing]="column.allowEditing" [dataType]="column.dataType" [format]="column.format">
+					[allowEditing]="column.allowEditing" [dataType]="column.dataType" [format]="column.format"
+					[cssClass]="column.cssClass">
 					<!--dxi-validation-rule *ngIf="column.allowEditing === true"
             type="pattern"
             [pattern]="column.pattern"

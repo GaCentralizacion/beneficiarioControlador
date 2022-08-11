@@ -1,27 +1,17 @@
 <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="square-loader">
     <p style="font-size: 20px; color: white">Cargando...</p>
 </ngx-spinner>
-<div style="width: 100%;">
-    <mat-card class="col-sm-12 col-md-12 col-xl-12">
-        <div class="row" [hidden]="showAddPersona">
+<div class='containerAll' [hidden]="showAddPersona">
+    <mat-card>
+        <div class="row">
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4">
-                <button class="btn btn-success pull-right" (click)="addPersona(false)">
+                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
+                    (click)="addPersona(false)">
                     <label>Agregar Persona <i class="fas fa-plus"></i></label>
                 </button>
             </div>
-        </div>
-        <div class="row" [hidden]="!showAddPersona">
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <button class="btn btn-info pull-left" (click)="addPersona(false)">
-                    <label><i class="fas fa-arrow-alt-circle-left"></i> Regresar </label>
-                </button>
-            </div>
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <h2>Agrear una Persona</h2>
-            </div>
-            <div class="col-sm-4 col-md-4 col-xl-4"></div>
         </div>
         <br>
         <div class="row" [hidden]="showAddPersona">
@@ -29,235 +19,302 @@
                 <app-grid-component *ngIf="muestraGrid" [datos]="allPersonas" [columns]="columns"
                     [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
                     [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
-                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' (crudPersona)="crudPersona($event)" [toolbar]="toolbar">
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                    (crudPersona)="crudPersona($event)" [toolbar]="toolbar">
                 </app-grid-component>
             </div>
         </div>
-        <div class="row" [hidden]="!showAddPersona">
-            <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="personaForm">
-                <div class="row justify-content-start align-items-center">
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Tipo Persona</mat-label>
-                            <mat-select formControlName="idTipoPersona">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let tipoPersona of catTipoPersona" [value]="tipoPersona.idTipoPer">
-                                    {{tipoPersona.tipoPersona}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+    </mat-card>
+</div>
+
+<div class="containerAll" [hidden]="!showAddPersona">
+    <mat-card>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button class="btn btn-info pull-left" (click)="addPersona(false)">
+                    <label><i class="fas fa-arrow-alt-circle-left"></i> Regresar </label>
+                </button>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+        </div>
+        <br>
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs">
+            <!-- Datos Generales -->
+            <mat-tab label="Datos Persona">
+                <mat-card>
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                        <div class="col-sm-4 col-md-4 col-xl-4">
+                            <h4>Agrear una Persona</h4>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-xl-4"></div>
                     </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Tipo Moral</mat-label>
-                            <mat-select formControlName="idTipoMor">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let tipoMoral of catTipoMoral" [value]="tipoMoral.idTipoMor">
-                                    {{tipoMoral.tipoMoral}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Sexo</mat-label>
-                            <mat-select formControlName="idSexo">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let sexo of catSexo" [value]="sexo.idSexo">
-                                    {{sexo.sexo}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-slide-toggle color="primary" formControlName="esAccionista">
-                            Es Accionista
-                        </mat-slide-toggle>
-                    </div>
-                </div>
-                <div class="row justify-content-start align-items-center">
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Nombre/Razon Social</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Nombre/Razon" formControlName="nombre_razon">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Apellido Paterno</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Apellido Paterno" formControlName="apellidoPaterno">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Apellido Materno</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Apellido Materno" formControlName="apellidoMaterno">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Alias</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Alias" formControlName="alias">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row justify-content-start align-items-center">
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Fecha Nacimineto</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento">
-                            <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Curp/Registro de población</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Curp/Registro de población" formControlName="curp_registroPob">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Rfc/Indentificación</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Rfc/Indentificación" formControlName="rfc_identificacion">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Pais</mat-label>
-                            <mat-select formControlName="idPais">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let pais of catPais" [value]="pais.idPais">
-                                    {{pais.pais}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row justify-content-start align-items-center">
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Pais Fiscal</mat-label>
-                            <mat-select formControlName="idPaisFiscal">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let pais of catPais" [value]="pais.idPais">
-                                    {{pais.pais}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Esado Civil</mat-label>
-                            <mat-select formControlName="idEstadoCivil">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let estadoCivil of catEstadoCivil"
-                                    [value]="estadoCivil.idEstadoCivil">
-                                    {{estadoCivil.estadoCivil}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Identificación</mat-label>
-                            <mat-select formControlName="idIdentificacion">
-                                <mat-option [value]="0">
-                                    Seleccione una opcion
-                                </mat-option>
-                                <mat-option *ngFor="let identificacion of catIdentificacion"
-                                    [value]="identificacion.idIdentificacion">
-                                    {{identificacion.identificacion}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-                        <mat-label>Clave Indentificación</mat-label>
-                        <mat-form-field appearance="fill">
-                            <input matInput placeholder="Clave Indentificación" formControlName="datoIdentificacion">
-                        </mat-form-field>
-                    </div>
-                </div>
-            </form>
+                    <br>
+                    <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="personaForm">
+                        <div class="row justify-content-start align-items-center">
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Tipo Persona</mat-label>
+                                    <mat-select formControlName="idTipoPersona"
+                                        (selectionChange)="getCamposForm($event.value)">
+                                        <mat-option [value]="0">
+                                            Seleccione una opcion
+                                        </mat-option>
+                                        <mat-option *ngFor="let tipoPersona of catTipoPersona"
+                                            [value]="tipoPersona.IdTipoPer">
+                                            {{tipoPersona.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un tipo de persona
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start align-items-center" [hidden]="hiddenForm">
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoMoralOption?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdTipoMoralOption?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idTipoMor">
+                                        <mat-option [value]="0">
+                                            Seleccione una opcion
+                                        </mat-option>
+                                        <mat-option *ngFor="let tipoMoral of catTipoMoral"
+                                            [value]="tipoMoral.IdTipoMoral">
+                                            {{tipoMoral.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un tipo moral
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoSexo?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdTipoSexo?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idSexo">
+                                        <mat-option [value]="0">
+                                            Seleccione una opcion
+                                        </mat-option>
+                                        <mat-option *ngFor="let sexo of catSexo" [value]="sexo.IdTipoSexo">
+                                            {{sexo.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un el sexo
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Nombre_RazonSocial?.length === 0">
+                                <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Nombre/Razon" formControlName="nombre_razon">
+                                    <mat-error>
+                                        Ingrese el nombre o razon
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="APaterno?.length === 0">
+                                <mat-label>{{APaterno?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Apellido Paterno" formControlName="apellidoPaterno">
+                                    <mat-error>
+                                        Ingrese el apellido paterno
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="AMaterno?.length === 0">
+                                <mat-label>{{AMaterno?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Apellido Materno" formControlName="apellidoMaterno">
+                                    <mat-error>
+                                        Ingrese el apellido materno
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Alias?.length === 0">
+                                <mat-label>{{Alias?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Alias" formControlName="alias">
+                                    <mat-error>
+                                        Ingrese el alias
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"[hidden]="Fecha_nacimiento_Constitucion?.length === 0">
+                                <mat-label>{{Fecha_nacimiento_Constitucion?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="Selecciona una fecha">
+                                    <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error>
+                                        Seleccione una fecha
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Registro_de_poblacion?.length === 0">
+                                <mat-label>{{Registro_de_poblacion?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Curp/Registro de población"
+                                        formControlName="curp_registroPob">
+                                    <mat-error>
+                                        Ingrese el curp o registro de poblacion
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="RFC?.length === 0">
+                                <mat-label>{{RFC?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Rfc/Indentificación"
+                                        formControlName="rfc_identificacion">
+                                    <mat-error>
+                                        Ingrese el rfc o identificadcion
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPais?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdPais?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idPais">
+                                        <mat-option [value]="0">
+                                            Seleccione una opcion
+                                        </mat-option>
+                                        <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
+                                            {{pais.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un pais
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdEstadoCivil?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdEstadoCivil?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idEstadoCivil">
+                                        <mat-option [value]="0">
+                                            Seleccione una opcion
+                                        </mat-option>
+                                        <mat-option *ngFor="let estadoCivil of catEstadoCivil"
+                                            [value]="estadoCivil.IdEstadoCivil">
+                                            {{estadoCivil.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un estado civil
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoIdentificacion?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdTipoIdentificacion?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idIdentificacion">
+                                        <mat-option [value]="0">
+                                            Seleccione una opcion
+                                        </mat-option>
+                                        <mat-option *ngFor="let identificacion of catIdentificacion"
+                                            [value]="identificacion.IdTipoIdentificacion">
+                                            {{identificacion.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un tipo de identificacion
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Identificiacion?.length === 0">
+                                <mat-label>{{Identificiacion?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="Clave Indentificación"
+                                        formControlName="datoIdentificacion">
+                                    <mat-error>
+                                        Ingrese la clave de la identificacion
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="EsAccionista?.length === 0">
+                                <mat-slide-toggle color="primary" formControlName="esAccionista">
+                                    <mat-label>{{EsAccionista?.Nombre}}</mat-label>
+                                </mat-slide-toggle>
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </mat-tab>
+            <!-- Datos Generales -->
 
             <!-- COMPONENETE CONTACTOS -->
-            <div class="row justify-content-start align-items-center">
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <h5>Contactos de la persona</h5>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <button class="btn btn-success pull-right" (click)="addContacto()">
-                        <label><i class="fas fa-plus"></i></label>
-                    </button>
-                    <button class="btn btn-danger pull-right" (click)="removeContacto()">
-                        <label><i class="fas fa-minus"></i></label>
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <app-contactos *ngFor="let contacto of arrayAllContactos" 
-                    [catTipoContacto]="catTipoContacto" 
-                    [arrayAllContactos]="arrayAllContactos"
-                    [currentIdContacto]="this.arrayAllContactos.length"
-                    [actualizarPersona]="actualizarPersona"></app-contactos>
-                </div>
-            </div>
+            <mat-tab *ngIf="!hiddenForm" label="Contactos Persona">
+                <mat-card>
+                    <div class="row justify-content-start align-items-center">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <h4>Contactos de la persona</h4>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <button class="btn btn-success pull-right" (click)="addContacto()">
+                                <label><i class="fas fa-plus"></i></label>
+                            </button>
+                            <button class="btn btn-danger pull-right" (click)="removeContacto()">
+                                <label><i class="fas fa-minus"></i></label>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-contactos *ngFor="let contacto of arrayAllContactos"
+                                [catTipoContacto]="catTipoContacto" [arrayAllContactos]="arrayAllContactos"
+                                [currentIdContacto]="this.arrayAllContactos.length"
+                                [actualizarPersona]="actualizarPersona"></app-contactos>
+                        </div>
+                    </div>
+                </mat-card>
+            </mat-tab>
             <!-- COMPONENETE CONTACTOS -->
 
             <!-- COMPONENETE DIRECCIONES -->
-            <div class="row justify-content-start align-items-center">
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <h5>Domicilios de la persona</h5>
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <button class="btn btn-success pull-right" (click)="addDomicilio()">
-                        <label><i class="fas fa-plus"></i></label>
-                    </button>
-                    <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
-                        <label><i class="fas fa-minus"></i></label>
-                    </button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <app-domicilios *ngFor="let domicilio of arrayAllDomicilios"
-                    [catTipoDomicilio]="catTipoDomicilio"
-                    [arrayAllDomicilios]="arrayAllDomicilios"
-                    [currentIdDomicilio]="arrayAllDomicilios.length"
-                    [actualizarPersona]="actualizarPersona"
-                    ></app-domicilios>
-                </div>
-            </div>
+            <mat-tab *ngIf="!hiddenForm" label="Domicilios Persona">
+                <mat-card>
+                    <div class="row justify-content-start align-items-center">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <h4>Domicilios de la persona</h4>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <button class="btn btn-success pull-right" (click)="addDomicilio()">
+                                <label><i class="fas fa-plus"></i></label>
+                            </button>
+                            <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
+                                <label><i class="fas fa-minus"></i></label>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-domicilios *ngFor="let domicilio of arrayAllDomicilios"
+                                [catTipoDomicilio]="catTipoDomicilio" [arrayAllDomicilios]="arrayAllDomicilios"
+                                [currentIdDomicilio]="arrayAllDomicilios.length"
+                                [actualizarPersona]="actualizarPersona"></app-domicilios>
+                        </div>
+                    </div>
+                </mat-card>
+            </mat-tab>
             <!-- COMPONENETE DIRECCIONES -->
-
-            <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
-                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                    <button class="btn btn-success pull-right" (click)="savePersona()" [hidden]="actualizarPersona">
-                        Guardar <i class="fa-solid fa-floppy-disk"></i>
-                    </button>
-                    <button class="btn btn-success pull-right" (click)="updatePersona()" [hidden]="!actualizarPersona">
-                        Actualizar <i class="fa-solid fa-arrows-rotate"></i>
-                    </button>
-                </div>
+        </mat-tab-group>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
+                    (click)="savePersona()" [hidden]="actualizarPersona">
+                    Guardar <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button *ngIf="accionesUsuario?.editarPersona === 1" class="btn btn-success pull-right"
+                    (click)="updatePersona()" [hidden]="!actualizarPersona">
+                    Actualizar <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
             </div>
         </div>
     </mat-card>

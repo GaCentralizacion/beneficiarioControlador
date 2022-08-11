@@ -1,7 +1,15 @@
-.row {
-    width: 100%;
-}
-
 mat-form-field {
     width: 100% !important;
+}
+
+.errorForm{
+    border: 0.5px #DC2626 solid
+}
+
+.labelError{
+    font-size: 13px;
+}
+
+.divError{
+    margin-top: -17px;
 }
