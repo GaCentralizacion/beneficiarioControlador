@@ -221,4 +221,21 @@ personas.prototype.post_updPersona = function (req, res, next) {
     });
 };
 
+personas.prototype.post_selDataSepoMex = function (req, res, next) {
+    var self = this;
+
+    const { CodigoPostal } = req.body
+
+    var params = [
+        { name: 'CodigoPostal', value: CodigoPostal, type: self.model.types.STRING },
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_Sepomex]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;

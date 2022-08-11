@@ -7,7 +7,7 @@
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4">
-                <button *ngIf="accionesUsuario.AgregarPersonas === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
                     (click)="addPersona(false)">
                     <label>Agregar Persona <i class="fas fa-plus"></i></label>
                 </button>
@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-sm-4 col-md-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-xl-4">
-                            <h2>Agrear una Persona</h2>
+                            <h4>Agrear una Persona</h4>
                         </div>
                         <div class="col-sm-4 col-md-4 col-xl-4"></div>
                     </div>
@@ -251,7 +251,7 @@
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <h5>Contactos de la persona</h5>
+                            <h4>Contactos de la persona</h4>
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                             <button class="btn btn-success pull-right" (click)="addContacto()">
@@ -280,7 +280,7 @@
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <h5>Domicilios de la persona</h5>
+                            <h4>Domicilios de la persona</h4>
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                             <button class="btn btn-success pull-right" (click)="addDomicilio()">
@@ -307,11 +307,11 @@
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                <button *ngIf="accionesUsuario.AgregarPersonas === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
                     (click)="savePersona()" [hidden]="actualizarPersona">
                     Guardar <i class="fa-solid fa-floppy-disk"></i>
                 </button>
-                <button *ngIf="accionesUsuario.ActualizarPersonas === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.editarPersona === 1" class="btn btn-success pull-right"
                     (click)="updatePersona()" [hidden]="!actualizarPersona">
                     Actualizar <i class="fa-solid fa-arrows-rotate"></i>
                 </button>

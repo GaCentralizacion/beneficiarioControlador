@@ -157,7 +157,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.menuApp = JSON.parse(localStorage.getItem(environment._varsLocalStorage.menuApp));
         this.userData = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
-
         if (!this.accionesUsuario) {
             Swal.fire({
                 title: '¡Error!',

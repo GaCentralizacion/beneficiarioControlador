@@ -405,7 +405,7 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 
 	/**FUNCIONES DE LAS COLUMNAS */
 	//PERONSAS
-	deletePersona = (proceso, data) => {
+	seleccionaPersona = (proceso, data) => {
 		this.crudPersona.emit({ proceso: proceso, data: data })
 	};
 	//PERONSAS

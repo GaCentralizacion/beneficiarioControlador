@@ -83,11 +83,8 @@
 
 		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
 		<div *dxTemplate="let data of 'crudPersonas'">
-			<button class="btn btn-primary btn-circle" (click)="deletePersona(1,data.row.data)">
+			<button class="btn btn-primary btn-circle" (click)="seleccionaPersona(1, data.row.data)">
 				<i class="fa-solid fa-file-pen"></i>
-			</button>
-			<button *ngIf="accionesUsuario.EliminarPersonas === 1" class="btn btn-primary btn-circle" (click)="deletePersona(2,data.row.data)">
-				<i class="fa-solid fa-trash-can"></i>
 			</button>
 		</div>
 		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>

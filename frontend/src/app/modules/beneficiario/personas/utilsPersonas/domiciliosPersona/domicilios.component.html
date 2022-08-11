@@ -40,28 +40,42 @@
         <div id="{{validFormCp}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Codigo Postal</mat-label>
             <mat-form-field id="{{validFormCp}}_component" appearance="fill">
-                <input matInput placeholder="Codigo Postal" formControlName="cp">
+                <input matInput placeholder="Codigo Postal" formControlName="cp" (ngModelChange)="changeCodigoPostal($event)">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormColonia_asentamiento}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Colonia/Asentamiento</mat-label>
             <mat-form-field id="{{validFormColonia_asentamiento}}_component" appearance="fill">
-                <input matInput placeholder="Colonia/Asentamiento" formControlName="colonia_asentamiento">
-                <mat-error></mat-error>
+                <input [readonly]="searchCodigoPostal" matInput placeholder="Colonia/Asentamiento" formControlName="colonia_asentamiento" [matAutocomplete]="autoColonia">
+                <mat-autocomplete #autoColonia="matAutocomplete">
+                    <mat-option *ngFor="let option of optionsColonia" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
             </mat-form-field>
         </div>
         <div id="{{validFormDelegacion_municipio}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Delegacion/Municipio</mat-label>
             <mat-form-field id="{{validFormDelegacion_municipio}}_component" appearance="fill">
-                <input matInput placeholder="Delegacion/Municipio" formControlName="delegacion_municipio">
+                <input [readonly]="searchCodigoPostal" matInput placeholder="Delegacion/Municipio" formControlName="delegacion_municipio" [matAutocomplete]="autoDelegacion">
+                <mat-autocomplete #autoDelegacion="matAutocomplete">
+                    <mat-option *ngFor="let option of optionsDelegacion" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormCiudad_estado}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Ciudad/Estado</mat-label>
             <mat-form-field id="{{validFormCiudad_estado}}_component" appearance="fill">
-                <input matInput placeholder="Ciudad/Estado" formControlName="ciudad_estado">
+                <input [readonly]="searchCodigoPostal" matInput placeholder="Ciudad/Estado" formControlName="ciudad_estado" [matAutocomplete]="autoCiudad">
+                <mat-autocomplete #autoCiudad="matAutocomplete">
+                    <mat-option *ngFor="let option of optionsCiudad" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
                 <mat-error></mat-error>
             </mat-form-field>
         </div>

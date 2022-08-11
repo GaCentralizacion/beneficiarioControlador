@@ -93,7 +93,12 @@ export class AuthSignInComponent implements OnInit {
 					this.spinner.hide();
 					localStorage.setItem(environment._varsLocalStorage.dataUsuario, JSON.stringify({ idRol: res[0][0].IdRol, Nombre: res[0][0].Nombre, IdUsuario: res[0][0].IdUsuario }));
 					localStorage.setItem(environment._varsLocalStorage.menuApp, JSON.stringify(res[1]));
-					localStorage.setItem(environment._varsLocalStorage.accionesUser, JSON.stringify({ "AgregarPersonas": 1, "ActualizarPersonas": 1, "EliminarPersonas": 1 }));
+					let jsonAcciones = '';
+					for (let data of res[2]) {
+						jsonAcciones += `"${data.IdAccionFront}": ${data.Aplica},`
+					};
+					let lastJsonAcciones = `{${jsonAcciones.substring(0, jsonAcciones.length - 1)}}`;
+					localStorage.setItem(environment._varsLocalStorage.accionesUser, lastJsonAcciones);
 					this._router.navigateByUrl('/beneficiario/dashboard');
 				} else {
 					this.spinner.hide();

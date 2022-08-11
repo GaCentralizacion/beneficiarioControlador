@@ -5,6 +5,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable } from '@angular/material/table';
 import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
+import { GaService } from 'app/services/ga.service';
+import Swal from 'sweetalert2';
+import { NgxSpinnerService } from "ngx-spinner";
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const REGEX_CP = /^[0-9]{5}$/;
 
@@ -37,12 +42,23 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     validFormCiudad_estado: string = '';
     validFormPais: string = '';
 
+    //VARIABLE PARA LA VALIDACION DEL CODIGO POSTAL
+    searchCodigoPostal: boolean = true;
+
+    /**VARIABLES AUTOCOMPLETE */
+    optionsColonia: string[] = [];
+    optionsDelegacion: string[] = [];
+    optionsCiudad: string[] = [];
+    /**VARIABLES AUTOCOMPLETE */
+
     constructor(
         private fb: FormBuilder,
         private router: Router,
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
+        private gaServise: GaService,
+        private spinner: NgxSpinnerService
     ) {
 
     }
@@ -79,6 +95,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
         this.validFormPais = `${this.stringIdDomicilio}${this.currentIdDomicilio}_pais`;
 
         if (this.actualizarPersona) {
+            this.searchCodigoPostal = false;
             this.setDataForm(this.idDomicilio);
         };
         this.domicilioPersonaForm.valueChanges.subscribe(res => {
@@ -109,6 +126,52 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 this.domicilioPersonaForm.controls.calle2.setValue(domicilio.data?.calle2);
                 this.domicilioPersonaForm.controls.predeterminado.setValue(domicilio.data?.predeterminado);
             };
+        };
+    };
+
+    changeCodigoPostal = e => {
+        if (e.match(REGEX_CP)) {
+            this.spinner.show();
+            const data = {
+                CodigoPostal: e
+            }
+            this.gaServise.postService('personas/selDataSepoMex', data).subscribe((res: any) => {
+                this.domicilioPersonaForm.controls.colonia_asentamiento.setValue('');
+                this.domicilioPersonaForm.controls.delegacion_municipio.setValue('');
+                this.domicilioPersonaForm.controls.ciudad_estado.setValue('');
+                this.optionsColonia = [];
+                this.optionsDelegacion = [];
+                this.optionsCiudad = [];
+                if (res[0].length > 0) {
+                    for (let data of res[0]) {
+                        if (this.optionsColonia.indexOf(data.Colonia_Asentamiento) === -1) {
+                            this.optionsColonia.push(data.Colonia_Asentamiento);
+                        };
+                        if (this.optionsDelegacion.indexOf(data.Delegacion_Municipio) === -1) {
+                            this.optionsDelegacion.push(data.Delegacion_Municipio);
+                        };
+                        if (this.optionsCiudad.indexOf(data.Ciudad_Estado) === -1) {
+                            this.optionsCiudad.push(data.Ciudad_Estado);
+                        };
+                    };
+                } else {
+                    this.optionsColonia = [];
+                    this.optionsDelegacion = [];
+                    this.optionsCiudad = [];
+                };
+                this.searchCodigoPostal = false;
+                this.spinner.hide();
+            }, (error: any) => {
+                this.spinner.hide();
+                Swal.fire({
+                    title: '¡Error!',
+                    text: 'Error al traer informacion de SepoMex, ' + error.error.text,
+                    icon: 'error',
+                    confirmButtonText: 'Cerrar'
+                });
+            });
+        } else {
+            this.searchCodigoPostal = true;
         };
     };
 
