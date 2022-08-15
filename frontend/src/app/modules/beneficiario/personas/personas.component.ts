@@ -101,6 +101,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     personaForm: FormGroup;
     focusTabs: number = 0;
     hiddenForm: boolean = true;
+    textModificacion: string = '';
 
     /**VARIABLES OPTIONCES */
     // IdTipoPer
@@ -273,6 +274,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getDataPersonaById = () => {
+        this.textModificacion = '';
         const data = {
             Opcion: 2,
             Usuario: this.userData.IdUsuario,
@@ -280,10 +282,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
         };
         this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
             if (res.length > 0) {
-                this.getCamposForm(res[0][0].IdTipoPer)
+                this.getCamposForm(res[0][0].IdTipoPer);
                 this.gralDataPersona = res[0][0];
                 this.showAddPersona = true;
                 this.setDataForms(res[1], res[2]);
+                if (this.gralDataPersona?.FechaModificacion !== null) {
+                    let dateModificacion = `${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[2]}/${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[1]}/${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[0]}`;
+                    this.textModificacion = `Modificado el ${dateModificacion} por ${this.gralDataPersona?.NombUsuarioModificacion}`;
+                } else {
+                    let dateCreacion = `${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[2]}/${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[1]}/${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[0]}`;
+                    this.textModificacion = `Registrado el ${dateCreacion} por ${this.gralDataPersona?.NombUsuarioAlta}`;
+                };
             } else {
                 Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona', 'error');
             };

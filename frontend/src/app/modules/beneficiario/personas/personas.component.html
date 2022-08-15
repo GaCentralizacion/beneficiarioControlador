@@ -301,7 +301,9 @@
                     Regresar <i class="fas fa-arrow-alt-circle-left"></i>
                 </button>
             </div>
-            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <Label [hidden]="!actualizarPersona"> {{textModificacion}} </Label>
+            </div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                 <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
                     (click)="savePersona()" [hidden]="actualizarPersona">
