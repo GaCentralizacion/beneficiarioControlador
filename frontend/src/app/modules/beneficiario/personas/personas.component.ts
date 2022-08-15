@@ -11,7 +11,8 @@ import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.c
 import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
 import { environment } from 'environments/environment';
 
-const REGEX_RFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 
 /**IMPORTS GRID */
 import {
@@ -177,6 +178,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getAllPersonas = () => {
+        this.muestraGrid = false;
         this.gaService.getService(`personas/allPersonas?opcion=1&usuario=${this.userData.IdUsuario}`).subscribe((res: any) => {
             this.allPersonas = res[0];
             this.createGrid();
@@ -256,7 +258,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             };
             this.gaService.postService('personas/allFormOptions', data).subscribe((res: any) => {
                 if (res[0].length > 0) {
-                    this.setVariablesForm(res[0]);
+                    this.setVariablesForm(res[0], tipoPersona);
                     this.hiddenForm = false;
                 } else {
                     Swal.fire('Alto', 'No se obtuvo la regla del fomulario', 'error');
@@ -657,16 +659,16 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 dataField: 'RFC'
             },
             {
-                caption: 'Nombre / Razon',
+                caption: 'Nombre / Razón',
                 dataField: 'Nombre',
                 cssClass: 'asignacion2'
             },
             {
-                caption: 'Tipo Persona',
+                caption: 'Tipo de persona',
                 dataField: 'TipoPer'
             },
             {
-                caption: 'Tipo Empresa',
+                caption: 'Tipo de empresa',
                 dataField: 'TipoMor'
             },
             {
@@ -678,7 +680,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 dataField: 'Alias'
             },
             {
-                caption: '',
+                caption: 'Editar',
                 allowEditing: false,
                 cellTemplate: 'crudPersonas'
             }
@@ -688,10 +690,12 @@ export class PersonasComponent implements OnInit, OnDestroy {
             */
         const pageSizes = ['10', '25', '50', '100'];
 
+        this.gridOptions = { paginacion: 5, pageSize: [10, 20, 40, 80, 100] };
+
         /*
         Parametros de Exploracion
         */
-        this.exportExcel = { enabled: false, fileName: 'datos' };
+        this.exportExcel = { enabled: true, fileName: 'datos' };
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
         this.columnHiding = { hide: true };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
@@ -829,6 +833,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                 };
             };
+
             if ((totalDatoPredeterminadoCelular + totalDatoPredeterminadoCorreo + totalDatoPredeterminadoTelefono) === 0) {
                 return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.` };
             };
@@ -897,23 +902,19 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                 };
             };
+
             if (totalDomicilioFiscal === 0) {
                 return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.` };
             };
             if (totalDomicilioFiscal > 1) {
                 return { success: 0, msg: `Solo puede tener 1 domicilio fisca.` };
             };
+
             if ((totalDomiciliosPredeterminadosOficina + totalDomiciliosPredeterminadosOtro + totalDomiciliosPredeterminadosParticular) === 0) {
                 return { success: 0, msg: `Debe seleccionar 1 domicilio como predeterminado.` };
             };
-            if (totalDomiciliosPredeterminadosOficina > 1) {
-                return { success: 0, msg: `Solo puede tener 1 oficina como domicilio predeterminado.` };
-            };
-            if (totalDomiciliosPredeterminadosOtro > 1) {
-                return { success: 0, msg: `Solo puede tener otro domicilio como predeterminado.` };
-            };
-            if (totalDomiciliosPredeterminadosParticular > 1) {
-                return { success: 0, msg: `Solo puede tener 1 domicilio particular como predeterminado.` };
+            if ((totalDomiciliosPredeterminadosOficina + totalDomiciliosPredeterminadosOtro + totalDomiciliosPredeterminadosParticular) > 1) {
+                return { success: 0, msg: `Solo puede tener 1 domicilio como predeterminado.` };
             };
             return { success: 1, msg: '' };
         };
@@ -1001,7 +1002,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**RESET VARIABLES DE OPCIONES */
 
     /**SET VARIABLES FORMULARIO*/
-    setVariablesForm = dataBd => {
+    setVariablesForm = (dataBd, tipoPersona) => {
         this.arrayAllContactos = [];
         this.arrayAllDomicilios = [];
         for (let data of dataBd) {
@@ -1052,8 +1053,18 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.IdTipoMoralOption?.Obligatorio ? this.personaForm.controls['idTipoMor'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.get('idTipoMor').clearValidators();
         this.personaForm.controls['idTipoMor'].updateValueAndValidity();
 
-        this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+        this.personaForm.controls['rfc_identificacion'].clearValidators();
         this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+
+        if (tipoPersona === 1) {
+            this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_FIS)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+            this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+        };
+
+        if (tipoPersona === 2) {
+            this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_MOR)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+            this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+        };
 
         this.Nombre_RazonSocial?.Obligatorio ? this.personaForm.controls['nombre_razon'].addValidators([Validators.required]) : this.personaForm.controls['nombre_razon'].clearValidators()
         this.personaForm.controls['nombre_razon'].updateValueAndValidity();

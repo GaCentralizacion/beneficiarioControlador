@@ -22,8 +22,7 @@
 
 
 		<!-- -------------------- PAGINACION ------------------------------------------>
-		<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true">
-		</dxo-pager>
+		<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" ></dxo-pager>
 		<dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
 
 		<!-- -------------------- FILTROS ------------------------------------------>
@@ -83,7 +82,7 @@
 
 		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
 		<div *dxTemplate="let data of 'crudPersonas'">
-			<button class="btn btn-primary btn-circle" (click)="seleccionaPersona(1, data.row.data)">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="seleccionaPersona(1, data.row.data)">
 				<i class="fa-solid fa-file-pen"></i>
 			</button>
 		</div>
@@ -192,8 +191,7 @@
 
 
 				<!-- -------------------- PAGINACION ------------------------------------------>
-				<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true">
-				</dxo-pager>
+				<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true"></dxo-pager>
 				<dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
 
 				<!-- -------------------- FILTROS ------------------------------------------>

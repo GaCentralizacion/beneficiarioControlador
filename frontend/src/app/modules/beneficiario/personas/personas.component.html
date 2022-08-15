@@ -8,15 +8,15 @@
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4">
                 <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
-                    (click)="addPersona(false)">
-                    <label>Agregar Persona <i class="fas fa-plus"></i></label>
+                (click)="addPersona(false)">
+                Agregar persona <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
         <br>
         <div class="row" [hidden]="showAddPersona">
             <div class="col-sm-12 col-md-12 col-xl-12">
-                <app-grid-component *ngIf="muestraGrid" [datos]="allPersonas" [columns]="columns"
+                <app-grid-component *ngIf="muestraGrid" [datos]="allPersonas" [columns]="columns" [gridOptions]="gridOptions"
                     [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
                     [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
                     (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
@@ -29,24 +29,14 @@
 
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
-        <div class="row">
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <button class="btn btn-info pull-left" (click)="addPersona(false)">
-                    <label><i class="fas fa-arrow-alt-circle-left"></i> Regresar </label>
-                </button>
-            </div>
-            <div class="col-sm-4 col-md-4 col-xl-4"></div>
-            <div class="col-sm-4 col-md-4 col-xl-4"></div>
-        </div>
-        <br>
         <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs">
             <!-- Datos Generales -->
-            <mat-tab label="Datos Persona">
+            <mat-tab label="Datos de persona">
                 <mat-card>
                     <div class="row">
                         <div class="col-sm-4 col-md-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-xl-4">
-                            <h4>Agrear una Persona</h4>
+                            <h4>Agregar persona</h4>
                         </div>
                         <div class="col-sm-4 col-md-4 col-xl-4"></div>
                     </div>
@@ -55,11 +45,11 @@
                         <div class="row justify-content-start align-items-center">
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
                                 <mat-form-field appearance="fill">
-                                    <mat-label>Tipo Persona</mat-label>
+                                    <mat-label>Tipo de persona</mat-label>
                                     <mat-select formControlName="idTipoPersona"
                                         (selectionChange)="getCamposForm($event.value)">
                                         <mat-option [value]="0">
-                                            Seleccione una opcion
+                                            Seleccione una opción
                                         </mat-option>
                                         <mat-option *ngFor="let tipoPersona of catTipoPersona"
                                             [value]="tipoPersona.IdTipoPer">
@@ -78,7 +68,7 @@
                                     <mat-label>{{IdTipoMoralOption?.Nombre}}</mat-label>
                                     <mat-select formControlName="idTipoMor">
                                         <mat-option [value]="0">
-                                            Seleccione una opcion
+                                            Seleccione una opción
                                         </mat-option>
                                         <mat-option *ngFor="let tipoMoral of catTipoMoral"
                                             [value]="tipoMoral.IdTipoMoral">
@@ -95,7 +85,7 @@
                                     <mat-label>{{IdTipoSexo?.Nombre}}</mat-label>
                                     <mat-select formControlName="idSexo">
                                         <mat-option [value]="0">
-                                            Seleccione una opcion
+                                            Seleccione una opción
                                         </mat-option>
                                         <mat-option *ngFor="let sexo of catSexo" [value]="sexo.IdTipoSexo">
                                             {{sexo.Descripcion}}
@@ -109,16 +99,16 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Nombre_RazonSocial?.length === 0">
                                 <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Nombre/Razon" formControlName="nombre_razon">
+                                    <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off">
                                     <mat-error>
-                                        Ingrese el nombre o razon
+                                        Ingrese el nombre o razón
                                     </mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="APaterno?.length === 0">
                                 <mat-label>{{APaterno?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Apellido Paterno" formControlName="apellidoPaterno">
+                                    <input matInput placeholder="{{APaterno?.Nombre}}" formControlName="apellidoPaterno" autocomplete="off">
                                     <mat-error>
                                         Ingrese el apellido paterno
                                     </mat-error>
@@ -127,7 +117,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="AMaterno?.length === 0">
                                 <mat-label>{{AMaterno?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Apellido Materno" formControlName="apellidoMaterno">
+                                    <input matInput placeholder="{{AMaterno?.Nombre}}" formControlName="apellidoMaterno" autocomplete="off">
                                     <mat-error>
                                         Ingrese el apellido materno
                                     </mat-error>
@@ -136,7 +126,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Alias?.length === 0">
                                 <mat-label>{{Alias?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Alias" formControlName="alias">
+                                    <input matInput placeholder="{{Alias?.Nombre}}" formControlName="alias" autocomplete="off">
                                     <mat-error>
                                         Ingrese el alias
                                     </mat-error>
@@ -145,7 +135,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"[hidden]="Fecha_nacimiento_Constitucion?.length === 0">
                                 <mat-label>{{Fecha_nacimiento_Constitucion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="Selecciona una fecha">
+                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="{{Fecha_nacimiento_Constitucion?.Nombre}}">
                                     <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
@@ -157,20 +147,18 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Registro_de_poblacion?.length === 0">
                                 <mat-label>{{Registro_de_poblacion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Curp/Registro de población"
-                                        formControlName="curp_registroPob">
+                                    <input matInput placeholder="{{Registro_de_poblacion?.Nombre}}" formControlName="curp_registroPob" autocomplete="off">
                                     <mat-error>
-                                        Ingrese el curp o registro de poblacion
+                                        Ingrese el curp o registro de población
                                     </mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="RFC?.length === 0">
                                 <mat-label>{{RFC?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Rfc/Indentificación"
-                                        formControlName="rfc_identificacion">
+                                    <input matInput placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off">
                                     <mat-error>
-                                        Ingrese el rfc o identificadcion
+                                        Ingrese el RFC
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -179,14 +167,14 @@
                                     <mat-label>{{IdPais?.Nombre}}</mat-label>
                                     <mat-select formControlName="idPais">
                                         <mat-option [value]="0">
-                                            Seleccione una opcion
+                                            Seleccione una opción
                                         </mat-option>
                                         <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
                                             {{pais.Descripcion}}
                                         </mat-option>
                                     </mat-select>
                                     <mat-error>
-                                        Seleccione un pais
+                                        Seleccione un país
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -195,7 +183,7 @@
                                     <mat-label>{{IdEstadoCivil?.Nombre}}</mat-label>
                                     <mat-select formControlName="idEstadoCivil">
                                         <mat-option [value]="0">
-                                            Seleccione una opcion
+                                            Seleccione una opción
                                         </mat-option>
                                         <mat-option *ngFor="let estadoCivil of catEstadoCivil"
                                             [value]="estadoCivil.IdEstadoCivil">
@@ -212,7 +200,7 @@
                                     <mat-label>{{IdTipoIdentificacion?.Nombre}}</mat-label>
                                     <mat-select formControlName="idIdentificacion">
                                         <mat-option [value]="0">
-                                            Seleccione una opcion
+                                            Seleccione una opción
                                         </mat-option>
                                         <mat-option *ngFor="let identificacion of catIdentificacion"
                                             [value]="identificacion.IdTipoIdentificacion">
@@ -220,24 +208,28 @@
                                         </mat-option>
                                     </mat-select>
                                     <mat-error>
-                                        Seleccione un tipo de identificacion
+                                        Seleccione un tipo de identificación
                                     </mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Identificiacion?.length === 0">
                                 <mat-label>{{Identificiacion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="Clave Indentificación"
-                                        formControlName="datoIdentificacion">
+                                    <input matInput placeholder="{{Identificiacion?.Nombre}}"
+                                        formControlName="datoIdentificacion" autocomplete="off">
                                     <mat-error>
-                                        Ingrese la clave de la identificacion
+                                        Ingrese la clave de la identificación
                                     </mat-error>
                                 </mat-form-field>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="EsAccionista?.length === 0">
                                 <mat-slide-toggle color="primary" formControlName="esAccionista">
-                                    <mat-label>{{EsAccionista?.Nombre}}</mat-label>
+                                    <mat-label>
+                                        {{EsAccionista?.Nombre}}
+                                    </mat-label>
                                 </mat-slide-toggle>
+                                <label style="font-size: 13px; color: gray;" *ngIf="!personaForm.controls.esAccionista.value">(No puede comprar acciones)</label> 
+                                <label style="font-size: 13px; color: green;" *ngIf="personaForm.controls.esAccionista.value">(Puede comprar acciones)</label> 
                             </div>
                         </div>
                     </form>
@@ -246,19 +238,19 @@
             <!-- Datos Generales -->
 
             <!-- COMPONENETE CONTACTOS -->
-            <mat-tab *ngIf="!hiddenForm" label="Contactos Persona">
+            <mat-tab *ngIf="!hiddenForm" label="Medios de contacto">
                 <mat-card>
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <h4>Contactos de la persona</h4>
+                            <h4>Medios de contacto</h4>
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <button class="btn btn-success pull-right" (click)="addContacto()">
-                                <label><i class="fas fa-plus"></i></label>
+                            <button class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
+                                <i class="fas fa-plus"></i>
                             </button>
                             <button class="btn btn-danger pull-right" (click)="removeContacto()">
-                                <label><i class="fas fa-minus"></i></label>
+                                <i class="fas fa-minus"></i>
                             </button>
                         </div>
                     </div>
@@ -275,19 +267,19 @@
             <!-- COMPONENETE CONTACTOS -->
 
             <!-- COMPONENETE DIRECCIONES -->
-            <mat-tab *ngIf="!hiddenForm" label="Domicilios Persona">
+            <mat-tab *ngIf="!hiddenForm" label="Domicilios">
                 <mat-card>
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <h4>Domicilios de la persona</h4>
+                            <h4>Domicilios</h4>
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <button class="btn btn-success pull-right" (click)="addDomicilio()">
-                                <label><i class="fas fa-plus"></i></label>
+                            <button class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addDomicilio()">
+                                <i class="fas fa-plus"></i>
                             </button>
                             <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
-                                <label><i class="fas fa-minus"></i></label>
+                                <i class="fas fa-minus"></i>
                             </button>
                         </div>
                     </div>
@@ -304,7 +296,11 @@
             <!-- COMPONENETE DIRECCIONES -->
         </mat-tab-group>
         <div class="row">
-            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <button class="btn btn-info pull-left" (click)="addPersona(false)">
+                    Regresar <i class="fas fa-arrow-alt-circle-left"></i>
+                </button>
+            </div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                 <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
