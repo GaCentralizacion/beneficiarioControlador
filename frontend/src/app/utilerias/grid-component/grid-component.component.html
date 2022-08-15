@@ -88,6 +88,14 @@
 		</div>
 		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE DEL RELACIONES FAMILIARES ------------------------------------------>
+		<div *dxTemplate="let data of 'eliminarRelacionFam'">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="eliminarRelacion(data.row.data)">
+				<i class="fa-solid fa-trash-can"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE DEL RELACIONES FAMILIARES ------------------------------------------>
+
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
 		<div *dxTemplate="let data of 'foto'" class="foto">

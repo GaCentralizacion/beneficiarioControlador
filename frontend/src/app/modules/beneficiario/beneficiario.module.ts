@@ -12,7 +12,8 @@ import { SeriesComponent } from './series/series.component';
 import { PersonasComponent } from './personas/personas.component';
 import { ContactosComponent } from './personas/utilsPersonas/contactosPersona/contactos.component';
 import { DomiciliosComponent } from './personas/utilsPersonas/domiciliosPersona/domicilios.component';
-
+import { RelacionFamiliarComponent } from './personas/utilsPersonas/relacionFamiliar/relacionFamiliar.component';
+import { AddRelacionComponent } from './personas/utilsPersonas/relacionFamiliar/addRelacion/addRelacion.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,9 @@ import { DomiciliosComponent } from './personas/utilsPersonas/domiciliosPersona/
         SeriesComponent,
         PersonasComponent,
         ContactosComponent,
-        DomiciliosComponent
+        DomiciliosComponent,
+        RelacionFamiliarComponent,
+        AddRelacionComponent
     ],
     imports: [
         CommonModule,

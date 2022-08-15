@@ -29,7 +29,6 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
-import { ThisReceiver } from '@angular/compiler';
 /**IMPORTS GRID */
 
 @Component({
@@ -708,11 +707,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
         this.columnHiding = { hide: true };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
-        this.Checkbox = { checkboxmode: 'multiple' };  // *desactivar con none*/
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
         // ******************PARAMETROS DE PARA EDITAR GRID**************** */
-        this.Editing = { allowupdate: true, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
         // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
-        this.Columnchooser = { columnchooser: true };
+        this.Columnchooser = { columnchooser: false };
 
         /*
         Parametros de Search

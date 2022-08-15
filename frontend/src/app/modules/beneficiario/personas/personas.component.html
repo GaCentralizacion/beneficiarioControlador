@@ -294,6 +294,16 @@
                 </mat-card>
             </mat-tab>
             <!-- COMPONENETE DIRECCIONES -->
+
+            <!-- COMPONENETE RELACIONES FAMILIARES -->
+            <mat-tab *ngIf="!hiddenForm && actualizarPersona" label="Relación familiar">
+                <mat-card>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <app-relacionFamiliar [idPersona]="gralDataPersona.IdPersona"></app-relacionFamiliar>
+                    </div>
+                </mat-card>
+            </mat-tab>
+            <!-- COMPONENETE RELACIONES FAMILIARES -->
         </mat-tab-group>
         <div class="row">
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
