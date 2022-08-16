@@ -34,7 +34,9 @@ import {
 })
 
 export class RelacionFamiliarComponent implements OnInit, OnDestroy {
-    @Input() idPersona: number;
+    @Input() gralDataPersona: any;
+    @Input() catRelacionFamiliar: any
+    @Input() catTipoPatrimonial: any
 
     /**Grid */
     allRelaciones: any;
@@ -72,9 +74,10 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
     };
 
     getAllRelacionesFamiliares = () => {
+        this.allRelaciones = [];
         const data = {
             Opcion: 2,
-            IdPersona: this.idPersona
+            IdPersona: this.gralDataPersona.IdPersona
         };
         this.gaServise.postService('personas/selAllRelacionesFamiliares', data).subscribe((res: any) => {
             this.allRelaciones = res[0];
@@ -91,28 +94,34 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
 
     addRelacion = () => {
         const dialogRef = this.dialog.open(AddRelacionComponent, {
-            width: '50%',
+            width: '100%',
             disableClose: true,
             data: {
-                title: 'Agregar relacion familiar'
+                title: 'Agregar relacion familiar',
+                dataPersona: this.gralDataPersona,
+                catRelacionFamiliar: this.catRelacionFamiliar,
+                catTipoPatrimonial: this.catTipoPatrimonial
             }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (!result) {
                 Swal.fire({
-                    title: '¡Informacion!',
+                    title: '¡Información!',
                     text: 'No se guardo la relación familiar',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
             } else {
-                console.log('result', result)
+                if (result.success === 1) {
+                    this.getAllRelacionesFamiliares();
+                };
             };
         });
     };
 
     createGrid = () => {
+        this.muestraGrid = false;
         this.toolbar = [];
         this.columns = [
             {
@@ -122,10 +131,6 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
             {
                 caption: 'Familiar',
                 dataField: 'NombreFamiliar'
-            },
-            {
-                caption: 'Tipo de persona',
-                dataField: 'TipoPer'
             },
             {
                 caption: 'Relación',

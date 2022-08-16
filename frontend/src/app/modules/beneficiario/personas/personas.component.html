@@ -299,7 +299,7 @@
             <mat-tab *ngIf="!hiddenForm && actualizarPersona" label="Relación familiar">
                 <mat-card>
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <app-relacionFamiliar [idPersona]="gralDataPersona.IdPersona"></app-relacionFamiliar>
+                        <app-relacionFamiliar [gralDataPersona]="gralDataPersona" [catRelacionFamiliar]="catRelacionFamiliar" [catTipoPatrimonial]="catTipoPatrimonial"></app-relacionFamiliar>
                     </div>
                 </mat-card>
             </mat-tab>

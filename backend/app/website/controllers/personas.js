@@ -257,4 +257,31 @@ personas.prototype.post_selAllRelacionesFamiliares = function (req, res, next) {
     });
 };
 
+personas.prototype.post_insRelacionesFamiliares = function (req, res, next) {
+    var self = this;
+
+    const {
+        Usuario,
+        IdPersona,
+        IdPersonaRelacion,
+        IdRelFamiliar,
+        IdTipoPatrimonial
+    } = req.body
+
+    var params = [
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdPersonaRelacion', value: IdPersonaRelacion, type: self.model.types.INT },
+        { name: 'IdRelFamiliar', value: IdRelFamiliar, type: self.model.types.INT },
+        { name: 'IdTipoPatrimonial', value: IdTipoPatrimonial, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_PersonaRelFamiliar]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;
