@@ -25,6 +25,7 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
+import { environment } from 'environments/environment';
 /**IMPORTS GRID */
 
 @Component({
@@ -54,6 +55,8 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
     Columnchooser: IColumnchooser;
     /**Grid */
 
+    dataUsuario: any;
+
     constructor(
         private fb: FormBuilder,
         private router: Router,
@@ -70,6 +73,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
         this.getAllRelacionesFamiliares();
     };
 
@@ -184,7 +188,52 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
     };
 
     eliminarRelacionFamiliar = e => {
-        console.log('e', e)
+        Swal.fire({
+            title: `¿Estas seguro de eliminar la relación familiar entre ${e.data.Nombre} y ${e.data.NombreFamiliar}?`,
+            showDenyButton: true,
+            // showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            denyButtonText: `Cancelar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = {
+                    Usuario: this.dataUsuario.IdUsuario,
+                    IdPersonaRelFam: e.data.IdPersonaRelFam
+                };
+                this.gaServise.postService('personas/delRelacionesFamiliares', data).subscribe((res: any) => {
+                    if (res[0][0].Codigo >= 1) {
+                        Swal.fire({
+                            title: '¡Listo!',
+                            text: res[0][0].Mensaje,
+                            icon: 'success',
+                            confirmButtonText: 'Cerrar'
+                        });
+                        this.getAllRelacionesFamiliares();
+                    } else {
+                        Swal.fire({
+                            title: '¡Alto!',
+                            text: res[0][0].Mensaje,
+                            icon: 'warning',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    };
+                }, (error: any) => {
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
+                })
+            } else if (result.isDenied) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se elimino la relación familiar.',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            };
+        });
     };
 
     datosMessage = e => {
