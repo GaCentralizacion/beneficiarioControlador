@@ -55,6 +55,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     muestraGridSubscripciones: boolean = false;
     /**GRID */
     allEmpresas: any;
+    dataCurrenteEmpresa: any;
     showInitialSubscripciones: boolean = true;
     allAcciones: any;
     allSubscripciones: any;
@@ -100,6 +101,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
     verSubscripciones = e => {
         if (e.data.IdPersona !== undefined || e.data.IdPersona !== null || e.data.IdPersona !== '') {
+            this.dataCurrenteEmpresa = e.data;
             this.getAllTransaccionesByIdPersona(e.data);
         } else {
             Swal.fire({
@@ -141,8 +143,31 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Agregar subscripción'
+                title: 'Agregar subscripción',
+                dataEmpresa: this.dataCurrenteEmpresa
             }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo la subscripción',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un erro al guardar la relacion familiar',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
         });
     };
 

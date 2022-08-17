@@ -119,6 +119,13 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
             } else {
                 if (result.success === 1) {
                     this.getAllRelacionesFamiliares();
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un erro al guardar la relacion familiar',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
                 };
             };
         });

@@ -1,12 +1,18 @@
 .pull-left {
-    float: left !important;
-  }
-  
-  .pull-right {
-    float: right !important;
-  }
+  float: left !important;
+}
 
-  mat-form-field{
-    width: 100% !important;
-  }
+.pull-right {
+  float: right !important;
+}
 
+mat-form-field {
+  width: 100% !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

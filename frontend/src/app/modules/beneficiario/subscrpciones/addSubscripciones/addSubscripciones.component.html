@@ -11,7 +11,174 @@
 	<mat-card style="background-color: gainsboro;">
 		<div class="row">
 			<div class="col-md-12">
-				
+				<form [formGroup]="subscripcionesForm" class="example-form">
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+							<mat-label>Razón social</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input readonly matInput placeholder="Razón social" formControlName="razonSocial"
+									autocomplete="off">
+								<mat-error>
+									Ingrese la razón social
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Persona de subscripción</mat-label>
+								<mat-select formControlName="subscriptor"
+									(selectionChange)="getAllConceptos($event.value)">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let subscriptor of allSubscriptores"
+										[value]="subscriptor.IdPersonaSubscripcion">
+										{{subscriptor.Nombre}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione un subscriptor
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showSelectConceptos && showAllFrom">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Concepto</mat-label>
+								<mat-select formControlName="concepto"
+									(selectionChange)="getAllPersonasDestino($event.value)">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let concepto of allConceptos" [value]="concepto.IdConcepto">
+										{{concepto.Concepto}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione un concepto
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"
+							*ngIf="showSelectPersonaDestino  && showAllFrom">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Persona Destino</mat-label>
+								<mat-select formControlName="personaDestino">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let personaDestino of allPersonasDestino"
+										[value]="personaDestino.IdPersonaDestino">
+										{{personaDestino.Nombre}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione una persona destino
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Serie</mat-label>
+								<mat-select formControlName="serie" (selectionChange)="getAllDataSerie($event.value)">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let serie of allSeries" [value]="serie.Serie">
+										{{serie.Serie}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione una serie
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
+							<mat-label>Valor unitario</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input readonly matInput currencyMask
+									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
+									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off">
+								<mat-error>
+									Seleccione una serie para obtener un valor unitario
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
+							<mat-label>Cantidad</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input [readonly]="readOnlyeCantidad" matInput type="number" placeholder="Cantidad"
+									formControlName="cantidad" autocomplete="off"
+									(keyup)="cantidadOnChangeEvent($event.target.value)">
+								<mat-error *ngIf="subscripcionesForm.controls.cantidad.value === 0">
+									Debes seleccionar minimo 1 acción
+								</mat-error>
+								<mat-error *ngIf="subscripcionesForm.controls.cantidad.value > 0">
+									Solo se tienen {{serieSeleccionada[0]?.Disponibles}} series disponibles
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
+							<mat-label>Importe</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input readonly matInput currencyMask
+									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
+									placeholder="Importe" formControlName="importe" autocomplete="off">
+								<mat-error>
+									Ingrese la cantidad de acciones para calcular el importe
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"
+							*ngIf="showFieldsImportePrecioVenta  && showAllFrom">
+							<mat-label>Precio unitario de venta</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+									type="text" placeholder="Precio unitario de venta" formControlName="precioVenta"
+									autocomplete="off">
+								<mat-error>
+									Ingrese el precio unitario de venta
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"
+							*ngIf="showFieldsImportePrecioVenta && showAllFrom">
+							<mat-label>Importe de venta</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+									type="text" placeholder="Importe de venta" formControlName="importeVenta"
+									autocomplete="off">
+								<mat-error>
+									Ingrese el importe de venta
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
+							<mat-label>Fecha adquisición</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input readonly [max]="today" matInput 
+								[matDatepicker]="picker" formControlName="fechaAdqusicion" placeholder="Fecha adquisición">
+								<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+								<mat-datepicker #picker></mat-datepicker>
+								<mat-error>
+									Seleccione una fecha de adquisición
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="showAllfields && showAllFrom">
+							<mat-label>Observaciones</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<textarea matInput rows="6" [maxlength]="maxLengthTextArea" placeholder="Observaciones"
+									formControlName="observaciones"></textarea>
+								<mat-error>
+									Ingrese las observaciones sin rebasar los caracteres permitidos
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</mat-card>
@@ -19,6 +186,6 @@
 <mat-dialog-actions align="end">
 	<button mat-button [mat-dialog-close]="0">Cancelar</button>
 	<button mat-button (click)="guardarSubscripcion()" cdkFocusInitial>
-		Guardar relación
+		Guardar subscripción
 	</button>
 </mat-dialog-actions>
