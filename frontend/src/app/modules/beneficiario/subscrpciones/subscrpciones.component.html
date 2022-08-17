@@ -1,0 +1,62 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="square-loader">
+    <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+
+<div style="width: 100%;">
+    <mat-card *ngIf="showInitialSubscripciones">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGrid" [datos]="allEmpresas" [columns]="columns" [gridOptions]="gridOptions"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                    (verSubscripciones)="verSubscripciones($event)" [toolbar]="toolbar">
+                </app-grid-component>
+            </div>
+        </div>
+    </mat-card>
+
+    <mat-card *ngIf="!showInitialSubscripciones">
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <h4>Acciones</h4>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button class="btn btn-info pull-right" (click)="backAllEmpresas(false)">
+                    Regresar <i class="fas fa-arrow-alt-circle-left"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGridAcciones" [datos]="allAcciones" [columns]="columnsAcciones" [gridOptions]="gridOptions"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbarAcciones">
+                </app-grid-component>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <h4>Subscripciones</h4>
+            </div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button class="btn btn-success pull-right" (click)="registrarSubscripcion()">
+                Registrar <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGridSubscripciones" [datos]="allSubscripciones" [columns]="columnsSubscripciones" [gridOptions]="gridOptions"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbarSubscripciones">
+                </app-grid-component>
+            </div>
+        </div>
+    </mat-card>
+</div>

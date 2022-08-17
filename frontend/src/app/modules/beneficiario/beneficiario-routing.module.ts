@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccionistaComponent } from './accionista/accionista.component';
 import { SeriesComponent } from './series/series.component';
 import { PersonasComponent } from './personas/personas.component';
+import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component';
 
 const routes: Routes = [
     {
@@ -22,6 +23,10 @@ const routes: Routes = [
     {
         path: 'series',
         component: SeriesComponent,
+    },
+    {
+        path: 'subscripciones',
+        component: SubscripcionesComponent,
     }
 ];
 

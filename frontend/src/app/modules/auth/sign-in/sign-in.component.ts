@@ -99,7 +99,7 @@ export class AuthSignInComponent implements OnInit {
 					};
 					let lastJsonAcciones = `{${jsonAcciones.substring(0, jsonAcciones.length - 1)}}`;
 					localStorage.setItem(environment._varsLocalStorage.accionesUser, lastJsonAcciones);
-					this._router.navigateByUrl('/beneficiario/dashboard');
+					this._router.navigateByUrl('/beneficiario/personas');
 				} else {
 					this.spinner.hide();
 					this.signInForm.enable();

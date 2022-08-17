@@ -668,8 +668,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Nombre / Razón',
-                dataField: 'Nombre',
-                cssClass: 'asignacion2'
+                dataField: 'Nombre'
             },
             {
                 caption: 'Tipo de persona',

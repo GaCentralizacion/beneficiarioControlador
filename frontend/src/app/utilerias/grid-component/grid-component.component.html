@@ -22,7 +22,7 @@
 
 
 		<!-- -------------------- PAGINACION ------------------------------------------>
-		<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" ></dxo-pager>
+		<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true"></dxo-pager>
 		<dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
 
 		<!-- -------------------- FILTROS ------------------------------------------>
@@ -48,7 +48,8 @@
 		<dxi-column *ngFor="let column of columns" [dataField]="column.dataField" [caption]="column.caption"
 			[width]="column.width" [groupIndex]="column.groupIndex" [cellTemplate]="column.cellTemplate"
 			[hidingPriority]="column.hiddingPriority" [allowEditing]="column.allowEditing" [dataType]="column.dataType"
-			[format]="column.format" [editorOptions]="column.editorOptions">
+			[format]="column.format" [editorOptions]="column.editorOptions" [fixed]="column.fixed"
+			[cssClass]="column.cssClass">
 		</dxi-column>
 
 		<!-- --- TEMPLATES PARA COLUMNAS QUE NECESITAN DE ALGUN CONTROL O FUNCIONALIDAD EN ESPECIAL --- -->
@@ -95,6 +96,14 @@
 			</button>
 		</div>
 		<!-- -------------------- TEMPLATE DEL RELACIONES FAMILIARES ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE VER SUBSCRIPCIONES DE LAS EMPRESAS ------------------------------------------>
+		<div *dxTemplate="let data of 'verSubscripciones'">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verSubscripcionesFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE VER SUBSCRIPCIONES DE LAS EMPRESAS ------------------------------------------>
 
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
@@ -225,7 +234,7 @@
 					[caption]="column.caption" [width]="column.width" [groupIndex]="column.groupIndex"
 					[cellTemplate]="column.cellTemplate" [hidingPriority]="column.hiddingPriority"
 					[allowEditing]="column.allowEditing" [dataType]="column.dataType" [format]="column.format"
-					[cssClass]="column.cssClass">
+					[fixed]="column.fixed" [cssClass]="column.cssClass">
 					<!--dxi-validation-rule *ngIf="column.allowEditing === true"
             type="pattern"
             [pattern]="column.pattern"
