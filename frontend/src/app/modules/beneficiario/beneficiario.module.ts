@@ -15,6 +15,7 @@ import { DomiciliosComponent } from './personas/utilsPersonas/domiciliosPersona/
 import { RelacionFamiliarComponent } from './personas/utilsPersonas/relacionFamiliar/relacionFamiliar.component';
 import { AddRelacionComponent } from './personas/utilsPersonas/relacionFamiliar/addRelacion/addRelacion.component';
 import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component';
+import { AddSubscripcionesComponent } from './subscrpciones/addSubscripciones/addSubscripciones.component';
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component
         DomiciliosComponent,
         RelacionFamiliarComponent,
         AddRelacionComponent,
-        SubscripcionesComponent
+        SubscripcionesComponent,
+        AddSubscripcionesComponent
     ],
     imports: [
         CommonModule,

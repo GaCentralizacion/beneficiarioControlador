@@ -6,6 +6,7 @@ import { MatTable } from '@angular/material/table';
 import { NgxSpinnerService } from "ngx-spinner";
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
+import { AddSubscripcionesComponent } from './addSubscripciones/addSubscripciones.component';
 
 /**IMPORTS GRID */
 import {
@@ -136,7 +137,13 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     registrarSubscripcion = () => {
-        console.log('Agregamos una subscripcion')
+        const dialogRef = this.dialog.open(AddSubscripcionesComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Agregar subscripción'
+            }
+        });
     };
 
     createInitialGrid = () => {
