@@ -76,11 +76,22 @@ export class AccionistaComponent implements OnInit, OnDestroy {
             this.spinner.hide();
             if (res[0][0].success === 1) {
                 this.dataAccionistas = res[1];
-                console.log('this.dataAccionistas', this.dataAccionistas)
                 this.createGrid();
             } else {
-                Swal.fire('No se Encontraton accionistas', '', 'warning')
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'No se encontraton accionistas',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
             };
+        }, (error: any) => {
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
@@ -88,7 +99,13 @@ export class AccionistaComponent implements OnInit, OnDestroy {
         this.spinner.show();
         this.gaService.getService(`accionistas/selAccionistaByid?idUsuario=${idUsuario}`).subscribe((res: any) => {
             this.spinner.hide();
-            console.log('resBYID', res)
+        }, (error: any) => {
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 

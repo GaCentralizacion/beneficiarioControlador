@@ -150,6 +150,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             if (!result) {
+                this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
                 Swal.fire({
                     title: '¡Información!',
                     text: 'No se guardo la subscripción',
@@ -209,7 +210,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         */
         this.exportExcel = { enabled: true, fileName: 'datos' };
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
-        this.columnHiding = { hide: true };
+        this.columnHiding = { hide: false };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
         this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
         // ******************PARAMETROS DE PARA EDITAR GRID**************** */
@@ -259,7 +260,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Serie'
             },
             {
-                caption: 'Valor Unitario',
+                caption: 'Valor unitario',
                 dataField: 'ValorUnitario'
             },
             {
@@ -291,7 +292,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         */
         this.exportExcel = { enabled: true, fileName: 'datos' };
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
-        this.columnHiding = { hide: true };
+        this.columnHiding = { hide: false };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
         this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
         // ******************PARAMETROS DE PARA EDITAR GRID**************** */
@@ -341,7 +342,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Cantidad'
             },
             {
-                caption: 'Valor Unitario',
+                caption: 'Valor unitario',
                 dataField: 'ValorUnitario'
             },
             {
@@ -349,7 +350,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Importe'
             },
             {
-                caption: 'Fecha Adquisicion',
+                caption: 'Fecha adquisición',
                 dataField: 'FechaAduisicion'
             },
             {
@@ -385,7 +386,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         */
         this.exportExcel = { enabled: true, fileName: 'datos' };
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
-        this.columnHiding = { hide: true };
+        this.columnHiding = { hide: false };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
         this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
         // ******************PARAMETROS DE PARA EDITAR GRID**************** */

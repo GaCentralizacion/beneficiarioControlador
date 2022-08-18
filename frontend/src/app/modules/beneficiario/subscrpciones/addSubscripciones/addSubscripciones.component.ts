@@ -308,8 +308,8 @@ export class AddSubscripcionesComponent implements OnInit {
 					Cantidad: this.subscripcionesForm.controls.cantidad.value,
 					FechaAduisicion: this.subscripcionesForm.controls.fechaAdqusicion.value,
 					Observaciones: this.subscripcionesForm.controls.observaciones.value,
-					PrecioUnitarioVenta: this.subscripcionesForm.controls.precioVenta.value,
-					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value
+					PrecioUnitarioVenta: this.subscripcionesForm.controls.precioVenta.value === 0 ? null : this.subscripcionesForm.controls.precioVenta.value,
+					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value
 				};
 
 				this.gaService.postService('subscripciones/insSubscripciones', dataSend).subscribe((res: any) => {

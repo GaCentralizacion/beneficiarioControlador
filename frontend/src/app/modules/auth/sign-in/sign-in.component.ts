@@ -112,7 +112,14 @@ export class AuthSignInComponent implements OnInit {
 				};
 			};
 		}, (error: any) => {
-			console.log('errorCatch', error)
+			this.spinner.hide();
+			this.signInForm.enable();
+			Swal.fire({
+				title: '¡Error!',
+				text: error.error.text,
+				icon: 'error',
+				confirmButtonText: 'Cerrar'
+			});
 		});
 	};
 };

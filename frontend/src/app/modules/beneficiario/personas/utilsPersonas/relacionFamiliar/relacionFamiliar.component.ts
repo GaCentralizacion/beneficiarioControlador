@@ -162,7 +162,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
             */
         const pageSizes = ['10', '25', '50', '100'];
 
-        this.gridOptions = { paginacion: 5, pageSize: [10, 20, 40, 80, 100] };
+        this.gridOptions = { paginacion: 10, pageSize: [20, 40, 80, 100] };
 
         /*
         Parametros de Exploracion

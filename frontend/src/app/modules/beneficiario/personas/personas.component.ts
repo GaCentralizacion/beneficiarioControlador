@@ -183,7 +183,12 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.allPersonas = res[0];
             this.createGrid();
         }, (error: any) => {
-            Swal.fire('Error', 'Error al regresar las personas, favor de contactar el administrador. ' + error.error.text, 'warning');
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
@@ -236,17 +241,32 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 };
             } else {
                 this.spinner.hide();
-                Swal.fire('Error al regresar los catalogos', '', 'warning');
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'Error al regresar los catalogos',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         }, (error: any) => {
             this.spinner.hide();
-            Swal.fire('Error', 'Error al regresar los catalogos, favor de contactar el administrador. ' + error.error.text, 'warning');
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
     getCamposForm = tipoPersona => {
         if (tipoPersona === 0) {
-            Swal.fire('Informacion', 'Debe seleccionar el tipo de persona', 'info');
+            Swal.fire({
+                title: '¡Información!',
+                text: 'Debe seleccionar el tipo de persona',
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
             this.hiddenForm = true;
         } else {
             this.spinner.show();
@@ -261,12 +281,22 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     this.setVariablesForm(res[0], tipoPersona);
                     this.hiddenForm = false;
                 } else {
-                    Swal.fire('Alto', 'No se obtuvo la regla del fomulario', 'error');
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'No se obtuvo la regla del fomulario',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
                 };
                 this.spinner.hide();
 
             }, (error: any) => {
-                Swal.fire('Error', 'Error al regresar la regla del formulario, favor de contactat el administrador. ' + error.error.text, 'warning');
+                Swal.fire({
+                    title: '¡Error!',
+                    text: error.error.text,
+                    icon: 'error',
+                    confirmButtonText: 'Cerrar'
+                });
                 this.spinner.hide();
             });
         };
@@ -293,10 +323,20 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     this.textModificacion = `Registrado el ${dateCreacion} por ${this.gralDataPersona?.NombUsuarioAlta}`;
                 };
             } else {
-                Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona', 'error');
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'Ocurrio un error al regresar los datos de la persona',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         }, (error: any) => {
-            Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona,' + error.error.text, 'error');
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
@@ -494,7 +534,12 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     this.spinner.hide();
                 });
             } else if (result.isDenied) {
-                Swal.fire('No se guardo la informacion', '', 'info')
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo la información',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         });
     };
@@ -608,19 +653,29 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     } else {
                         this.spinner.hide();
                         Swal.fire({
-                            title: '¡Error!',
+                            title: '¡Alto!',
                             text: res[0][0].Mensaje,
-                            icon: 'error',
+                            icon: 'warning',
                             confirmButtonText: 'Cerrar'
                         });
                     };
                 }, (error: any) => {
                     this.spinner.hide();
-                    Swal.fire('Error', 'Error al actualizar la persona ' + error.error.text, 'error');
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
                 });
 
             } else if (result.isDenied) {
-                Swal.fire('No se guardo la informacion', '', 'info')
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo la información',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         });
     };
@@ -645,15 +700,30 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                     this.gaService.postService('personas/delPersona', dataSend).subscribe((res: any) => {
                         if (res[0][0].success === 1) {
-                            Swal.fire('Listo', res[0][0].msg, 'success');
+                            Swal.fire({
+                                title: '¡Listo!',
+                                text: res[0][0].msg,
+                                icon: 'success',
+                                confirmButtonText: 'Cerrar'
+                            });
                             this.getAllPersonas();
                         } else {
-                            Swal.fire('Alto', res[0][0].msg, 'error')
+                            Swal.fire({
+                                title: '¡Alto!',
+                                text: res[0][0].msg,
+                                icon: 'warning',
+                                confirmButtonText: 'Cerrar'
+                            });
                             this.getAllPersonas();
                         };
                     });
                 } else {
-                    Swal.fire('', 'No se realizo ninguna accion.', 'success')
+                    Swal.fire({
+                        title: '¡Información!',
+                        text: 'No se realizo ninguna acción',
+                        icon: 'info',
+                        confirmButtonText: 'Cerrar'
+                    });
                 }
             });
         };
@@ -697,7 +767,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             */
         const pageSizes = ['10', '25', '50', '100'];
 
-        this.gridOptions = { paginacion: 5, pageSize: [10, 20, 40, 80, 100] };
+        this.gridOptions = { paginacion: 10, pageSize: [20, 40, 80, 100] };
 
         /*
         Parametros de Exploracion
