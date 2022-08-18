@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-sm-12 col-md-4 col-xl-4"></div>
+    <div class="col-sm-12 col-md-4 col-xl-4"></div>
+    <div class="col-sm-12 col-md-4 col-xl-4">
+        <!-- <button class="btn btn-success pull-right" (click)="addRelacion()">
+            Agregar relación familiar <i class="fas fa-plus"></i>
+        </button> -->
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-xl-12">
+        <app-grid-component *ngIf="muestraGrid" [datos]="allRelaciones" [columns]="columns" [gridOptions]="gridOptions"
+            [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+            [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+            (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar"
+            (eliminarRelacionFamiliar)="eliminarRelacionFamiliar($event)">
+        </app-grid-component>
+    </div>
+</div>

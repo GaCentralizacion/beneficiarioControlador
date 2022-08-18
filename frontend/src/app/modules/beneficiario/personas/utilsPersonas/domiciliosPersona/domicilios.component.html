@@ -3,10 +3,10 @@
     <div class="row justify-content-start align-items-center">
         <div id="{{validFormTipoDom}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-form-field id="{{validFormTipoDom}}_component" appearance="fill">
-                <mat-label>Tipo Domicilio</mat-label>
+                <mat-label>Tipo de domicilio</mat-label>
                 <mat-select formControlName="idTipDom">
                     <mat-option [value]="0">
-                        Seleccione una opcion
+                        Seleccione una opción
                     </mat-option>
                     <mat-option *ngFor="let tipoDomicilio of catTipoDomicilio" [value]="tipoDomicilio.IdTipoDomicilio">
                         {{tipoDomicilio.Descripcion}}
@@ -18,36 +18,36 @@
         <div id="{{validFormCalle}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Calle</mat-label>
             <mat-form-field id="{{validFormCalle}}_component" appearance="fill">
-                <input matInput placeholder="Calle" formControlName="calle">
+                <input matInput placeholder="Calle" formControlName="calle" autocomplete="off">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormNumExt}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Número Exteriror</mat-label>
+            <mat-label>Número exteriror</mat-label>
             <mat-form-field id="{{validFormNumExt}}_component" appearance="fill">
-                <input matInput placeholder="Numero Exteriror" formControlName="numExt">
+                <input matInput placeholder="Número exteriror" formControlName="numExt" autocomplete="off">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Número Interiror</mat-label>
+            <mat-label>Número interiror</mat-label>
             <mat-form-field appearance="fill">
-                <input matInput placeholder="Número Interiror" formControlName="numInt">
+                <input matInput placeholder="Número interiror" formControlName="numInt" autocomplete="off">
             </mat-form-field>
         </div>
     </div>
     <div class="row justify-content-start align-items-center">
         <div id="{{validFormCp}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Codigo Postal</mat-label>
+            <mat-label>Código postal</mat-label>
             <mat-form-field id="{{validFormCp}}_component" appearance="fill">
-                <input matInput placeholder="Codigo Postal" formControlName="cp" (ngModelChange)="changeCodigoPostal($event)">
+                <input matInput placeholder="Código postal" formControlName="cp" (ngModelChange)="changeCodigoPostal($event)" autocomplete="off">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div id="{{validFormColonia_asentamiento}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Colonia/Asentamiento</mat-label>
+            <mat-label>Colonia / Asentamiento</mat-label>
             <mat-form-field id="{{validFormColonia_asentamiento}}_component" appearance="fill">
-                <input [readonly]="searchCodigoPostal" matInput placeholder="Colonia/Asentamiento" formControlName="colonia_asentamiento" [matAutocomplete]="autoColonia">
+                <input [readonly]="searchCodigoPostal" matInput placeholder="Colonia / Asentamiento" formControlName="colonia_asentamiento" [matAutocomplete]="autoColonia" autocomplete="off">
                 <mat-autocomplete #autoColonia="matAutocomplete">
                     <mat-option *ngFor="let option of optionsColonia" [value]="option">
                       {{option}}
@@ -56,9 +56,9 @@
             </mat-form-field>
         </div>
         <div id="{{validFormDelegacion_municipio}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Delegacion/Municipio</mat-label>
+            <mat-label>Delegación / Municipio</mat-label>
             <mat-form-field id="{{validFormDelegacion_municipio}}_component" appearance="fill">
-                <input [readonly]="searchCodigoPostal" matInput placeholder="Delegacion/Municipio" formControlName="delegacion_municipio" [matAutocomplete]="autoDelegacion">
+                <input [readonly]="searchCodigoPostal" matInput placeholder="Delegación / Municipio" formControlName="delegacion_municipio" [matAutocomplete]="autoDelegacion" autocomplete="off">
                 <mat-autocomplete #autoDelegacion="matAutocomplete">
                     <mat-option *ngFor="let option of optionsDelegacion" [value]="option">
                       {{option}}
@@ -68,9 +68,9 @@
             </mat-form-field>
         </div>
         <div id="{{validFormCiudad_estado}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Ciudad/Estado</mat-label>
+            <mat-label>Ciudad / Estado</mat-label>
             <mat-form-field id="{{validFormCiudad_estado}}_component" appearance="fill">
-                <input [readonly]="searchCodigoPostal" matInput placeholder="Ciudad/Estado" formControlName="ciudad_estado" [matAutocomplete]="autoCiudad">
+                <input [readonly]="searchCodigoPostal" matInput placeholder="Ciudad / Estado" formControlName="ciudad_estado" [matAutocomplete]="autoCiudad" autocomplete="off">
                 <mat-autocomplete #autoCiudad="matAutocomplete">
                     <mat-option *ngFor="let option of optionsCiudad" [value]="option">
                       {{option}}
@@ -84,30 +84,30 @@
         <div id="{{validFormPais}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>País</mat-label>
             <mat-form-field id="{{validFormPais}}_component" appearance="fill">
-                <input matInput placeholder="País" formControlName="pais">
+                <input matInput placeholder="País" formControlName="pais" autocomplete="off">
                 <mat-error></mat-error>
             </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Entre Calle 1</mat-label>
+            <mat-label>Entre calle 1</mat-label>
             <mat-form-field appearance="fill">
-                <input matInput placeholder="Entre Calle 1" formControlName="calle1">
+                <input matInput placeholder="Entre calle 1" formControlName="calle1" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
-            <mat-label>Entre Calle 2</mat-label>
+            <mat-label>Entre calle 2</mat-label>
             <mat-form-field appearance="fill">
-                <input matInput placeholder="Entre Calle 3" formControlName="calle2">
+                <input matInput placeholder="Entre calle 2" formControlName="calle2" autocomplete="off">
             </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-slide-toggle color="primary" formControlName="esFiscal">
-                Domicilio Fiscal
+                Domicilio fiscal
             </mat-slide-toggle>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-slide-toggle color="primary" formControlName="predeterminado">
-                Domicilio Predeterminado
+                Predeterminado
             </mat-slide-toggle>
         </div>
     </div>

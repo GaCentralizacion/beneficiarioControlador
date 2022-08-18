@@ -70,7 +70,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
             clearInterval(this.globalInterval);
         };
         this.initEventListener();
-        // this.initInterval();
+        this.initInterval();
 
         this.dataUser = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
         this.menuApp = JSON.parse(localStorage.getItem(environment._varsLocalStorage.menuApp));
@@ -117,24 +117,24 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
         return parseInt(localStorage.getItem(STORE_KEY));
     };
 
-    // initInterval() {
-    //     this.globalInterval = setInterval(() => {
-    //         this.checkInterval();
-    //     }, CHECK_INTERVAL);
-    // };
+    initInterval() {
+        this.globalInterval = setInterval(() => {
+            this.checkInterval();
+        }, CHECK_INTERVAL);
+    };
 
-    // checkInterval = () => {
-    //     if (this._router.url !== '/sign-in') {
-    //         const now = Date.now();
-    //         const timeleft = this.getLastAction() + MINUTES_UNITL_AUTO_LOGOUT * 60 * 1000;
-    //         const diff = timeleft - now
-    //         const isTimeout = diff < 0;
+    checkInterval = () => {
+        if (this._router.url !== '/sign-in') {
+            const now = Date.now();
+            const timeleft = this.getLastAction() + MINUTES_UNITL_AUTO_LOGOUT * 60 * 1000;
+            const diff = timeleft - now
+            const isTimeout = diff < 0;
 
-    //         if (isTimeout) {
-    //             this._router.navigateByUrl('sign-in');
-    //         };
-    //     };
-    // };
+            if (isTimeout) {
+                this._router.navigateByUrl('sign-in');
+            };
+        };
+    };
 
     createMenu = () => {
         let _default: FuseNavigationItem[] = [];

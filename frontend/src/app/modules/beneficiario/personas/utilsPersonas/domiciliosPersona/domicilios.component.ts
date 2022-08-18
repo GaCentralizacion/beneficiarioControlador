@@ -234,12 +234,12 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 if (JSON.stringify(domicilio.data) === '{}') {
                     await this.createAndEmbebedDivError(idDivTipoDom, idPadreValidFormTipoDom, idComponentPadreValidFormTipoDom, 'Selecciona el tipo de domicilio');
                     await this.createAndEmbebedDivError(idDivCalle, idPadreValidFormCalle, idComponentPadreValidFormCalle, 'Ingresa la calle');
-                    await this.createAndEmbebedDivError(idDivNumExt, idPadreValidFormNumExt, idComponentPadreValidFormNumExt, 'Selecciona el numero exteriror');
-                    await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa el codigo postal');
-                    await this.createAndEmbebedDivError(idDivColonia_asentamiento, idPadreValidFormColonia_asentamiento, idComponentPadreValidFormColonia_asentamiento, 'Ingresa la colonia');
-                    await this.createAndEmbebedDivError(idDivDelegacion_municipio, idPadreValidFormDelegacion_municipio, idComponentPadreValidFormDelegacion_municipio, 'Ingresa la delegacion');
-                    await this.createAndEmbebedDivError(idDivCiudad_estado, idPadreValidFormCiudad_estado, idComponentPadreValidFormCiudad_estado, 'Selecciona la ciudad');
-                    await this.createAndEmbebedDivError(idDivPais, idPadreValidFormPais, idComponentPadreValidFormPais, 'Ingresa el pais');
+                    await this.createAndEmbebedDivError(idDivNumExt, idPadreValidFormNumExt, idComponentPadreValidFormNumExt, 'Selecciona el número exteriror');
+                    await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa el código postal');
+                    await this.createAndEmbebedDivError(idDivColonia_asentamiento, idPadreValidFormColonia_asentamiento, idComponentPadreValidFormColonia_asentamiento, 'Ingresa la colonia / asentamiento');
+                    await this.createAndEmbebedDivError(idDivDelegacion_municipio, idPadreValidFormDelegacion_municipio, idComponentPadreValidFormDelegacion_municipio, 'Ingresa la delegación / municipio');
+                    await this.createAndEmbebedDivError(idDivCiudad_estado, idPadreValidFormCiudad_estado, idComponentPadreValidFormCiudad_estado, 'Ingresa la ciudad / estado');
+                    await this.createAndEmbebedDivError(idDivPais, idPadreValidFormPais, idComponentPadreValidFormPais, 'Ingresa el país');
                 } else {
                     if (domicilio.data.idTipDom === null || domicilio.data.idTipDom === undefined || domicilio.data.idTipDom === 0) {
                         await this.createAndEmbebedDivError(idDivTipoDom, idPadreValidFormTipoDom, idComponentPadreValidFormTipoDom, 'Selecciona el tipo de domicilio');
@@ -248,26 +248,26 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                         await this.createAndEmbebedDivError(idDivCalle, idPadreValidFormCalle, idComponentPadreValidFormCalle, 'Ingresa la calle');
                     };
                     if (domicilio.data.numExt === null || domicilio.data.numExt === undefined || domicilio.data.numExt === '') {
-                        await this.createAndEmbebedDivError(idDivNumExt, idPadreValidFormNumExt, idComponentPadreValidFormNumExt, 'Selecciona el numero exteriror');
+                        await this.createAndEmbebedDivError(idDivNumExt, idPadreValidFormNumExt, idComponentPadreValidFormNumExt, 'Selecciona el número exteriror');
                     };
                     if (domicilio.data.cp === null || domicilio.data.cp === undefined || domicilio.data.cp === '') {
-                        await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa el codigo postal');
+                        await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa el código postal');
                     } else {
                         if (!domicilio.data.cp.match(REGEX_CP)) {
-                            await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa un codigo postal valido');
+                            await this.createAndEmbebedDivError(idDivCp, idPadreValidFormCp, idComponentPadreValidFormCp, 'Ingresa un código postal valido');
                         };
                     };
                     if (domicilio.data.colonia_asentamiento === null || domicilio.data.colonia_asentamiento === undefined || domicilio.data.colonia_asentamiento === '') {
-                        await this.createAndEmbebedDivError(idDivColonia_asentamiento, idPadreValidFormColonia_asentamiento, idComponentPadreValidFormColonia_asentamiento, 'Ingresa la colonia');
+                        await this.createAndEmbebedDivError(idDivColonia_asentamiento, idPadreValidFormColonia_asentamiento, idComponentPadreValidFormColonia_asentamiento, 'Ingresa la colonia / asentamiento');
                     };
                     if (domicilio.data.delegacion_municipio === null || domicilio.data.delegacion_municipio === undefined || domicilio.data.delegacion_municipio === '') {
-                        await this.createAndEmbebedDivError(idDivDelegacion_municipio, idPadreValidFormDelegacion_municipio, idComponentPadreValidFormDelegacion_municipio, 'Ingresa la delegacion');
+                        await this.createAndEmbebedDivError(idDivDelegacion_municipio, idPadreValidFormDelegacion_municipio, idComponentPadreValidFormDelegacion_municipio, 'Ingresa la delegación / municipio');
                     };
                     if (domicilio.data.ciudad_estado === null || domicilio.data.ciudad_estado === undefined || domicilio.data.ciudad_estado === '') {
-                        await this.createAndEmbebedDivError(idDivCiudad_estado, idPadreValidFormCiudad_estado, idComponentPadreValidFormCiudad_estado, 'Selecciona la ciudad');
+                        await this.createAndEmbebedDivError(idDivCiudad_estado, idPadreValidFormCiudad_estado, idComponentPadreValidFormCiudad_estado, 'Ingresa la ciudad / estado');
                     };
                     if (domicilio.data.pais === null || domicilio.data.pais === undefined || domicilio.data.pais === '') {
-                        await this.createAndEmbebedDivError(idDivPais, idPadreValidFormPais, idComponentPadreValidFormPais, 'Ingresa el pais');
+                        await this.createAndEmbebedDivError(idDivPais, idPadreValidFormPais, idComponentPadreValidFormPais, 'Ingresa el país');
                     };
                 };
             };

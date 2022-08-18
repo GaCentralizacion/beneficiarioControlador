@@ -12,7 +12,10 @@ import { SeriesComponent } from './series/series.component';
 import { PersonasComponent } from './personas/personas.component';
 import { ContactosComponent } from './personas/utilsPersonas/contactosPersona/contactos.component';
 import { DomiciliosComponent } from './personas/utilsPersonas/domiciliosPersona/domicilios.component';
-
+import { RelacionFamiliarComponent } from './personas/utilsPersonas/relacionFamiliar/relacionFamiliar.component';
+import { AddRelacionComponent } from './personas/utilsPersonas/relacionFamiliar/addRelacion/addRelacion.component';
+import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component';
+import { AddSubscripcionesComponent } from './subscrpciones/addSubscripciones/addSubscripciones.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +24,11 @@ import { DomiciliosComponent } from './personas/utilsPersonas/domiciliosPersona/
         SeriesComponent,
         PersonasComponent,
         ContactosComponent,
-        DomiciliosComponent
+        DomiciliosComponent,
+        RelacionFamiliarComponent,
+        AddRelacionComponent,
+        SubscripcionesComponent,
+        AddSubscripcionesComponent
     ],
     imports: [
         CommonModule,

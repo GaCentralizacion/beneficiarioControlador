@@ -31,6 +31,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
     validaFormDato: string = '';
     validaFormEmail: string = '';
     datoType: string = 'text'
+    datoPlaceHolder: string = ''
 
     constructor(
         private fb: FormBuilder,
@@ -84,10 +85,13 @@ export class ContactosComponent implements OnInit, OnDestroy {
 
     selectContacto = e => {
         this.contactosPersonaForm.controls.dato.setValue('');
+        this.datoPlaceHolder = '';
         if (e === 2) {
             this.datoType = 'text';
+            this.datoPlaceHolder = 'Email';
         } else {
             this.datoType = 'number';
+            this.datoPlaceHolder = 'Número';
         };
     };
 
@@ -116,14 +120,20 @@ export class ContactosComponent implements OnInit, OnDestroy {
                         await this.createAndEmbebedDivError(idDivTipo, `${contacto.id}_tipo`, idComponentPadreTipo, 'Selecciona el tipo de contacto');
                     };
                     if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
-                        await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa el dato');
+                        if (contacto.data.idTipCont === 0) {
+                            await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa un dato');
+                        } else if (contacto.data.idTipCont === 2) {
+                            await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa el email');
+                        } else {
+                            await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa el número');
+                        }
                     };
 
                     if (contacto.data.idTipCont === 2) {
                         if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
                         } else {
                             if (!contacto.data.dato.match(VALID_REGEX_MAIL)) {
-                                await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un mail valido');
+                                await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un email valido');
                             };
                         };
                     };

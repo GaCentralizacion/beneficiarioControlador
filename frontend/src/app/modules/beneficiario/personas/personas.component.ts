@@ -11,7 +11,8 @@ import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.c
 import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
 import { environment } from 'environments/environment';
 
-const REGEX_RFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 
 /**IMPORTS GRID */
 import {
@@ -28,7 +29,6 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
-import { ThisReceiver } from '@angular/compiler';
 /**IMPORTS GRID */
 
 @Component({
@@ -100,6 +100,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     personaForm: FormGroup;
     focusTabs: number = 0;
     hiddenForm: boolean = true;
+    textModificacion: string = '';
 
     /**VARIABLES OPTIONCES */
     // IdTipoPer
@@ -177,11 +178,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getAllPersonas = () => {
+        this.muestraGrid = false;
         this.gaService.getService(`personas/allPersonas?opcion=1&usuario=${this.userData.IdUsuario}`).subscribe((res: any) => {
             this.allPersonas = res[0];
             this.createGrid();
         }, (error: any) => {
-            Swal.fire('Error', 'Error al regresar las personas, favor de contactar el administrador. ' + error.error.text, 'warning');
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
@@ -234,17 +241,32 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 };
             } else {
                 this.spinner.hide();
-                Swal.fire('Error al regresar los catalogos', '', 'warning');
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'Error al regresar los catalogos',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         }, (error: any) => {
             this.spinner.hide();
-            Swal.fire('Error', 'Error al regresar los catalogos, favor de contactar el administrador. ' + error.error.text, 'warning');
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
     getCamposForm = tipoPersona => {
         if (tipoPersona === 0) {
-            Swal.fire('Informacion', 'Debe seleccionar el tipo de persona', 'info');
+            Swal.fire({
+                title: '¡Información!',
+                text: 'Debe seleccionar el tipo de persona',
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
             this.hiddenForm = true;
         } else {
             this.spinner.show();
@@ -256,21 +278,32 @@ export class PersonasComponent implements OnInit, OnDestroy {
             };
             this.gaService.postService('personas/allFormOptions', data).subscribe((res: any) => {
                 if (res[0].length > 0) {
-                    this.setVariablesForm(res[0]);
+                    this.setVariablesForm(res[0], tipoPersona);
                     this.hiddenForm = false;
                 } else {
-                    Swal.fire('Alto', 'No se obtuvo la regla del fomulario', 'error');
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'No se obtuvo la regla del fomulario',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
                 };
                 this.spinner.hide();
 
             }, (error: any) => {
-                Swal.fire('Error', 'Error al regresar la regla del formulario, favor de contactat el administrador. ' + error.error.text, 'warning');
+                Swal.fire({
+                    title: '¡Error!',
+                    text: error.error.text,
+                    icon: 'error',
+                    confirmButtonText: 'Cerrar'
+                });
                 this.spinner.hide();
             });
         };
     };
 
     getDataPersonaById = () => {
+        this.textModificacion = '';
         const data = {
             Opcion: 2,
             Usuario: this.userData.IdUsuario,
@@ -278,15 +311,32 @@ export class PersonasComponent implements OnInit, OnDestroy {
         };
         this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
             if (res.length > 0) {
-                this.getCamposForm(res[0][0].IdTipoPer)
+                this.getCamposForm(res[0][0].IdTipoPer);
                 this.gralDataPersona = res[0][0];
                 this.showAddPersona = true;
                 this.setDataForms(res[1], res[2]);
+                if (this.gralDataPersona?.FechaModificacion !== null) {
+                    let dateModificacion = `${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[2]}/${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[1]}/${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[0]}`;
+                    this.textModificacion = `Modificado el ${dateModificacion} por ${this.gralDataPersona?.NombUsuarioModificacion}`;
+                } else {
+                    let dateCreacion = `${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[2]}/${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[1]}/${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[0]}`;
+                    this.textModificacion = `Registrado el ${dateCreacion} por ${this.gralDataPersona?.NombUsuarioAlta}`;
+                };
             } else {
-                Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona', 'error');
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'Ocurrio un error al regresar los datos de la persona',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         }, (error: any) => {
-            Swal.fire('Alto', 'Ocurrio un error al regresar los datos de la persona,' + error.error.text, 'error');
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         });
     };
 
@@ -484,7 +534,12 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     this.spinner.hide();
                 });
             } else if (result.isDenied) {
-                Swal.fire('No se guardo la informacion', '', 'info')
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo la información',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         });
     };
@@ -598,19 +653,29 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     } else {
                         this.spinner.hide();
                         Swal.fire({
-                            title: '¡Error!',
+                            title: '¡Alto!',
                             text: res[0][0].Mensaje,
-                            icon: 'error',
+                            icon: 'warning',
                             confirmButtonText: 'Cerrar'
                         });
                     };
                 }, (error: any) => {
                     this.spinner.hide();
-                    Swal.fire('Error', 'Error al actualizar la persona ' + error.error.text, 'error');
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
                 });
 
             } else if (result.isDenied) {
-                Swal.fire('No se guardo la informacion', '', 'info')
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo la información',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         });
     };
@@ -635,15 +700,30 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                     this.gaService.postService('personas/delPersona', dataSend).subscribe((res: any) => {
                         if (res[0][0].success === 1) {
-                            Swal.fire('Listo', res[0][0].msg, 'success');
+                            Swal.fire({
+                                title: '¡Listo!',
+                                text: res[0][0].msg,
+                                icon: 'success',
+                                confirmButtonText: 'Cerrar'
+                            });
                             this.getAllPersonas();
                         } else {
-                            Swal.fire('Alto', res[0][0].msg, 'error')
+                            Swal.fire({
+                                title: '¡Alto!',
+                                text: res[0][0].msg,
+                                icon: 'warning',
+                                confirmButtonText: 'Cerrar'
+                            });
                             this.getAllPersonas();
                         };
                     });
                 } else {
-                    Swal.fire('', 'No se realizo ninguna accion.', 'success')
+                    Swal.fire({
+                        title: '¡Información!',
+                        text: 'No se realizo ninguna acción',
+                        icon: 'info',
+                        confirmButtonText: 'Cerrar'
+                    });
                 }
             });
         };
@@ -657,16 +737,15 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 dataField: 'RFC'
             },
             {
-                caption: 'Nombre / Razon',
-                dataField: 'Nombre',
-                cssClass: 'asignacion2'
+                caption: 'Nombre / Razón',
+                dataField: 'Nombre'
             },
             {
-                caption: 'Tipo Persona',
+                caption: 'Tipo de persona',
                 dataField: 'TipoPer'
             },
             {
-                caption: 'Tipo Empresa',
+                caption: 'Tipo de empresa',
                 dataField: 'TipoMor'
             },
             {
@@ -678,7 +757,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 dataField: 'Alias'
             },
             {
-                caption: '',
+                caption: 'Editar',
                 allowEditing: false,
                 cellTemplate: 'crudPersonas'
             }
@@ -688,18 +767,20 @@ export class PersonasComponent implements OnInit, OnDestroy {
             */
         const pageSizes = ['10', '25', '50', '100'];
 
+        this.gridOptions = { paginacion: 10, pageSize: [20, 40, 80, 100] };
+
         /*
         Parametros de Exploracion
         */
-        this.exportExcel = { enabled: false, fileName: 'datos' };
+        this.exportExcel = { enabled: true, fileName: 'datos' };
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
         this.columnHiding = { hide: true };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
-        this.Checkbox = { checkboxmode: 'multiple' };  // *desactivar con none*/
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
         // ******************PARAMETROS DE PARA EDITAR GRID**************** */
-        this.Editing = { allowupdate: true, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
         // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
-        this.Columnchooser = { columnchooser: true };
+        this.Columnchooser = { columnchooser: false };
 
         /*
         Parametros de Search
@@ -829,6 +910,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                 };
             };
+
             if ((totalDatoPredeterminadoCelular + totalDatoPredeterminadoCorreo + totalDatoPredeterminadoTelefono) === 0) {
                 return { success: 0, msg: `Debe seleccionar un medio de contacto como predeterminado de los ${this.arrayAllContactos.length} agregados.` };
             };
@@ -897,23 +979,19 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     };
                 };
             };
+
             if (totalDomicilioFiscal === 0) {
                 return { success: 0, msg: `Debe seleccionar 1 domicilio fiscal de los ${this.arrayAllDomicilios.length} agregados.` };
             };
             if (totalDomicilioFiscal > 1) {
                 return { success: 0, msg: `Solo puede tener 1 domicilio fisca.` };
             };
+
             if ((totalDomiciliosPredeterminadosOficina + totalDomiciliosPredeterminadosOtro + totalDomiciliosPredeterminadosParticular) === 0) {
                 return { success: 0, msg: `Debe seleccionar 1 domicilio como predeterminado.` };
             };
-            if (totalDomiciliosPredeterminadosOficina > 1) {
-                return { success: 0, msg: `Solo puede tener 1 oficina como domicilio predeterminado.` };
-            };
-            if (totalDomiciliosPredeterminadosOtro > 1) {
-                return { success: 0, msg: `Solo puede tener otro domicilio como predeterminado.` };
-            };
-            if (totalDomiciliosPredeterminadosParticular > 1) {
-                return { success: 0, msg: `Solo puede tener 1 domicilio particular como predeterminado.` };
+            if ((totalDomiciliosPredeterminadosOficina + totalDomiciliosPredeterminadosOtro + totalDomiciliosPredeterminadosParticular) > 1) {
+                return { success: 0, msg: `Solo puede tener 1 domicilio como predeterminado.` };
             };
             return { success: 1, msg: '' };
         };
@@ -1001,7 +1079,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**RESET VARIABLES DE OPCIONES */
 
     /**SET VARIABLES FORMULARIO*/
-    setVariablesForm = dataBd => {
+    setVariablesForm = (dataBd, tipoPersona) => {
         this.arrayAllContactos = [];
         this.arrayAllDomicilios = [];
         for (let data of dataBd) {
@@ -1052,8 +1130,18 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.IdTipoMoralOption?.Obligatorio ? this.personaForm.controls['idTipoMor'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.get('idTipoMor').clearValidators();
         this.personaForm.controls['idTipoMor'].updateValueAndValidity();
 
-        this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+        this.personaForm.controls['rfc_identificacion'].clearValidators();
         this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+
+        if (tipoPersona === 1) {
+            this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_FIS)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+            this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+        };
+
+        if (tipoPersona === 2) {
+            this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_MOR)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
+            this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+        };
 
         this.Nombre_RazonSocial?.Obligatorio ? this.personaForm.controls['nombre_razon'].addValidators([Validators.required]) : this.personaForm.controls['nombre_razon'].clearValidators()
         this.personaForm.controls['nombre_razon'].updateValueAndValidity();

@@ -284,3 +284,13 @@
         overflow: hidden;
     }
 }
+
+::ng-deep .btn-hover:hover {
+    background-color: #999;
+    border-color: #999;
+}
+
+::ng-deep .dx-datagrid .dx-column-lines > td {
+    border-left: 0px solid #ddd;
+    border-right: 0px solid #ddd;
+}

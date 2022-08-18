@@ -64,6 +64,8 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() eliminar = new EventEmitter<{ eliminar }>();
 	@Output() archivarCfdi = new EventEmitter<{ archivarCfdi }>();
 	@Output() crudPersona = new EventEmitter<{ proceso, data }>();
+	@Output() eliminarRelacionFamiliar = new EventEmitter<{ data }>();
+	@Output() verSubscripciones = new EventEmitter<{ data }>();
 
 	public contador = 0;
 	public contadordetail = 0;
@@ -407,6 +409,14 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	//PERONSAS
 	seleccionaPersona = (proceso, data) => {
 		this.crudPersona.emit({ proceso: proceso, data: data })
+	};
+
+	eliminarRelacion = data => {
+		this.eliminarRelacionFamiliar.emit({ data: data });
+	};
+
+	verSubscripcionesFn = data => {
+		this.verSubscripciones.emit({ data: data })
 	};
 	//PERONSAS
 	/**FUNCIONES DE LAS COLUMNAS */

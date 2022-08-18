@@ -238,4 +238,71 @@ personas.prototype.post_selDataSepoMex = function (req, res, next) {
     });
 };
 
+personas.prototype.post_selAllRelacionesFamiliares = function (req, res, next) {
+    var self = this;
+
+    const { Opcion,
+        IdPersona } = req.body
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_PersonaRelFamiliar]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+personas.prototype.post_insRelacionesFamiliares = function (req, res, next) {
+    var self = this;
+
+    const {
+        Usuario,
+        IdPersona,
+        IdPersonaRelacion,
+        IdRelFamiliar,
+        IdTipoPatrimonial
+    } = req.body
+
+    var params = [
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdPersonaRelacion', value: IdPersonaRelacion, type: self.model.types.INT },
+        { name: 'IdRelFamiliar', value: IdRelFamiliar, type: self.model.types.INT },
+        { name: 'IdTipoPatrimonial', value: IdTipoPatrimonial, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_PersonaRelFamiliar]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+personas.prototype.post_delRelacionesFamiliares = function (req, res, next) {
+    var self = this;
+
+    const {
+        Usuario,
+        IdPersonaRelFam
+    } = req.body
+
+    var params = [
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdPersonaRelFam', value: IdPersonaRelFam, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Upd_PersonaRelFamiliar]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;
