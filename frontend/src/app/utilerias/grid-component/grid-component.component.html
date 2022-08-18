@@ -91,7 +91,7 @@
 
 		<!-- -------------------- TEMPLATE DEL RELACIONES FAMILIARES ------------------------------------------>
 		<div *dxTemplate="let data of 'eliminarRelacionFam'">
-			<button class="btn btn-circle btns-grids btn-hover" (click)="eliminarRelacion(data.row.data)">
+			<button *ngIf="accionesUsuario.eliminarRelacionFamiliar === 1" class="btn btn-circle btns-grids btn-hover" (click)="eliminarRelacion(data.row.data)">
 				<i class="fa-solid fa-trash-can"></i>
 			</button>
 		</div>

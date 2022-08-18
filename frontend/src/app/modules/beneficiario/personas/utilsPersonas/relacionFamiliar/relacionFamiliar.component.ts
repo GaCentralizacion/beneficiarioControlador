@@ -56,6 +56,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
     /**Grid */
 
     dataUsuario: any;
+    accionesUsuario: any;
 
     constructor(
         private fb: FormBuilder,
@@ -73,6 +74,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
         this.getAllRelacionesFamiliares();
     };

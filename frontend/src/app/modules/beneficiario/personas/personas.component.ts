@@ -170,8 +170,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.getAllPersonas();
 
         for (let menuApp of this.menuApp) {
-            if (menuApp.Link ===
-                this._router.url) {
+            if (menuApp.Link === this._router.url) {
                 this.idMenuApp = menuApp.IdMenuApp;
             };
         };

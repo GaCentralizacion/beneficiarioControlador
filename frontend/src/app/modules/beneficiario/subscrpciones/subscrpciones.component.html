@@ -44,7 +44,7 @@
             </div>
             <div class="col-sm-4 col-md-4 col-xl-4"></div>
             <div class="col-sm-4 col-md-4 col-xl-4">
-                <button class="btn btn-success pull-right" (click)="registrarSubscripcion()">
+                <button *ngIf="accionesUsuario.agregarSubscripciones === 1" class="btn btn-success pull-right" (click)="registrarSubscripcion()">
                 Registrar <i class="fas fa-plus"></i>
                 </button>
             </div>

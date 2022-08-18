@@ -23,6 +23,7 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
+import { environment } from 'environments/environment';
 /**IMPORTS GRID */
 
 @Component({
@@ -32,6 +33,7 @@ import {
 })
 
 export class SubscripcionesComponent implements OnInit, OnDestroy {
+    accionesUsuario: any
     /**GRID */
     gridOptions: IGridOptions;
     columns: IColumns[];
@@ -75,6 +77,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllEmpresas();
     };
 
