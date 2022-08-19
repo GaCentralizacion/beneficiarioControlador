@@ -323,7 +323,7 @@ export class AddSubscripcionesComponent implements OnInit {
 					IdPersona: this.dataEmpresa.IdPersona,
 					IdPersonaSubscripcion: this.subscripcionesForm.controls.subscriptor.value,
 					IdConcepto: this.subscripcionesForm.controls.concepto.value,
-					IdPersonaDestino: this.subscripcionesForm.controls.personaDestino.value === 0 ? null : this.subscripcionesForm.controls.personaDestino,
+					IdPersonaDestino: this.subscripcionesForm.controls.personaDestino.value === 0 ? null : this.subscripcionesForm.controls.personaDestino.value,
 					Serie: this.subscripcionesForm.controls.serie.value,
 					Cantidad: this.subscripcionesForm.controls.cantidad.value,
 					FechaAduisicion: this.subscripcionesForm.controls.fechaAdqusicion.value,
@@ -355,7 +355,7 @@ export class AddSubscripcionesComponent implements OnInit {
 					this.spinner.hide();
 					Swal.fire({
 						title: '¡Error!',
-						text: error.error.text,
+						text: 'Error 500, al guardar la transacción',
 						icon: 'error',
 						confirmButtonText: 'Cerrar'
 					});
