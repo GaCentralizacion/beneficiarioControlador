@@ -305,4 +305,23 @@ personas.prototype.post_delRelacionesFamiliares = function (req, res, next) {
     });
 };
 
+personas.prototype.post_selDocumentosExpediente = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdPersona
+    } = req.body
+
+    var params = [
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_DocumentosPersona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;

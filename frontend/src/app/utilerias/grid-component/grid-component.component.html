@@ -105,6 +105,14 @@
 		</div>
 		<!-- -------------------- TEMPLATE VER SUBSCRIPCIONES DE LAS EMPRESAS ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE VER EL DOCUMENTO DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+		<div *dxTemplate="let data of 'verDocumentoExpDig'">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verDocumentoExpedienteDigital(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE VER EL DOCUMENTO DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
 		<div *dxTemplate="let data of 'foto'" class="foto">

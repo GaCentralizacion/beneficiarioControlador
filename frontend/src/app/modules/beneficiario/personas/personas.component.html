@@ -304,6 +304,17 @@
                 </mat-card>
             </mat-tab>
             <!-- COMPONENETE RELACIONES FAMILIARES -->
+
+            <!-- COMPONENETE EXPEDINETE DIGITAL -->
+            <mat-tab *ngIf="!hiddenForm && actualizarPersona" label="Expediente digital">
+                <mat-card>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <app-expedienteDigital [gralDataPersona]="gralDataPersona"></app-expedienteDigital>
+                    </div>
+                </mat-card>
+            </mat-tab>
+
+            <!-- COMPONENETE EXPEDINETE DIGITAL -->
         </mat-tab-group>
         <div class="row">
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
@@ -315,11 +326,11 @@
                 <Label style="font-size: 14px;" [hidden]="!actualizarPersona"> {{textModificacion}} </Label>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.altaPersona === 1 && (focusTabs === 0 || focusTabs === 1 || focusTabs === 2)" class="btn btn-success pull-right"
                     (click)="savePersona()" [hidden]="actualizarPersona">
                     Guardar <i class="fa-solid fa-floppy-disk"></i>
                 </button>
-                <button *ngIf="accionesUsuario?.editarPersona === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.editarPersona === 1 && (focusTabs === 0 || focusTabs === 1 || focusTabs === 2)" class="btn btn-success pull-right"
                     (click)="updatePersona()" [hidden]="!actualizarPersona">
                     Actualizar <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
