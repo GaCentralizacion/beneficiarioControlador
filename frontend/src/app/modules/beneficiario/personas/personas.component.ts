@@ -120,6 +120,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     IdEstadoCivil: any;
     /**VARIABLES OPTIONCES */
 
+    rfcMaxLenght: number = 0;
+
     constructor(
         private fb: FormBuilder,
         private router: Router,
@@ -1133,11 +1135,13 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
 
         if (tipoPersona === 1) {
+            this.rfcMaxLenght = 13;
             this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_FIS)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
             this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
         };
 
         if (tipoPersona === 2) {
+            this.rfcMaxLenght = 12;
             this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_MOR)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
             this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
         };

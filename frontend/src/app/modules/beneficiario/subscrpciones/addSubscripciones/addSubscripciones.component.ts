@@ -42,6 +42,8 @@ export class AddSubscripcionesComponent implements OnInit {
 	showAllFrom: boolean = false;
 	maxLengthTextArea: number = 8000;
 	today = new Date();
+	fechaAquisicionInput: any;
+	placeHolderCantidad: string = 'Máximo';
 
 	constructor(
 		public dialog: MatDialog,
@@ -56,6 +58,19 @@ export class AddSubscripcionesComponent implements OnInit {
 	};
 
 	ngOnInit() {
+		var d = new Date(),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+
+		if (month.length < 2)
+			month = '0' + month;
+		if (day.length < 2)
+			day = '0' + day;
+
+		let dateObject = [year, month, day].join('-');
+		this.fechaAquisicionInput = this.FechaDiaCorrecto(dateObject);
+
 		this.subscripcionesForm = this._formBuilder.group({
 			razonSocial: [this.dataEmpresa.RazonSocial, Validators.required],
 			subscriptor: [0, Validators.min(1)],
@@ -63,7 +78,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			personaDestino: [0, Validators.min(1)],
 			serie: [0, Validators.min(1)],
 			valorUnitario: [null, Validators.required],
-			cantidad: [0, Validators.required],
+			cantidad: [null, Validators.required],
 			importe: [null, Validators.required],
 			precioVenta: [Validators.required],
 			importeVenta: [Validators.required],
@@ -143,7 +158,7 @@ export class AddSubscripcionesComponent implements OnInit {
 	};
 
 	getAllPersonasDestino = e => {
-		this.subscripcionesForm.controls.cantidad.setValue(0);
+		this.subscripcionesForm.controls.cantidad.setValue(null);
 		this.subscripcionesForm.controls.cantidad.markAsTouched();
 		this.subscripcionesForm.controls.valorUnitario.setValue(null);
 		this.subscripcionesForm.controls.valorUnitario.markAsTouched();
@@ -162,6 +177,7 @@ export class AddSubscripcionesComponent implements OnInit {
 				if (res.length > 0) {
 					this.allPersonasDestino = res[0];
 					this.subscripcionesForm.controls.personaDestino.setValue(0);
+					this.subscripcionesForm.controls.fechaAdqusicion.setValue(this.fechaAquisicionInput);
 					this.showSelectPersonaDestino = true;
 				} else {
 					Swal.fire({
@@ -181,6 +197,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			});
 			this.getAllSeries();
 		} else {
+			this.subscripcionesForm.controls.fechaAdqusicion.setValue(this.fechaAquisicionInput);
 			this.showSelectPersonaDestino = false;
 			this.subscripcionesForm.controls.personaDestino.clearValidators()
 			this.subscripcionesForm.controls.personaDestino.updateValueAndValidity();
@@ -239,10 +256,12 @@ export class AddSubscripcionesComponent implements OnInit {
 
 	getAllDataSerie = e => {
 		if (e !== 0) {
+			this.placeHolderCantidad = 'Máximo';
 			this.serieSeleccionada = [];
 			this.serieSeleccionada = this.allSeries.filter(x => x.Serie === e);
+			this.placeHolderCantidad = `Máximo ${this.serieSeleccionada[0].Disponibles}`
 			this.subscripcionesForm.controls.valorUnitario.setValue(this.serieSeleccionada[0].ValorUnitario);
-			this.subscripcionesForm.controls.cantidad.setValue(0);
+			this.subscripcionesForm.controls.cantidad.setValue(null);
 			this.subscripcionesForm.controls.importe.setValue(null);
 			this.subscripcionesForm.controls.cantidad.clearValidators()
 			this.subscripcionesForm.controls.cantidad.updateValueAndValidity();
@@ -252,8 +271,9 @@ export class AddSubscripcionesComponent implements OnInit {
 			}, 500);
 			this.readOnlyeCantidad = false;
 		} else {
+			this.placeHolderCantidad = 'Máximo';
 			this.readOnlyeCantidad = true;
-			this.subscripcionesForm.controls.cantidad.setValue(0);
+			this.subscripcionesForm.controls.cantidad.setValue(null);
 			this.subscripcionesForm.controls.cantidad.markAsTouched();
 			this.subscripcionesForm.controls.valorUnitario.setValue(null);
 			this.subscripcionesForm.controls.valorUnitario.markAsTouched();
@@ -356,7 +376,7 @@ export class AddSubscripcionesComponent implements OnInit {
 		this.subscripcionesForm.controls.personaDestino.setValue(0);
 		this.subscripcionesForm.controls.serie.setValue(0);
 		this.subscripcionesForm.controls.valorUnitario.setValue(null);
-		this.subscripcionesForm.controls.cantidad.setValue(0);
+		this.subscripcionesForm.controls.cantidad.setValue(null);
 		this.subscripcionesForm.controls.importe.setValue(null);
 		this.subscripcionesForm.controls.precioVenta.setValue(null);
 		this.subscripcionesForm.controls.importeVenta.setValue(null);
@@ -367,4 +387,7 @@ export class AddSubscripcionesComponent implements OnInit {
 		this.dialogRef.close(data);
 	};
 
-}
+	FechaDiaCorrecto(fecha) {
+		return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
+	};
+};

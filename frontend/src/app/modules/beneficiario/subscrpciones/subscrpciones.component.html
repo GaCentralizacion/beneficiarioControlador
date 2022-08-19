@@ -6,57 +6,83 @@
     <mat-card *ngIf="showInitialSubscripciones">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-xl-12">
-                <app-grid-component *ngIf="muestraGrid" [datos]="allEmpresas" [columns]="columns" [gridOptions]="gridOptions"
-                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
-                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
-                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
-                    (verSubscripciones)="verSubscripciones($event)" [toolbar]="toolbar">
+                <app-grid-component *ngIf="muestraGrid" [datos]="allEmpresas" [columns]="columns"
+                    [gridOptions]="gridOptions" [exportExcel]="exportExcel" [columnHiding]="columnHiding"
+                    [Checkbox]="Checkbox" [Editing]="Editing" [Columnchooser]="Columnchooser"
+                    [searchPanel]="searchPanel" [scroll]="scroll" (messageEvent)="receiveMessage($event)"
+                    (datosevent)='datosMessage($event)' (verSubscripciones)="verSubscripciones($event)"
+                    [toolbar]="toolbar">
                 </app-grid-component>
             </div>
         </div>
     </mat-card>
 
-    <mat-card *ngIf="!showInitialSubscripciones">
-        <div class="row">
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <h4>Acciones</h4>
+    <div class="containerAll" *ngIf="!showInitialSubscripciones">
+        <mat-card>
+            <mat-tab-group class="sm:px-2" [animationDuration]="'0'" (selectedTabChange)="onTabChanged($event.index);">
+                <mat-tab label="Acciones">
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                                <h4>Acciones</h4>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <app-grid-component *ngIf="muestraGridAcciones" [datos]="allAcciones"
+                                    [columns]="columnsAcciones" [gridOptions]="gridOptions" [exportExcel]="exportExcel"
+                                    [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                                    [toolbar]="toolbarAcciones">
+                                </app-grid-component>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab label="Subscripciones">
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                                <h4>Subscripciones</h4>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <app-grid-component *ngIf="muestraGridSubscripciones" [datos]="allSubscripciones"
+                                    [columns]="columnsSubscripciones" [gridOptions]="gridOptions"
+                                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox"
+                                    [Editing]="Editing" [Columnchooser]="Columnchooser" [searchPanel]="searchPanel"
+                                    [scroll]="scroll" (messageEvent)="receiveMessage($event)"
+                                    (datosevent)='datosMessage($event)' [toolbar]="toolbarSubscripciones">
+                                </app-grid-component>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+            </mat-tab-group>
+
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-xl-4">
+                    <button class="btn btn-info pull-left" (click)="backAllEmpresas(false)">
+                        Regresar <i class="fas fa-arrow-alt-circle-left"></i>
+                    </button>
+                </div>
+                <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                <div class="col-sm-4 col-md-4 col-xl-4">
+                    <button *ngIf="accionesUsuario.agregarSubscripciones === 1" class="btn btn-success pull-right"
+                        (click)="registrarSubscripcion()">
+                        Registrar <i class="fas fa-plus"></i>
+                    </button>
+                </div>
             </div>
-            <div class="col-sm-4 col-md-4 col-xl-4"></div>
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <button class="btn btn-info pull-right" (click)="backAllEmpresas(false)">
-                    Regresar <i class="fas fa-arrow-alt-circle-left"></i>
-                </button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-xl-12">
-                <app-grid-component *ngIf="muestraGridAcciones" [datos]="allAcciones" [columns]="columnsAcciones" [gridOptions]="gridOptions"
-                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
-                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
-                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbarAcciones">
-                </app-grid-component>
-            </div>
-        </div>
-        <br><br>
-        <div class="row">
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <h4>Subscripciones</h4>
-            </div>
-            <div class="col-sm-4 col-md-4 col-xl-4"></div>
-            <div class="col-sm-4 col-md-4 col-xl-4">
-                <button *ngIf="accionesUsuario.agregarSubscripciones === 1" class="btn btn-success pull-right" (click)="registrarSubscripcion()">
-                Registrar <i class="fas fa-plus"></i>
-                </button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-xl-12">
-                <app-grid-component *ngIf="muestraGridSubscripciones" [datos]="allSubscripciones" [columns]="columnsSubscripciones" [gridOptions]="gridOptions"
-                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
-                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
-                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbarSubscripciones">
-                </app-grid-component>
-            </div>
-        </div>
-    </mat-card>
+        </mat-card>
+    </div>
+
 </div>

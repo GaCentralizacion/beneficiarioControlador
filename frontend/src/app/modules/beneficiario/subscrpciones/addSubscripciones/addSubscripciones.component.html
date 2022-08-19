@@ -95,6 +95,7 @@
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
 							<mat-label>Valor unitario</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
+								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input readonly matInput currencyMask
 									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
 									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off">
@@ -106,20 +107,21 @@
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
 							<mat-label>Cantidad</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
-								<input [readonly]="readOnlyeCantidad" matInput type="number" placeholder="Cantidad"
+								<input [readonly]="readOnlyeCantidad" matInput type="number" [placeholder]="placeHolderCantidad"
 									formControlName="cantidad" autocomplete="off"
 									(keyup)="cantidadOnChangeEvent($event.target.value)">
 								<mat-error *ngIf="subscripcionesForm.controls.cantidad.value === 0">
 									Debes seleccionar minimo 1 acción
 								</mat-error>
 								<mat-error *ngIf="subscripcionesForm.controls.cantidad.value > 0">
-									Solo se tienen {{serieSeleccionada[0]?.Disponibles}} series disponibles
+									Solo se tienen {{serieSeleccionada[0]?.Disponibles}} acciones disponibles
 								</mat-error>
 							</mat-form-field>
 						</div>
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
 							<mat-label>Importe</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
+								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input readonly matInput currencyMask
 									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
 									placeholder="Importe" formControlName="importe" autocomplete="off">
@@ -132,6 +134,7 @@
 							*ngIf="showFieldsImportePrecioVenta  && showAllFrom">
 							<mat-label>Precio unitario de venta</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
+								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
 									type="text" placeholder="Precio unitario de venta" formControlName="precioVenta"
 									autocomplete="off">
@@ -144,6 +147,7 @@
 							*ngIf="showFieldsImportePrecioVenta && showAllFrom">
 							<mat-label>Importe de venta</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
+								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
 									type="text" placeholder="Importe de venta" formControlName="importeVenta"
 									autocomplete="off">
@@ -184,8 +188,8 @@
 	</mat-card>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-button [mat-dialog-close]="0">Cancelar</button>
-	<button mat-button (click)="guardarSubscripcion()" cdkFocusInitial>
-		Guardar subscripción
+	<button class="btn btn-danger"  [mat-dialog-close]="0">Cancelar</button>
+	<button class="btn btn-success" style="margin-left: 10px;" (click)="guardarSubscripcion()">
+		Guardar subscripción <i class="fa-solid fa-floppy-disk"></i>
 	</button>
 </mat-dialog-actions>

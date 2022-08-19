@@ -8,7 +8,7 @@
 		(onRowInserted)="OnRowInserted($event)" (onRowRemoved)="OnRowRemoved($event)"
 		[columnHidingEnabled]="columnHiding.hide" (onRowUpdating)="onRowUpdating($event)"
 		(onCellPrepared)="onCellPrepared($event)" (onRowPrepared)="onRowPrepared($event)"
-		(onInitNewRow)="OnInitNewRow($event)">
+		(onInitNewRow)="OnInitNewRow($event)" [allowColumnResizing]="true">
 
 		<!-- -------------------- EDITAR ------------------------------------------>
 		<dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate" [allowDeleting]="Editing.allowDeleting"
@@ -46,7 +46,7 @@
 		<!-- -------------------- COLUMNAS ------------------------------------------>
 
 		<dxi-column *ngFor="let column of columns" [dataField]="column.dataField" [caption]="column.caption"
-			[width]="column.width" [groupIndex]="column.groupIndex" [cellTemplate]="column.cellTemplate"
+		    [width]="column.width" [groupIndex]="column.groupIndex" [cellTemplate]="column.cellTemplate"
 			[hidingPriority]="column.hiddingPriority" [allowEditing]="column.allowEditing" [dataType]="column.dataType"
 			[format]="column.format" [editorOptions]="column.editorOptions" [fixed]="column.fixed"
 			[cssClass]="column.cssClass">

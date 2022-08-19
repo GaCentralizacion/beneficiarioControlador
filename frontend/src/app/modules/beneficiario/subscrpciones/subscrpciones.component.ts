@@ -50,7 +50,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     datosEvent: any = [];
     columnsAcciones: IColumns[];
     toolbarAcciones: Toolbar[];
-    columnsSubscripciones: IColumns[];
+    columnsSubscripciones = [];
     toolbarSubscripciones: Toolbar[];
 
     muestraGridAcciones: boolean = false;
@@ -175,6 +175,14 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         });
     };
 
+    onTabChanged = e => {
+        if (e === 1) {
+            this.createAccionesGrid();
+        } else {
+            this.createSubscripcionesGrid()
+        };
+    };
+
     createInitialGrid = () => {
         this.muestraGrid = false;
         this.toolbar = [];
@@ -264,6 +272,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Valor unitario',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'ValorUnitario'
             },
             {
@@ -326,7 +336,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.columnsSubscripciones = [
             {
                 caption: 'Persona subscripción',
-                dataField: 'PersonaSuscripcion'
+                dataField: 'PersonaSuscripcion',
             },
             {
                 caption: 'Concepto',
@@ -346,10 +356,14 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Valor unitario',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'ValorUnitario'
             },
             {
                 caption: 'Importe',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'Importe'
             },
             {
@@ -358,14 +372,19 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Observaciones',
-                dataField: 'Observaciones'
+                dataField: 'Observaciones',
+                cssClass: 'observaciones'
             },
             {
                 caption: 'Precio unitario venta',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'PrecioUnitarioVenta'
             },
             {
                 caption: 'Importe venta',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'ImporteVenta'
             },
             {
