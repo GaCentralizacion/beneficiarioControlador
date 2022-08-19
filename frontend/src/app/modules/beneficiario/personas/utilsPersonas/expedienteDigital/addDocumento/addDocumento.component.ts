@@ -31,6 +31,8 @@ export class AddDocumentoComponent implements OnInit {
 	filedata: any;
 	docCargado: boolean = false;
 	namePcDoc: string = '';
+	showForm: boolean = false;
+	documentosForm: FormGroup;
 
 	constructor(
 		public dialog: MatDialog,
@@ -47,6 +49,9 @@ export class AddDocumentoComponent implements OnInit {
 
 	ngOnInit() {
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
+		this.documentosForm = this._formBuilder.group({
+			idDocumento: [0, Validators.min(1)]
+		});
 		console.log('allDocumentos', this.allDocumentos);
 		console.log('this.dataPersona ', this.dataPersona)
 	};
@@ -58,10 +63,12 @@ export class AddDocumentoComponent implements OnInit {
 				this.namePcDoc = e.target.files[0].name;
 				this.filedata = await this.toBase64(e.target.files[0]);
 				this.docCargado = true;
+				this.showForm = true;
 				console.log('this.filedata', this.filedata)
 			} else {
 				this.myInputEvidenceVariable.nativeElement.value = "";
 				this.docCargado = false;
+				this.showForm = false;
 				this.namePcDoc = '';
 				Swal.fire({
 					title: '¡Información!',
@@ -73,6 +80,7 @@ export class AddDocumentoComponent implements OnInit {
 		} catch (error) {
 			this.myInputEvidenceVariable.nativeElement.value = "";
 			this.docCargado = false;
+			this.showForm = false;
 			this.namePcDoc = '';
 			Swal.fire({
 				title: '¡Información!',
