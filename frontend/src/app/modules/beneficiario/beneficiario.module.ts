@@ -17,6 +17,7 @@ import { AddRelacionComponent } from './personas/utilsPersonas/relacionFamiliar/
 import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component';
 import { AddSubscripcionesComponent } from './subscrpciones/addSubscripciones/addSubscripciones.component';
 import { ExpedienteDigitalComponent } from './personas/utilsPersonas/expedienteDigital/expedienteDigital.component';
+import { AddDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/addDocumento/addDocumento.component';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { ExpedienteDigitalComponent } from './personas/utilsPersonas/expedienteD
         AddRelacionComponent,
         SubscripcionesComponent,
         AddSubscripcionesComponent,
-        ExpedienteDigitalComponent
+        ExpedienteDigitalComponent,
+        AddDocumentoComponent
     ],
     imports: [
         CommonModule,

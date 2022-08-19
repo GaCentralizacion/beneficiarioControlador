@@ -7,6 +7,7 @@ import { MatTable } from '@angular/material/table';
 import { promises, resolve } from 'dns';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
+import { AddDocumentoComponent } from './addDocumento/addDocumento.component';
 
 /**IMPORTS GRID */
 import {
@@ -92,7 +93,28 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     addDocumento = () => {
+        const dialogRef = this.dialog.open(AddDocumentoComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Agregar documento',
+                dataPersona: this.gralDataPersona,
+                allDocumentos: this.allDocumentos
+            }
+        });
 
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo el documento',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+
+            };
+        });
     };
 
     createGrid = () => {
