@@ -94,7 +94,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
 
     addDocumento = () => {
         const dialogRef = this.dialog.open(AddDocumentoComponent, {
-            width: '40%',
+            width: '50%',
             disableClose: true,
             data: {
                 title: 'Agregar documento',

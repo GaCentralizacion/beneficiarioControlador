@@ -107,7 +107,7 @@
 
 		<!-- -------------------- TEMPLATE VER EL DOCUMENTO DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
 		<div *dxTemplate="let data of 'verDocumentoExpDig'">
-			<button class="btn btn-circle btns-grids btn-hover" (click)="verDocumentoExpedienteDigital(data.row.data)">
+			<button *ngIf="data.row.data.IdExpPer !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDocumentoExpedienteDigital(data.row.data)">
 				<i class="fa-solid fa-eye"></i>
 			</button>
 		</div>

@@ -1,6 +1,8 @@
 var personasView = require('../views/referencia'),
     personasModel = require('../models/dataAccess');
 
+var saveImagesB64 = require('../utils/saveImages');
+
 var personas = function (conf) {
     this.conf = conf || {};
 
@@ -322,6 +324,29 @@ personas.prototype.post_selDocumentosExpediente = function (req, res, next) {
             result: result
         });
     });
+};
+
+personas.prototype.post_saveDocumentoExpediente = async function (req, res, next) {
+    var self = this;
+
+    const {
+        b64File,
+        IdDocumento,
+        ruta,
+        nombreArchivo
+    } = req.body
+    const url = `${ruta}${nombreArchivo}`;
+
+    const resSave = await saveImagesB64.saveImage(b64File.split(';base64,').pop(), url);
+    // var params = [
+    //     { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
+    // ];
+
+    // this.model.queryAllRecordSet('[dbo].[Sel_DocumentosPersona]', params, function (error, result) {
+    self.view.expositor(res, {
+        result: [{ success: 1 }]
+    });
+    // });
 };
 
 module.exports = personas;

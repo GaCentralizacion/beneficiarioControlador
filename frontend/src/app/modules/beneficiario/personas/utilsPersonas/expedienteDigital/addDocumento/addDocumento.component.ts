@@ -5,6 +5,8 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
+import { filter } from 'rxjs/operators';
+import { Mail } from '../../../../../admin/apps/mailbox/mailbox.types';
 
 /**
  * Obtenemos el Mensaje a mostrar
@@ -32,7 +34,10 @@ export class AddDocumentoComponent implements OnInit {
 	docCargado: boolean = false;
 	namePcDoc: string = '';
 	showForm: boolean = false;
+	showBtns: boolean = false;
 	documentosForm: FormGroup;
+	showBtnActualizar: boolean;
+	dataDocumento: any;
 
 	constructor(
 		public dialog: MatDialog,
@@ -52,20 +57,17 @@ export class AddDocumentoComponent implements OnInit {
 		this.documentosForm = this._formBuilder.group({
 			idDocumento: [0, Validators.min(1)]
 		});
-		console.log('allDocumentos', this.allDocumentos);
-		console.log('this.dataPersona ', this.dataPersona)
 	};
 
 	async fileEvent(e) {
 		try {
 			if (e.target.files[0].type === "application/pdf") {
-				console.log('e.target.files[0]', e.target.files[0])
 				this.namePcDoc = e.target.files[0].name;
 				this.filedata = await this.toBase64(e.target.files[0]);
 				this.docCargado = true;
 				this.showForm = true;
-				console.log('this.filedata', this.filedata)
 			} else {
+				this.filedata = '';
 				this.myInputEvidenceVariable.nativeElement.value = "";
 				this.docCargado = false;
 				this.showForm = false;
@@ -78,6 +80,7 @@ export class AddDocumentoComponent implements OnInit {
 				});
 			};
 		} catch (error) {
+			this.filedata = '';
 			this.myInputEvidenceVariable.nativeElement.value = "";
 			this.docCargado = false;
 			this.showForm = false;
@@ -91,9 +94,114 @@ export class AddDocumentoComponent implements OnInit {
 		};
 	};
 
-	guardarDocumento = () => {
-
+	documentoSelected = e => {
+		if (e === 0) {
+			this.showBtns = false;
+		} else {
+			this.showBtns = true;
+			this.dataDocumento = this.allDocumentos.filter(x => x.IdDocumento === e);
+			if (this.dataDocumento[0].IdExpPer === null) {
+				this.showBtnActualizar = false;
+			} else {
+				this.showBtnActualizar = true;
+			};
+		};
 	};
+
+	guardarDocumento = () => {
+		if (this.filedata === '' || this.filedata === null || this.filedata === undefined) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Seleccione un archivo',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.filedata = '';
+			this.myInputEvidenceVariable.nativeElement.value = "";
+			return
+		};
+
+		if (this.documentosForm.invalid) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Seleccione el documento que se va a guardar',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.documentosForm.markAllAsTouched();
+			return
+		};
+
+		const data = {
+			b64File: this.filedata,
+			IdDocumento: this.documentosForm.controls.idDocumento.value,
+			ruta: 'C:\\app\\public\\Imagenes\\beneficiarioControlador\\',
+			nombreArchivo: `documento_${this.dataDocumento[0].IdPersona}.${this.dataDocumento[0].Extencion}`
+		};
+
+		Swal.fire({
+			title: `¿Quieres guardar el documento para el expediente de ${this.dataDocumento[0].Nombre}?`,
+			showDenyButton: true,
+			// showCancelButton: true,
+			confirmButtonText: 'Guardar',
+			denyButtonText: `Cancelar`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				this.spinner.show();
+				this.gaService.postService('personas/saveDocumentoExpediente', data).subscribe((res: any) => {
+					this.spinner.hide();
+					this.retornarValores.success = 1;
+					this.closeDialog(this.retornarValores);
+				}, (error: any) => {
+					this.spinner.hide();
+					Swal.fire({
+						title: '¡Error!',
+						text: 'Error 500 al guardar el documento',
+						icon: 'error',
+						confirmButtonText: 'Cerrar'
+					});
+				});
+			} else if (result.isDenied) {
+				Swal.fire({
+					title: '¡Información!',
+					text: 'No se guardo el documento',
+					icon: 'info',
+					confirmButtonText: 'Cerrar'
+				});
+			};
+		});
+	};
+
+	actualizarDocumento = () => {
+		if (this.filedata === '' || this.filedata === null || this.filedata === undefined) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Seleccione un archivo',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.filedata = '';
+			this.myInputEvidenceVariable.nativeElement.value = "";
+			return
+		};
+
+		if (this.documentosForm.invalid) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Seleccione el documento que se va a guardar',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.documentosForm.markAllAsTouched();
+			return
+		};
+
+		const data = {
+			b64File: this.filedata,
+			IdDocumento: this.documentosForm.controls.idDocumento.value
+		};
+		console.log('data', data)
+	}
 
 	closeDialog = data => {
 		this.dialogRef.close(data);
