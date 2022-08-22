@@ -113,6 +113,25 @@
 		</div>
 		<!-- -------------------- TEMPLATE VER EL DOCUMENTO DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+		<div *dxTemplate="let data of 'documentoObligatorio'">
+			<label *ngIf="data.row.data.Obligatorio">
+				Si
+			</label>
+			<label *ngIf="!data.row.data.Obligatorio">
+				No
+			</label>
+		</div>
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
+		<div *dxTemplate="let data of 'estatusDocumento'">
+			<div [ngClass]="{'estatusRegistrado' : 1 === 1, 'estatusAprobado' : 2 === 1, 'estatusError' : 3 === 1}">
+				<label> {{data.row.data.Estatus}} </label>
+			</div>
+		</div>
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
 		<div *dxTemplate="let data of 'foto'" class="foto">

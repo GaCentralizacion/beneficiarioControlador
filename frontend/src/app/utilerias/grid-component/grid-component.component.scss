@@ -294,3 +294,30 @@
     border-left: 0px solid #ddd;
     border-right: 0px solid #ddd;
 }
+
+.estatusRegistrado{
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: rgb(11, 22, 173);
+    color: white;
+}
+
+.estatusAprobado{
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: rgb(49, 173, 11);
+    color: white;
+}
+
+.estatusError{
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: rgb(173, 11, 11);
+    color: white;
+}

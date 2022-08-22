@@ -136,9 +136,26 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
                 dataField: 'Documento'
             },
             {
-                caption: 'Ver documento',
+                caption: 'Obligatorio',
+                cellTemplate: 'documentoObligatorio'
+            },
+            {
+                caption: 'Vigencia',
+                dataField: 'Vigencia'
+            },
+            {
+                caption: 'Fecha documento',
+                dataField: 'FechaDocumento'
+            },
+            {
+                caption: 'Estatus',
+                cellTemplate: 'estatusDocumento'
+            },
+            {
+                caption: 'Ver',
                 allowEditing: false,
-                cellTemplate: 'verDocumentoExpDig'
+                cellTemplate: 'verDocumentoExpDig',
+                width: 60
             }
         ];
         /*
