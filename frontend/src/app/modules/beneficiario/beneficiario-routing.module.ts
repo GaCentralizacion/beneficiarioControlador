@@ -25,7 +25,7 @@ const routes: Routes = [
         component: SeriesComponent,
     },
     {
-        path: 'subscripciones',
+        path: 'suscripciones',
         component: SubscripcionesComponent,
     }
 ];

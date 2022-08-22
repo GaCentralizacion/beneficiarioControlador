@@ -5,8 +5,6 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
-import { filter } from 'rxjs/operators';
-import { Mail } from '../../../../../admin/apps/mailbox/mailbox.types';
 
 /**
  * Obtenemos el Mensaje a mostrar

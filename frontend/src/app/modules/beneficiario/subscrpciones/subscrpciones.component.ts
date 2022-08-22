@@ -109,7 +109,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         } else {
             Swal.fire({
                 title: '¡Error!',
-                text: 'Error al mostrar las subscripciones.',
+                text: 'Error al mostrar las suscripciones.',
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
@@ -146,7 +146,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Agregar subscripción',
+                title: 'Agregar suscripción',
                 dataEmpresa: this.dataCurrenteEmpresa
             }
         });
@@ -156,7 +156,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo la subscripción',
+                    text: 'No se guardo la suscripción',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
@@ -166,7 +166,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar la relacion familiar',
+                        text: 'Ocurrio un erro al guardar la suscripción',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
@@ -197,16 +197,20 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Acciones emitidas',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Acciones'
             },
             {
                 caption: 'Acciones disponibles',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Disponibles'
             },
             {
                 caption: 'Ver',
                 allowEditing: false,
-                cellTemplate: 'verSubscripciones'
+                cellTemplate: 'verSuscripciones'
             }
         ];
         /*
@@ -278,10 +282,14 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Cantidad',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Cantidad'
             },
             {
                 caption: 'Disponibles',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Disponibles'
             },
             {
@@ -335,7 +343,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.toolbarSubscripciones = [];
         this.columnsSubscripciones = [
             {
-                caption: 'Persona subscripción',
+                caption: 'Persona suscripción',
                 dataField: 'PersonaSuscripcion',
             },
             {
@@ -352,6 +360,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Cantidad',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Cantidad'
             },
             {

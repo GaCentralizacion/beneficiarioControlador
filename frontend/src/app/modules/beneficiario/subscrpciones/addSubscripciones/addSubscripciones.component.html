@@ -25,7 +25,7 @@
 						</div>
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
 							<mat-form-field appearance="fill" floatLabel="always">
-								<mat-label>Persona de subscripción</mat-label>
+								<mat-label>Persona de suscripción</mat-label>
 								<mat-select formControlName="subscriptor"
 									(selectionChange)="getAllConceptos($event.value)">
 									<mat-option [value]="0">
@@ -37,7 +37,7 @@
 									</mat-option>
 								</mat-select>
 								<mat-error>
-									Seleccione un subscriptor
+									Seleccione un suscriptor
 								</mat-error>
 							</mat-form-field>
 						</div>
@@ -190,6 +190,6 @@
 <mat-dialog-actions align="end">
 	<button class="btn btn-danger"  [mat-dialog-close]="0">Cancelar</button>
 	<button class="btn btn-success" style="margin-left: 10px;" (click)="guardarSubscripcion()">
-		Guardar subscripción <i class="fa-solid fa-floppy-disk"></i>
+		Guardar suscripción <i class="fa-solid fa-floppy-disk"></i>
 	</button>
 </mat-dialog-actions>
