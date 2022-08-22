@@ -1,11 +1,11 @@
-var subscripcionesView = require('../views/referencia'),
-    subscripcionesModel = require('../models/dataAccess');
+var suscripcionesView = require('../views/referencia'),
+    suscripcionesModel = require('../models/dataAccess');
 
-var subscripciones = function (conf) {
+var suscripciones = function (conf) {
     this.conf = conf || {};
 
-    this.view = new subscripcionesView();
-    this.model = new subscripcionesModel({
+    this.view = new suscripcionesView();
+    this.model = new suscripcionesModel({
         parameters: this.conf.parameters
     });
 
@@ -15,7 +15,7 @@ var subscripciones = function (conf) {
 };
 
 
-subscripciones.prototype.post_selAcciones = function (req, res, next) {
+suscripciones.prototype.post_selAcciones = function (req, res, next) {
     var self = this;
 
     const { Opcion, IdPersona } = req.body;
@@ -33,7 +33,7 @@ subscripciones.prototype.post_selAcciones = function (req, res, next) {
     });
 };
 
-subscripciones.prototype.post_selAllTransacciones = function (req, res, next) {
+suscripciones.prototype.post_selAllTransacciones = function (req, res, next) {
     var self = this;
 
     const {
@@ -58,7 +58,7 @@ subscripciones.prototype.post_selAllTransacciones = function (req, res, next) {
     });
 };
 
-subscripciones.prototype.post_insSubscripciones = function (req, res, next) {
+suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
     var self = this;
 
     const {
@@ -97,4 +97,4 @@ subscripciones.prototype.post_insSubscripciones = function (req, res, next) {
     });
 };
 
-module.exports = subscripciones;
+module.exports = suscripciones;

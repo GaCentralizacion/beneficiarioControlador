@@ -61,6 +61,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     showInitialSubscripciones: boolean = true;
     allAcciones: any;
     allSubscripciones: any;
+    focusTabs: number = 0;
 
     constructor(
         private gaService: GaService,
@@ -87,7 +88,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             Opcion: 1,
             IdPersona: null
         };
-        this.gaService.postService('subscripciones/selAcciones', data).subscribe((res: any) => {
+        this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allEmpresas = res[0];
             this.createInitialGrid();
@@ -122,7 +123,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             Opcion: 2,
             IdPersona: dataPersona.IdPersona
         };
-        this.gaService.postService('subscripciones/selAcciones', data).subscribe((res: any) => {
+        this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allAcciones = res[0];
             this.allSubscripciones = res[1];

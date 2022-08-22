@@ -96,14 +96,14 @@ export class AddSubscripcionesComponent implements OnInit {
 			IdPersonaSubscripcion: null,
 			IdConcepto: null
 		};
-		this.gaService.postService('subscripciones/selAllTransacciones', data).subscribe((res: any) => {
+		this.gaService.postService('suscripciones/selAllTransacciones', data).subscribe((res: any) => {
 			if (res[0].length > 0) {
 				this.allSubscriptores = res[0];
 				this.subscripcionesForm.controls.subscriptor.setValue(0);
 			} else {
 				Swal.fire({
 					title: '¡Alto!',
-					text: 'No se obtuvieron los subscriptores',
+					text: 'No se obtuvieron los suscriptores',
 					icon: 'warning',
 					confirmButtonText: 'Cerrar'
 				});
@@ -129,7 +129,7 @@ export class AddSubscripcionesComponent implements OnInit {
 				IdPersonaSubscripcion: this.personaSubscriptora[0].IdPersonaSubscripcion,
 				IdConcepto: null
 			};
-			this.gaService.postService('subscripciones/selAllTransacciones', data).subscribe((res: any) => {
+			this.gaService.postService('suscripciones/selAllTransacciones', data).subscribe((res: any) => {
 				if (res[0].length > 0) {
 					this.allConceptos = res[0];
 					this.subscripcionesForm.controls.concepto.setValue(0);
@@ -137,7 +137,7 @@ export class AddSubscripcionesComponent implements OnInit {
 				} else {
 					Swal.fire({
 						title: '¡Alto!',
-						text: 'No se obtuvieron los conceptos del subscriptor',
+						text: 'No se obtuvieron los conceptos del suscriptor',
 						icon: 'warning',
 						confirmButtonText: 'Cerrar'
 					});
@@ -173,7 +173,7 @@ export class AddSubscripcionesComponent implements OnInit {
 				IdPersonaSubscripcion: this.personaSubscriptora[0].IdPersonaSubscripcion,
 				IdConcepto: this.conceptoSelecionado[0].IdConcepto
 			};
-			this.gaService.postService('subscripciones/selAllTransacciones', data).subscribe((res: any) => {
+			this.gaService.postService('suscripciones/selAllTransacciones', data).subscribe((res: any) => {
 				if (res.length > 0) {
 					this.allPersonasDestino = res[0];
 					this.subscripcionesForm.controls.personaDestino.setValue(0);
@@ -212,7 +212,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			IdPersonaSubscripcion: this.personaSubscriptora[0].IdPersonaSubscripcion,
 			IdConcepto: this.conceptoSelecionado[0].IdConcepto
 		};
-		this.gaService.postService('subscripciones/selAllTransacciones', data).subscribe((res: any) => {
+		this.gaService.postService('suscripciones/selAllTransacciones', data).subscribe((res: any) => {
 			if (res.length > 0) {
 				this.allSeries = res[0];
 				this.showAllfields = true;
@@ -309,7 +309,7 @@ export class AddSubscripcionesComponent implements OnInit {
 		};
 
 		Swal.fire({
-			title: `¿Estas seguro de guardar la subscripción?`,
+			title: `¿Estas seguro de guardar la suscripción?`,
 			showDenyButton: true,
 			// showCancelButton: true,
 			confirmButtonText: 'Guardar',
@@ -332,7 +332,7 @@ export class AddSubscripcionesComponent implements OnInit {
 					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value
 				};
 
-				this.gaService.postService('subscripciones/insSubscripciones', dataSend).subscribe((res: any) => {
+				this.gaService.postService('suscripciones/insSuscripciones', dataSend).subscribe((res: any) => {
 					this.spinner.hide();
 					if (res[0][0].Codigo < 0) {
 						Swal.fire({
@@ -363,7 +363,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			} else if (result.isDenied) {
 				Swal.fire({
 					title: '¡Información!',
-					text: 'No se guardo la relación familiar.',
+					text: 'No se guardo la suscripción.',
 					icon: 'info',
 					confirmButtonText: 'Cerrar'
 				});
