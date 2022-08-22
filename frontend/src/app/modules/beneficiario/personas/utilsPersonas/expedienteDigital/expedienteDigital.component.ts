@@ -8,6 +8,7 @@ import { promises, resolve } from 'dns';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { AddDocumentoComponent } from './addDocumento/addDocumento.component';
+import { ShowDocumentoComponent } from './showDocumento/showDocumento.component';
 
 /**IMPORTS GRID */
 import {
@@ -89,7 +90,16 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     verDocumentoExpDigCargado = data => {
-        console.log('data', data)
+        const ruta = 'http://localhost:1220/Imagenes/beneficiarioControlador/documento_1.pdf#toolbar=0';
+
+        this.dialog.open(ShowDocumentoComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Documento',
+                urlGet: ruta
+            }
+        });
     };
 
     addDocumento = () => {

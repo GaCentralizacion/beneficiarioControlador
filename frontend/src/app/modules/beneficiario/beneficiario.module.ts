@@ -18,6 +18,7 @@ import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component
 import { AddSubscripcionesComponent } from './subscrpciones/addSubscripciones/addSubscripciones.component';
 import { ExpedienteDigitalComponent } from './personas/utilsPersonas/expedienteDigital/expedienteDigital.component';
 import { AddDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/addDocumento/addDocumento.component';
+import { ShowDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/showDocumento/showDocumento.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { AddDocumentoComponent } from './personas/utilsPersonas/expedienteDigita
         SubscripcionesComponent,
         AddSubscripcionesComponent,
         ExpedienteDigitalComponent,
-        AddDocumentoComponent
+        AddDocumentoComponent,
+        ShowDocumentoComponent
     ],
     imports: [
         CommonModule,
