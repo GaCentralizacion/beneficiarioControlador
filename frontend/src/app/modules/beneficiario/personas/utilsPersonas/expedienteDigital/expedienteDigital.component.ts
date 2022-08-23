@@ -111,6 +111,20 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     addDocumento = () => {
+        const documentos = this.allDocumentos.filter(x => {
+            return x.IdEstatusArchivo === 2 || x.IdEstatusArchivo === 3 || x.IdEstatusArchivo === null
+        });
+
+        if (documentos.length === 0) {
+            Swal.fire({
+                title: '¡Información!',
+                text: 'No hay documentos para guardar o actualizar',
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
+            return;
+        };
+
         const dialogRef = this.dialog.open(AddDocumentoComponent, {
             width: '50%',
             disableClose: true,

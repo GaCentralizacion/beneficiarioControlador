@@ -29,6 +29,7 @@ export class ShowDocumentoComponent implements OnInit {
     allDataDocumento: any;
     dataUsuario: any;
     maxLengthTextArea: number = 8000;
+    readyPdf: boolean = false;
 
     retornarValores = { success: 0, data: {} };
 
@@ -58,6 +59,7 @@ export class ShowDocumentoComponent implements OnInit {
     showDocumentoFn = () => {
         this.thumbnail = '';
         this.thumbnail = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlGet);
+        this.readyPdf = true;
     };
 
     aprobarDocumento = () => {

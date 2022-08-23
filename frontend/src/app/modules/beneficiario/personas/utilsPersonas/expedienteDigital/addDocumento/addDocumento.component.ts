@@ -48,7 +48,9 @@ export class AddDocumentoComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataPersona = data.dataPersona;
-		this.allDocumentos = data.allDocumentos
+		this.allDocumentos = data.allDocumentos.filter(x => {
+			return x.IdEstatusArchivo === 2 || x.IdEstatusArchivo === 3 || x.IdEstatusArchivo === null
+		});
 	};
 
 	ngOnInit() {
@@ -227,12 +229,72 @@ export class AddDocumentoComponent implements OnInit {
 			return
 		};
 
-		const data = {
-			b64File: this.filedata,
-			IdDocumento: this.documentosForm.controls.idDocumento.value
-		};
-		console.log('data', data)
-	}
+		Swal.fire({
+			title: `¿Quieres actualizar el ${this.dataDocumento[0].Documento}?`,
+			showDenyButton: true,
+			// showCancelButton: true,
+			confirmButtonText: 'Actualizar',
+			denyButtonText: `Cancelar`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const data = {
+					Opcion: 1,
+					Usuario: this.dataUsuario.IdUsuario,
+					IdExpPer: this.dataDocumento[0].IdExpPer,
+					FechaDocumento: this.documentosForm.controls.fechaDocumento.value,
+					IdEstatusArchivo: null,
+					Observacion: null,
+					nombreDocumento: this.dataDocumento[0].Archivo,
+					nombreDocumentoRespaldo: this.dataDocumento[0].ArchivoRespaldo,
+					carpeta: this.dataDocumento[0].Carpeta,
+					carpetaHeredado: this.dataDocumento[0].CarpetaHeredado,
+					idDocumento: this.dataDocumento[0].IdDocumento,
+					idPersona: this.dataDocumento[0].IdPersona,
+					rutaGuardado: this.dataDocumento[0].RutaGuardado,
+					rutaRespaldo: this.dataDocumento[0].RutaRespaldo,
+					b64File: this.filedata
+				};
+				this.spinner.show();
+				this.gaService.postService('personas/updateDocumento', data).subscribe((res: any) => {
+					this.spinner.hide();
+					if (res[0][0].Codigo > 0) {
+						Swal.fire({
+							title: '¡Listo!',
+							text: res[0][0].Mensaje,
+							icon: 'success',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 1;
+						this.closeDialog(this.retornarValores);
+					} else {
+						Swal.fire({
+							title: '¡Alto!',
+							text: res[0][0].Mensaje,
+							icon: 'error',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 0;
+						this.closeDialog(this.retornarValores);
+					};
+				}, (error: any) => {
+					this.spinner.hide();
+					Swal.fire({
+						title: '¡Error!',
+						text: 'Error 500 al actualizar el documento',
+						icon: 'error',
+						confirmButtonText: 'Cerrar'
+					});
+				});
+			} else if (result.isDenied) {
+				Swal.fire({
+					title: '¡Información!',
+					text: 'No se actualizo el documento',
+					icon: 'info',
+					confirmButtonText: 'Cerrar'
+				});
+			};
+		});
+	};
 
 	closeDialog = data => {
 		this.dialogRef.close(data);
