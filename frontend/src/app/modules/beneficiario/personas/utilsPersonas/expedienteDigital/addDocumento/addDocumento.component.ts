@@ -22,7 +22,7 @@ export interface SendData {
 })
 export class AddDocumentoComponent implements OnInit {
 	@ViewChild('myInputDocument') myInputEvidenceVariable: ElementRef;
-
+	today = new Date();
 	retornarValores = { success: 0, data: {} };
 	titulo: string;
 	dataUsuario: any;
@@ -36,6 +36,7 @@ export class AddDocumentoComponent implements OnInit {
 	documentosForm: FormGroup;
 	showBtnActualizar: boolean;
 	dataDocumento: any;
+	showFechaDocumento: boolean;
 
 	constructor(
 		public dialog: MatDialog,
@@ -53,7 +54,8 @@ export class AddDocumentoComponent implements OnInit {
 	ngOnInit() {
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 		this.documentosForm = this._formBuilder.group({
-			idDocumento: [0, Validators.min(1)]
+			idDocumento: [0, Validators.min(1)],
+			fechaDocumento: [null, Validators.required]
 		});
 	};
 
@@ -103,6 +105,17 @@ export class AddDocumentoComponent implements OnInit {
 			} else {
 				this.showBtnActualizar = true;
 			};
+
+			if (this.dataDocumento[0].Vigencia === '') {
+				this.documentosForm.controls.fechaDocumento.setValue(null);
+				this.documentosForm.controls.fechaDocumento.clearValidators();
+				this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+				this.showFechaDocumento = false;
+			} else {
+				this.documentosForm.controls.fechaDocumento.addValidators(Validators.required);
+				this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+				this.showFechaDocumento = true;
+			};
 		};
 	};
 
@@ -122,19 +135,12 @@ export class AddDocumentoComponent implements OnInit {
 		if (this.documentosForm.invalid) {
 			Swal.fire({
 				title: '¡Alto!',
-				text: 'Seleccione el documento que se va a guardar',
+				text: 'Complete los datos obligatorios',
 				icon: 'warning',
 				confirmButtonText: 'Cerrar'
 			});
 			this.documentosForm.markAllAsTouched();
 			return
-		};
-
-		const data = {
-			b64File: this.filedata,
-			IdDocumento: this.documentosForm.controls.idDocumento.value,
-			ruta: 'C:\\app\\public\\Imagenes\\beneficiarioControlador\\',
-			nombreArchivo: `documento_${this.dataDocumento[0].IdPersona}.${this.dataDocumento[0].Extencion}`
 		};
 
 		Swal.fire({
@@ -145,11 +151,38 @@ export class AddDocumentoComponent implements OnInit {
 			denyButtonText: `Cancelar`,
 		}).then((result) => {
 			if (result.isConfirmed) {
+				const data = {
+					b64File: this.filedata,
+					IdDocumento: this.documentosForm.controls.idDocumento.value,
+					nombreArchivo: this.dataDocumento[0].Archivo,
+					carpetaPersona: this.dataDocumento[0].Carpeta,
+					idPersona: this.dataDocumento[0].IdPersona,
+					rutaGuardado: this.dataDocumento[0].RutaGuardado,
+					fechaDocumento: this.documentosForm.controls.fechaDocumento.value,
+					idUsuario: this.dataUsuario.IdUsuario
+				};
 				this.spinner.show();
 				this.gaService.postService('personas/saveDocumentoExpediente', data).subscribe((res: any) => {
 					this.spinner.hide();
-					this.retornarValores.success = 1;
-					this.closeDialog(this.retornarValores);
+					if (res[0][0].Codigo > 0) {
+						Swal.fire({
+							title: '¡Listo!',
+							text: res[0][0].Mensaje,
+							icon: 'success',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 1;
+						this.closeDialog(this.retornarValores);
+					} else {
+						Swal.fire({
+							title: '¡Error!',
+							text: res[0][0].Mensaje,
+							icon: 'error',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 0;
+						this.closeDialog(this.retornarValores);
+					}
 				}, (error: any) => {
 					this.spinner.hide();
 					Swal.fire({

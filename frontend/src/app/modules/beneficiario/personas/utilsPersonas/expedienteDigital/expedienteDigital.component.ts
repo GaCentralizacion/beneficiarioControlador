@@ -90,16 +90,17 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     verDocumentoExpDigCargado = data => {
-        const ruta = 'http://localhost:1220/Imagenes/beneficiarioControlador/documento_1.pdf#toolbar=0';
+        console.log('data', data)
+        // const ruta = 'http://localhost:1220/Imagenes/beneficiarioControlador/documento_1.pdf#toolbar=0';
 
-        this.dialog.open(ShowDocumentoComponent, {
-            width: '100%',
-            disableClose: true,
-            data: {
-                title: 'Documento',
-                urlGet: ruta
-            }
-        });
+        // this.dialog.open(ShowDocumentoComponent, {
+        //     width: '100%',
+        //     disableClose: true,
+        //     data: {
+        //         title: 'Documento',
+        //         urlGet: ruta
+        //     }
+        // });
     };
 
     addDocumento = () => {
@@ -122,7 +123,9 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
                     confirmButtonText: 'Cerrar'
                 });
             } else {
-
+                if (result.success === 1) {
+                    this.getAllDocuments();
+                };
             };
         });
     };

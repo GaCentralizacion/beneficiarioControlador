@@ -1,7 +1,8 @@
 var personasView = require('../views/referencia'),
     personasModel = require('../models/dataAccess');
 
-var saveImagesB64 = require('../utils/saveImages');
+var logicSave = require('../utils/logicSaveFile');
+var fs = require("fs");
 
 var personas = function (conf) {
     this.conf = conf || {};
@@ -332,21 +333,42 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
     const {
         b64File,
         IdDocumento,
-        ruta,
-        nombreArchivo
-    } = req.body
-    const url = `${ruta}${nombreArchivo}`;
+        nombreArchivo,
+        carpetaPersona,
+        idPersona,
+        rutaGuardado,
+        fechaDocumento,
+        idUsuario
+    } = req.body;
 
-    const resSave = await saveImagesB64.saveImage(b64File.split(';base64,').pop(), url);
-    // var params = [
-    //     { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
-    // ];
+    const resLogic = await logicSave.saveDocumentoLogic(b64File, nombreArchivo, carpetaPersona, rutaGuardado);
 
-    // this.model.queryAllRecordSet('[dbo].[Sel_DocumentosPersona]', params, function (error, result) {
-    self.view.expositor(res, {
-        result: [{ success: 1 }]
-    });
-    // });
+    if (resLogic.success === 1) {
+        if (fs.existsSync(`${rutaGuardado}${carpetaPersona}\\\\${nombreArchivo}`)) {
+
+            var params = [
+                { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+                { name: 'IdPersona', value: idPersona, type: self.model.types.INT },
+                { name: 'IdDocumento', value: IdDocumento, type: self.model.types.INT },
+                { name: 'FechaDocumento', value: fechaDocumento, type: self.model.types.STRING }
+            ];
+
+            this.model.queryAllRecordSet('[dbo].[Ins_DocumentosPersona]', params, function (error, result) {
+                self.view.expositor(res, {
+                    error: error,
+                    result: result
+                });
+            });
+        } else {
+            self.view.expositor(res, {
+                result: [[{ Codigo: -1, Mensaje: 'No se guardo el documento fisicamente.' }]]
+            });
+        };
+    } else {
+        self.view.expositor(res, {
+            result: [[{ Codigo: -1, Mensaje: 'Error al intentar guardar el documento.' }]]
+        });
+    };
 };
 
 module.exports = personas;
