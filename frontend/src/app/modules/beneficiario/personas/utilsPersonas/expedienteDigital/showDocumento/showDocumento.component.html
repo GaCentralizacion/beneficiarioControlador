@@ -1,19 +1,24 @@
 <div mat-dialog-title>
-    <h5>{{title}}</h5>
-</div>
-<mat-dialog-content class="mat-typography">
-    <div style="text-align: center;">
-        <div class="row">
-            <div class="col-md-12">
-                <iframe [src]="thumbnail" width="100%" height="680px"></iframe>
-            </div>
+    <div class="row" style="width: 100%;">
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+            <h5>{{title}}</h5>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <iframe [src]="thumbnail" width="100%" height="680px"></iframe>
-            </div>
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4"></div>
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+            <button type="button" class="btn btn-danger pull-right" [mat-dialog-close]="0">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
         </div>
     </div>
+</div>
+<mat-dialog-content class="mat-typography" style="height: 100%;">
+    <!-- <div style="text-align: center;">
+        <div class="row">
+            <div class="col-md-12"> -->
+                <iframe [src]="thumbnail" width="100%" height="100%"></iframe>
+            <!-- </div>
+        </div>
+    </div> -->
 </mat-dialog-content>
 <mat-dialog-actions>
     <div class="row" style="width: 100%;">
@@ -36,14 +41,5 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4"></div>
-    </div>
-    <div class="row" style="width: 100%;">
-        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4"></div>
-        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4"></div>
-        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
-            <button type="button" class="btn btn-danger pull-right" [mat-dialog-close]="0">
-                Cerrar
-            </button>
-        </div>
     </div>
 </mat-dialog-actions>

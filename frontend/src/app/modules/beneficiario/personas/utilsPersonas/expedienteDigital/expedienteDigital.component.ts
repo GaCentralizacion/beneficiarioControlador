@@ -90,17 +90,15 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     verDocumentoExpDigCargado = data => {
-        console.log('data', data)
-        // const ruta = 'http://localhost:1220/Imagenes/beneficiarioControlador/documento_1.pdf#toolbar=0';
-
-        // this.dialog.open(ShowDocumentoComponent, {
-        //     width: '100%',
-        //     disableClose: true,
-        //     data: {
-        //         title: 'Documento',
-        //         urlGet: ruta
-        //     }
-        // });
+        this.dialog.open(ShowDocumentoComponent, {
+            width: '100%',
+            height: '95%',
+            disableClose: true,
+            data: {
+                title: data.data.Documento,
+                urlGet: `${data.data.RutaLectura}#toolbar=0`
+            }
+        });
     };
 
     addDocumento = () => {

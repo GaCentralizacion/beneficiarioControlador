@@ -34,10 +34,11 @@ export class ShowDocumentoComponent implements OnInit {
     };
 
     ngOnInit() {
-        this.showDocumento({});
+        this.showDocumentoFn();
     };
 
-    showDocumento = data => {
+    showDocumentoFn = () => {
+        this.thumbnail = '';
         this.thumbnail = this.sanitizer.bypassSecurityTrustResourceUrl(this.urlGet);
     };
 
