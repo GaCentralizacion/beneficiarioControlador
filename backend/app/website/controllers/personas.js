@@ -371,4 +371,33 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
     };
 };
 
+personas.prototype.post_aprobarRechazarDocumento = function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        Usuario,
+        IdExpPer,
+        FechaDocumento,
+        IdEstatusArchivo,
+        Observacion
+    } = req.body
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdExpPer', value: IdExpPer, type: self.model.types.INT },
+        { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
+        { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
+        { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Upd_DocumentosPersona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;

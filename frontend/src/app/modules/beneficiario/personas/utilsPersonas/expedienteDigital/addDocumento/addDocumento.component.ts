@@ -144,7 +144,7 @@ export class AddDocumentoComponent implements OnInit {
 		};
 
 		Swal.fire({
-			title: `¿Quieres guardar el documento para el expediente de ${this.dataDocumento[0].Nombre}?`,
+			title: `¿Quieres guardar el ${this.dataDocumento[0].Documento}?`,
 			showDenyButton: true,
 			// showCancelButton: true,
 			confirmButtonText: 'Guardar',

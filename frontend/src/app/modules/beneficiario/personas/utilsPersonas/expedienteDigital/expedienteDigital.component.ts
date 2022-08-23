@@ -90,14 +90,23 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     verDocumentoExpDigCargado = data => {
-        this.dialog.open(ShowDocumentoComponent, {
+        const dialogRef = this.dialog.open(ShowDocumentoComponent, {
             width: '100%',
             height: '95%',
             disableClose: true,
             data: {
                 title: data.data.Documento,
-                urlGet: `${data.data.RutaLectura}#toolbar=0`
+                urlGet: `${data.data.RutaLectura}#toolbar=0`,
+                allDataDocumento: data.data
             }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.success === 1) {
+                    this.getAllDocuments();
+                };
+            };
         });
     };
 

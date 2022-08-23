@@ -57,3 +57,19 @@ mat-form-field {
     color: white;
     background-color: #c82333;
 }
+
+.divRechazo {
+    background: radial-gradient(red, black);
+    text-align: center;
+    border-radius: 10px;
+    margin-left: 8%;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center !important;
+    height: 25px;
+    font-size: 20px; 
+    color: blanchedalmond;
+}
