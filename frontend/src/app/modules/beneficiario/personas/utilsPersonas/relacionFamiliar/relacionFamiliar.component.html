@@ -2,9 +2,9 @@
     <div class="col-sm-12 col-md-4 col-xl-4"></div>
     <div class="col-sm-12 col-md-4 col-xl-4"></div>
     <div class="col-sm-12 col-md-4 col-xl-4">
-        <!-- <button class="btn btn-success pull-right" (click)="addRelacion()">
+        <button *ngIf="accionesUsuario.agregarRelacionFamiliar === 1" class="btn btn-success pull-right" (click)="addRelacion()">
             Agregar relación familiar <i class="fas fa-plus"></i>
-        </button> -->
+        </button>
     </div>
 </div>
 <div class="row">

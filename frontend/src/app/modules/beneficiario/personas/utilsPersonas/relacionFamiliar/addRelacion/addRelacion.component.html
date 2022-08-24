@@ -77,8 +77,8 @@
 	</mat-card>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-button [mat-dialog-close]="0">Cancelar</button>
-	<button mat-button (click)="guardarRelacion()" cdkFocusInitial>
-		Guardar relación
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+	<button class="btn btn-success" style="margin-left: 10px;" (click)="guardarRelacion()" cdkFocusInitial>
+		Guardar relación <i class="fa-solid fa-floppy-disk"></i>
 	</button>
 </mat-dialog-actions>

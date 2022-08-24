@@ -23,6 +23,7 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
+import { environment } from 'environments/environment';
 /**IMPORTS GRID */
 
 @Component({
@@ -32,6 +33,7 @@ import {
 })
 
 export class SubscripcionesComponent implements OnInit, OnDestroy {
+    accionesUsuario: any
     /**GRID */
     gridOptions: IGridOptions;
     columns: IColumns[];
@@ -48,7 +50,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     datosEvent: any = [];
     columnsAcciones: IColumns[];
     toolbarAcciones: Toolbar[];
-    columnsSubscripciones: IColumns[];
+    columnsSubscripciones = [];
     toolbarSubscripciones: Toolbar[];
 
     muestraGridAcciones: boolean = false;
@@ -59,6 +61,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     showInitialSubscripciones: boolean = true;
     allAcciones: any;
     allSubscripciones: any;
+    focusTabs: number = 0;
 
     constructor(
         private gaService: GaService,
@@ -75,6 +78,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllEmpresas();
     };
 
@@ -84,7 +88,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             Opcion: 1,
             IdPersona: null
         };
-        this.gaService.postService('subscripciones/selAcciones', data).subscribe((res: any) => {
+        this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allEmpresas = res[0];
             this.createInitialGrid();
@@ -106,7 +110,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         } else {
             Swal.fire({
                 title: '¡Error!',
-                text: 'Error al mostrar las subscripciones.',
+                text: 'Error al mostrar las suscripciones.',
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
@@ -119,7 +123,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             Opcion: 2,
             IdPersona: dataPersona.IdPersona
         };
-        this.gaService.postService('subscripciones/selAcciones', data).subscribe((res: any) => {
+        this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allAcciones = res[0];
             this.allSubscripciones = res[1];
@@ -143,7 +147,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Agregar subscripción',
+                title: 'Agregar suscripción',
                 dataEmpresa: this.dataCurrenteEmpresa
             }
         });
@@ -153,7 +157,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo la subscripción',
+                    text: 'No se guardo la suscripción',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
@@ -163,13 +167,21 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar la relacion familiar',
+                        text: 'Ocurrio un erro al guardar la suscripción',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
                 };
             };
         });
+    };
+
+    onTabChanged = e => {
+        if (e === 1) {
+            this.createAccionesGrid();
+        } else {
+            this.createSubscripcionesGrid()
+        };
     };
 
     createInitialGrid = () => {
@@ -186,16 +198,20 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Acciones emitidas',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Acciones'
             },
             {
                 caption: 'Acciones disponibles',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Disponibles'
             },
             {
                 caption: 'Ver',
                 allowEditing: false,
-                cellTemplate: 'verSubscripciones'
+                cellTemplate: 'verSuscripciones'
             }
         ];
         /*
@@ -261,14 +277,20 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Valor unitario',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'ValorUnitario'
             },
             {
                 caption: 'Cantidad',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Cantidad'
             },
             {
                 caption: 'Disponibles',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Disponibles'
             },
             {
@@ -322,8 +344,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.toolbarSubscripciones = [];
         this.columnsSubscripciones = [
             {
-                caption: 'Persona subscripción',
-                dataField: 'PersonaSuscripcion'
+                caption: 'Persona suscripción',
+                dataField: 'PersonaSuscripcion',
             },
             {
                 caption: 'Concepto',
@@ -339,14 +361,20 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Cantidad',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
                 dataField: 'Cantidad'
             },
             {
                 caption: 'Valor unitario',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'ValorUnitario'
             },
             {
                 caption: 'Importe',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'Importe'
             },
             {
@@ -355,14 +383,19 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             },
             {
                 caption: 'Observaciones',
-                dataField: 'Observaciones'
+                dataField: 'Observaciones',
+                cssClass: 'observaciones'
             },
             {
                 caption: 'Precio unitario venta',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'PrecioUnitarioVenta'
             },
             {
                 caption: 'Importe venta',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
                 dataField: 'ImporteVenta'
             },
             {

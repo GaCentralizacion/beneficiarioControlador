@@ -1,0 +1,35 @@
+.pull-left {
+    float: left !important;
+  }
+  
+  .pull-right {
+    float: right !important;
+  }
+
+  mat-form-field{
+    width: 100% !important;
+  }
+
+  .divFile{
+    cursor: pointer !important;
+    padding:5px 10px;
+    background:#0F172A;
+    border:1px solid #0F172A;
+    position:relative;
+    color:#fff;
+    border-radius:2px;
+    text-align:center;
+    float:left;
+    border-radius: 5px;
+  }
+  .hide_file {
+      position: absolute;
+      z-index: 1000;
+      opacity: 0;
+      cursor: pointer !important;
+      right: 0;
+      top: 0;
+      height: 100%;
+      font-size: 24px;
+      width: 100%;
+  }  

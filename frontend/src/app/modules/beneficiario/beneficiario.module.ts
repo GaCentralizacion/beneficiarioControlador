@@ -16,6 +16,9 @@ import { RelacionFamiliarComponent } from './personas/utilsPersonas/relacionFami
 import { AddRelacionComponent } from './personas/utilsPersonas/relacionFamiliar/addRelacion/addRelacion.component';
 import { SubscripcionesComponent } from './subscrpciones/subscrpciones.component';
 import { AddSubscripcionesComponent } from './subscrpciones/addSubscripciones/addSubscripciones.component';
+import { ExpedienteDigitalComponent } from './personas/utilsPersonas/expedienteDigital/expedienteDigital.component';
+import { AddDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/addDocumento/addDocumento.component';
+import { ShowDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/showDocumento/showDocumento.component';
 
 @NgModule({
     declarations: [
@@ -28,7 +31,10 @@ import { AddSubscripcionesComponent } from './subscrpciones/addSubscripciones/ad
         RelacionFamiliarComponent,
         AddRelacionComponent,
         SubscripcionesComponent,
-        AddSubscripcionesComponent
+        AddSubscripcionesComponent,
+        ExpedienteDigitalComponent,
+        AddDocumentoComponent,
+        ShowDocumentoComponent
     ],
     imports: [
         CommonModule,

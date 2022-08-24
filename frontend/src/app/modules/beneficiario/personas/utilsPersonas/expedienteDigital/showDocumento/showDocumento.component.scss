@@ -1,0 +1,75 @@
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+mat-form-field {
+    width: 100% !important;
+}
+
+.btn-circle-like {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 1px 0;
+    font-size: 20px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+    color: white;
+    background-color: transparent;
+}
+
+.btn-circle-disLike {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 1px 0;
+    font-size: 20px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+    color: white;
+    background-color: transparent;
+}
+
+.btn-circle-like:hover {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 1px 0;
+    font-size: 20px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+    color: white;
+    background-color: #218838;
+}
+
+.btn-circle-disLike:hover {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 1px 0;
+    font-size: 20px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+    color: white;
+    background-color: #c82333;
+}
+
+.divRechazo {
+    background: radial-gradient(red, black);
+    text-align: center;
+    border-radius: 10px;
+    margin-left: 8%;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center !important;
+    height: 25px;
+    font-size: 20px; 
+    color: blanchedalmond;
+}

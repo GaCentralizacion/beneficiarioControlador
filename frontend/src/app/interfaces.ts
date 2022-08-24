@@ -204,7 +204,8 @@ export enum TiposdeFormato {
   dmy = 'dd/MM/yyyy',
   dmyt = 'dd/MM/yyyy HH:mm:ss',
   hm = 'HH:mm',
-  moneda = '$#,##0.00'
+  moneda = '$#,##0.00',
+  numberMask = '#,##0'
 }
 
 export enum Template {

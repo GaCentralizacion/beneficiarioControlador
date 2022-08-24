@@ -47,7 +47,7 @@
                                 <mat-form-field appearance="fill">
                                     <mat-label>Tipo de persona</mat-label>
                                     <mat-select formControlName="idTipoPersona"
-                                        (selectionChange)="getCamposForm($event.value)">
+                                        (selectionChange)="getCamposForm($event.value)" [disabled]="actualizarPersona">
                                         <mat-option [value]="0">
                                             Seleccione una opción
                                         </mat-option>
@@ -156,7 +156,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="RFC?.length === 0">
                                 <mat-label>{{RFC?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off">
+                                    <input matInput [maxlength]="rfcMaxLenght" placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off">
                                     <mat-error>
                                         Ingrese el RFC
                                     </mat-error>
@@ -296,7 +296,7 @@
             <!-- COMPONENETE DIRECCIONES -->
 
             <!-- COMPONENETE RELACIONES FAMILIARES -->
-            <mat-tab *ngIf="!hiddenForm && actualizarPersona" label="Relación familiar">
+            <mat-tab *ngIf="!hiddenForm && actualizarPersona && personaForm.controls.idTipoPersona.value === 1" label="Relación familiar">
                 <mat-card>
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <app-relacionFamiliar [gralDataPersona]="gralDataPersona" [catRelacionFamiliar]="catRelacionFamiliar" [catTipoPatrimonial]="catTipoPatrimonial"></app-relacionFamiliar>
@@ -304,6 +304,17 @@
                 </mat-card>
             </mat-tab>
             <!-- COMPONENETE RELACIONES FAMILIARES -->
+
+            <!-- COMPONENETE EXPEDINETE DIGITAL -->
+            <mat-tab *ngIf="!hiddenForm && actualizarPersona" label="Expediente digital">
+                <mat-card>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <app-expedienteDigital [gralDataPersona]="gralDataPersona"></app-expedienteDigital>
+                    </div>
+                </mat-card>
+            </mat-tab>
+
+            <!-- COMPONENETE EXPEDINETE DIGITAL -->
         </mat-tab-group>
         <div class="row">
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
@@ -312,14 +323,14 @@
                 </button>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                <Label [hidden]="!actualizarPersona"> {{textModificacion}} </Label>
+                <Label style="font-size: 14px;" [hidden]="!actualizarPersona"> {{textModificacion}} </Label>
             </div>
             <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.altaPersona === 1 && (focusTabs === 0 || focusTabs === 1 || focusTabs === 2)" class="btn btn-success pull-right"
                     (click)="savePersona()" [hidden]="actualizarPersona">
                     Guardar <i class="fa-solid fa-floppy-disk"></i>
                 </button>
-                <button *ngIf="accionesUsuario?.editarPersona === 1" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.editarPersona === 1 && (focusTabs === 0 || focusTabs === 1 || focusTabs === 2)" class="btn btn-success pull-right"
                     (click)="updatePersona()" [hidden]="!actualizarPersona">
                     Actualizar <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
