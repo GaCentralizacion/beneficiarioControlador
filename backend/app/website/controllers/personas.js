@@ -338,27 +338,56 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
         idPersona,
         rutaGuardado,
         fechaDocumento,
-        idUsuario
+        idUsuario,
+        CarpetaHeredado
     } = req.body;
 
     const resLogic = await logicSave.saveDocumentoLogic(b64File, nombreArchivo, carpetaPersona, rutaGuardado);
 
     if (resLogic.success === 1) {
         if (fs.existsSync(`${rutaGuardado}${carpetaPersona}\\\\${nombreArchivo}`)) {
+            if (CarpetaHeredado === '') {
+                var params = [
+                    { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+                    { name: 'IdPersona', value: idPersona, type: self.model.types.INT },
+                    { name: 'IdDocumento', value: IdDocumento, type: self.model.types.INT },
+                    { name: 'FechaDocumento', value: fechaDocumento, type: self.model.types.STRING }
+                ];
 
-            var params = [
-                { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
-                { name: 'IdPersona', value: idPersona, type: self.model.types.INT },
-                { name: 'IdDocumento', value: IdDocumento, type: self.model.types.INT },
-                { name: 'FechaDocumento', value: fechaDocumento, type: self.model.types.STRING }
-            ];
-
-            this.model.queryAllRecordSet('[dbo].[Ins_DocumentosPersona]', params, function (error, result) {
-                self.view.expositor(res, {
-                    error: error,
-                    result: result
+                this.model.queryAllRecordSet('[dbo].[Ins_DocumentosPersona]', params, function (error, result) {
+                    self.view.expositor(res, {
+                        error: error,
+                        result: result
+                    });
                 });
-            });
+            } else {
+                const resLogicHeredado = await logicSave.saveDocumentoLogic(b64File, nombreArchivo, CarpetaHeredado, rutaGuardado);
+                if (resLogicHeredado.success === 1) {
+                    if (fs.existsSync(`${rutaGuardado}${CarpetaHeredado}\\\\${nombreArchivo}`)) {
+                        var params = [
+                            { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+                            { name: 'IdPersona', value: idPersona, type: self.model.types.INT },
+                            { name: 'IdDocumento', value: IdDocumento, type: self.model.types.INT },
+                            { name: 'FechaDocumento', value: fechaDocumento, type: self.model.types.STRING }
+                        ];
+
+                        this.model.queryAllRecordSet('[dbo].[Ins_DocumentosPersona]', params, function (error, result) {
+                            self.view.expositor(res, {
+                                error: error,
+                                result: result
+                            });
+                        });
+                    } else {
+                        self.view.expositor(res, {
+                            result: [[{ Codigo: -1, Mensaje: 'No se guardo el documento heredado fisicamente.' }]]
+                        });
+                    }
+                } else {
+                    self.view.expositor(res, {
+                        result: [[{ Codigo: -1, Mensaje: 'Error al guardar el documento heredado fisicamente.' }]]
+                    });
+                };
+            };
         } else {
             self.view.expositor(res, {
                 result: [[{ Codigo: -1, Mensaje: 'No se guardo el documento fisicamente.' }]]
@@ -418,27 +447,59 @@ personas.prototype.post_updateDocumento = async function (req, res, next) {
         idPersona,
         rutaGuardado,
         rutaRespaldo,
-        b64File
+        b64File,
+        RutaRespaldoHeredado
     } = req.body
 
     const logicSaveRes = await logicSave.updateLogicDocumento(b64File, nombreDocumento, carpeta, rutaGuardado, nombreDocumentoRespaldo, rutaRespaldo);
     if (logicSaveRes.success === 1) {
         if (fs.existsSync(`${rutaGuardado}${carpeta}\\\\${nombreDocumento}`)) {
-            var params = [
-                { name: 'Opcion', value: Opcion, type: self.model.types.INT },
-                { name: 'Usuario', value: Usuario, type: self.model.types.INT },
-                { name: 'IdExpPer', value: IdExpPer, type: self.model.types.INT },
-                { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
-                { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
-                { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
-            ];
+            if (carpetaHeredado === '') {
+                var params = [
+                    { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+                    { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+                    { name: 'IdExpPer', value: IdExpPer, type: self.model.types.INT },
+                    { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
+                    { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
+                    { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+                ];
 
-            this.model.queryAllRecordSet('[dbo].[Upd_DocumentosPersona]', params, function (error, result) {
-                self.view.expositor(res, {
-                    error: error,
-                    result: result
+                this.model.queryAllRecordSet('[dbo].[Upd_DocumentosPersona]', params, function (error, result) {
+                    self.view.expositor(res, {
+                        error: error,
+                        result: result
+                    });
                 });
-            });
+            } else {
+                const logicSaveResHeredado = await logicSave.updateLogicDocumento(b64File, nombreDocumento, carpetaHeredado, rutaGuardado, nombreDocumentoRespaldo, RutaRespaldoHeredado);
+                if (logicSaveResHeredado.success === 1) {
+                    if (fs.existsSync(`${rutaGuardado}${carpetaHeredado}\\\\${nombreDocumento}`)) {
+                        var params = [
+                            { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+                            { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+                            { name: 'IdExpPer', value: IdExpPer, type: self.model.types.INT },
+                            { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
+                            { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
+                            { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+                        ];
+
+                        this.model.queryAllRecordSet('[dbo].[Upd_DocumentosPersona]', params, function (error, result) {
+                            self.view.expositor(res, {
+                                error: error,
+                                result: result
+                            });
+                        });
+                    } else {
+                        self.view.expositor(res, {
+                            result: [[{ Codigo: -1, Mensaje: 'Error no se guardo el archivo heredado' }]]
+                        });
+                    };
+                } else {
+                    self.view.expositor(res, {
+                        result: [[{ Codigo: -1, Mensaje: 'Error al guardar el archivo heredado' }]]
+                    });
+                };
+            };
         } else {
             self.view.expositor(res, {
                 result: [[{ Codigo: -1, Mensaje: 'Error al guardar el archivo' }]]

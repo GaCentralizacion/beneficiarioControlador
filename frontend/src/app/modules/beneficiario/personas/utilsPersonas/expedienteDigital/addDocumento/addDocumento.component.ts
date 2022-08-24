@@ -161,8 +161,10 @@ export class AddDocumentoComponent implements OnInit {
 					idPersona: this.dataDocumento[0].IdPersona,
 					rutaGuardado: this.dataDocumento[0].RutaGuardado,
 					fechaDocumento: this.documentosForm.controls.fechaDocumento.value,
-					idUsuario: this.dataUsuario.IdUsuario
+					idUsuario: this.dataUsuario.IdUsuario,
+					CarpetaHeredado: this.dataDocumento[0].CarpetaHeredado
 				};
+
 				this.spinner.show();
 				this.gaService.postService('personas/saveDocumentoExpediente', data).subscribe((res: any) => {
 					this.spinner.hide();
@@ -252,8 +254,10 @@ export class AddDocumentoComponent implements OnInit {
 					idPersona: this.dataDocumento[0].IdPersona,
 					rutaGuardado: this.dataDocumento[0].RutaGuardado,
 					rutaRespaldo: this.dataDocumento[0].RutaRespaldo,
-					b64File: this.filedata
+					b64File: this.filedata,
+					RutaRespaldoHeredado: this.dataDocumento[0].RutaRespaldoHeredado
 				};
+
 				this.spinner.show();
 				this.gaService.postService('personas/updateDocumento', data).subscribe((res: any) => {
 					this.spinner.hide();
