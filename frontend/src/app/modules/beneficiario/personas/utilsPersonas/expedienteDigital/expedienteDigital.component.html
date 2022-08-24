@@ -2,7 +2,7 @@
     <div class="col-sm-12 col-md-4 col-xl-4"></div>
     <div class="col-sm-12 col-md-4 col-xl-4"></div>
     <div class="col-sm-12 col-md-4 col-xl-4">
-        <button class="btn btn-success pull-right" (click)="addDocumento()">
+        <button *ngIf="accionesUsuario?.agregarActualizarDocs === 1" class="btn btn-success pull-right" (click)="addDocumento()">
             Agregar / Actualizar documento
         </button>
     </div>

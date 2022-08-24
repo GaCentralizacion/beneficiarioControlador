@@ -32,6 +32,7 @@ export class ShowDocumentoComponent implements OnInit {
     readyPdf: boolean = false;
 
     retornarValores = { success: 0, data: {} };
+    accionesUsuario: any;
 
     constructor(private fb: FormBuilder,
         private sanitizer: DomSanitizer,
@@ -50,6 +51,7 @@ export class ShowDocumentoComponent implements OnInit {
     };
 
     ngOnInit() {
+        this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
         setTimeout(() => {
             this.showDocumentoFn();

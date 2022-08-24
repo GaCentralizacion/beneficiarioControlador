@@ -25,6 +25,7 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
+import { environment } from 'environments/environment';
 /**IMPORTS GRID */
 
 @Component({
@@ -55,6 +56,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     /**Grid */
 
     allDocumentos: any = [];
+    accionesUsuario: any;
 
     constructor(
         private fb: FormBuilder,
@@ -69,6 +71,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     ngOnInit(): void {
+        this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllDocuments();
     };
 
