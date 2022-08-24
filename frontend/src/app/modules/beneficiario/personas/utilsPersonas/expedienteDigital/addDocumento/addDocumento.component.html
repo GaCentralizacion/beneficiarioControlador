@@ -50,7 +50,7 @@
 								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="showForm && showFechaDocumento">
 									<mat-label>Fecha del documento</mat-label>
 									<mat-form-field appearance="fill">
-										<input readonly [max]="today" matInput [matDatepicker]="picker"
+										<input readonly [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
 											formControlName="fechaDocumento"
 											placeholder="Fecha documento">
 										<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
