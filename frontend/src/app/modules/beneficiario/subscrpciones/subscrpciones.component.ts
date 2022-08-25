@@ -63,6 +63,15 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     allSubscripciones: any;
     focusTabs: number = 0;
 
+    dashForm: FormGroup;
+    headerDash: any;
+    bodyDash: any;
+    tituloAcciones: string;
+    tituloImporte: string;
+    dataAcciones: string;
+    importeAcciones: string;
+    showResumen: boolean = false;
+
     constructor(
         private gaService: GaService,
         private fb: FormBuilder,
@@ -78,6 +87,9 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.dashForm = this._formBuilder.group({
+            tipoBusqueda: [1]
+        });
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllEmpresas();
     };
@@ -107,6 +119,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         if (e.data.IdPersona !== undefined || e.data.IdPersona !== null || e.data.IdPersona !== '') {
             this.dataCurrenteEmpresa = e.data;
             this.getAllTransaccionesByIdPersona(e.data);
+            this.getAllTransaccionesDash(1);
         } else {
             Swal.fire({
                 title: '¡Error!',
@@ -121,7 +134,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.spinner.show();
         const data = {
             Opcion: 2,
-            IdPersona: dataPersona.IdPersona
+            IdPersona: dataPersona.IdPersona,
+            Tipo: null
         };
         this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
@@ -131,6 +145,38 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.createSubscripcionesGrid();
             this.showInitialSubscripciones = false;
             this.muestraGrid = false;
+        }, (error: any) => {
+            this.spinner.hide();
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+        });
+    };
+
+    getAllTransaccionesDash = tipo => {
+        this.showResumen = false;
+        if (tipo === 1) {
+            this.tituloAcciones = 'Acciones suscritas';
+            this.tituloImporte = 'Importe suscrito';
+        } else if (tipo === 2) {
+            this.tituloAcciones = 'Acciones pagadas';
+            this.tituloImporte = 'Importe pagado';
+        };
+        this.spinner.show();
+        const data = {
+            Opcion: 2,
+            IdPersona: this.dataCurrenteEmpresa.IdPersona,
+            Tipo: tipo
+        };
+        this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
+            this.spinner.hide();
+            this.headerDash = res[2][0];
+            this.bodyDash = res[3];
+            console.log('this.bodyDash', this.bodyDash)
+            this.showResumen = true;
         }, (error: any) => {
             this.spinner.hide();
             Swal.fire({
@@ -177,9 +223,12 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     onTabChanged = e => {
-        if (e === 1) {
+        if (e === 0) {
+            this.dashForm.controls.tipoBusqueda.setValue(1);
+            this.getAllTransaccionesDash(1);
+        } else if (e === 1) {
             this.createAccionesGrid();
-        } else {
+        } else if (e === 2) {
             this.createSubscripcionesGrid()
         };
     };

@@ -19,7 +19,70 @@
 
     <div class="containerAll" *ngIf="!showInitialSubscripciones">
         <mat-card>
-            <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs" (selectedTabChange)="onTabChanged($event.index);">
+            <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
+                (selectedTabChange)="onTabChanged($event.index);">
+                <mat-tab label="Dashboard">
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                            <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
+                                <h4>Dashboard</h4>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="dashForm">
+                                <div class="row justify-content-start align-items-center">
+                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Tipo de de calculo</mat-label>
+                                            <mat-select formControlName="tipoBusqueda"
+                                                (selectionChange)="getAllTransaccionesDash($event.value)">
+                                                <mat-option [value]="0">
+                                                    Seleccione una opción
+                                                </mat-option>
+                                                <mat-option [value]="1">
+                                                    Suscrito
+                                                </mat-option>
+                                                <mat-option [value]="2">
+                                                    Pagado
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                Seleccione un tipo de persona
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row justify-content-start align-items-center">
+                            <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2"></div>
+                            <div class="col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                                <table>
+                                    <tr>
+                                        <th style="text-align: center;">
+                                            {{tituloAcciones}}
+                                        </th>
+                                        <th style="text-align: center;">
+                                            {{tituloImporte}}
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            <label>{{headerDash?.Acciones | number}}</label>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <label>{{headerDash?.Importe | currency}}</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2"></div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
                 <mat-tab label="Acciones">
                     <mat-card>
                         <div class="row">
@@ -76,8 +139,8 @@
                 </div>
                 <div class="col-sm-4 col-md-4 col-xl-4"></div>
                 <div class="col-sm-4 col-md-4 col-xl-4">
-                    <button *ngIf="accionesUsuario.agregarSubscripciones === 1 && focusTabs !== 0" class="btn btn-success pull-right"
-                        (click)="registrarSubscripcion()">
+                    <button *ngIf="accionesUsuario.agregarSubscripciones === 1 && focusTabs !== 0"
+                        class="btn btn-success pull-right" (click)="registrarSubscripcion()">
                         Registrar <i class="fas fa-plus"></i>
                     </button>
                 </div>
