@@ -26,7 +26,7 @@
                         <div class="row">
                             <div class="col-sm-4 col-md-4 col-xl-4"></div>
                             <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
-                                <h4>Dashboard</h4>
+                                <h4>Dashboard {{dataCurrenteEmpresa.RazonSocial}}</h4>
                             </div>
                             <div class="col-sm-4 col-md-4 col-xl-4">
                             </div>
@@ -81,14 +81,26 @@
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2"></div>
                         </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <app-grid-component *ngIf="muestraGridDash" [datos]="bodyDash"
+                                    [columns]="columnsDashboard" [gridOptions]="gridOptions" [exportExcel]="exportExcel"
+                                    [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                                    [toolbar]="toolbarDashboard">
+                                </app-grid-component>
+                            </div>
+                        </div>
                     </mat-card>
                 </mat-tab>
                 <mat-tab label="Acciones">
                     <mat-card>
                         <div class="row">
                             <div class="col-sm-4 col-md-4 col-xl-4"></div>
-                            <div class="col-sm-4 col-md-4 col-xl-4">
-                                <h4>Acciones</h4>
+                            <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
+                                <h4>Acciones {{dataCurrenteEmpresa.RazonSocial}}</h4>
                             </div>
                             <div class="col-sm-4 col-md-4 col-xl-4">
                             </div>
@@ -110,8 +122,8 @@
                     <mat-card>
                         <div class="row">
                             <div class="col-sm-4 col-md-4 col-xl-4"></div>
-                            <div class="col-sm-4 col-md-4 col-xl-4">
-                                <h4>Suscripciones</h4>
+                            <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
+                                <h4>Suscripciones {{dataCurrenteEmpresa.RazonSocial}}</h4>
                             </div>
                             <div class="col-sm-4 col-md-4 col-xl-4">
                             </div>

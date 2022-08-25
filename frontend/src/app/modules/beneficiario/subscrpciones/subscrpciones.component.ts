@@ -55,6 +55,9 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
     muestraGridAcciones: boolean = false;
     muestraGridSubscripciones: boolean = false;
+    muestraGridDash: boolean = false;
+    columnsDashboard: any = [];
+    toolbarDashboard: Toolbar[];
     /**GRID */
     allEmpresas: any;
     dataCurrenteEmpresa: any;
@@ -116,6 +119,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verSubscripciones = e => {
+        this.focusTabs = 0;
         if (e.data.IdPersona !== undefined || e.data.IdPersona !== null || e.data.IdPersona !== '') {
             this.dataCurrenteEmpresa = e.data;
             this.getAllTransaccionesByIdPersona(e.data);
@@ -175,7 +179,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.spinner.hide();
             this.headerDash = res[2][0];
             this.bodyDash = res[3];
-            console.log('this.bodyDash', this.bodyDash)
+            this.createInitialDashboard();
             this.showResumen = true;
         }, (error: any) => {
             this.spinner.hide();
@@ -491,6 +495,79 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         */
         this.scroll = { mode: 'standard' };
         this.muestraGridSubscripciones = true;
+    };
+
+    createInitialDashboard = () => {
+        this.muestraGridDash = false;
+        this.toolbarDashboard = [];
+        this.columnsDashboard = [
+            {
+                caption: 'Nombre',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Importe directo',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
+                dataField: 'ImporteDirecto',
+                cssClass: 'directo'
+            },
+            {
+                caption: '% particiáción directa',
+                dataType: TiposdeDato.number,
+                dataField: 'ParticipacionDirecto',
+                cssClass: 'directo'
+            },
+            {
+                caption: '',
+                dataField: ''
+            },
+            {
+                caption: '% particiáción indirecta',
+                dataField: 'ParticipacionIndirecto',
+                cssClass: 'indirecto'
+            },
+            {
+                caption: '% participacion total',
+                dataField: 'ParticipacionTotal',
+                cssClass: 'indirecto'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+        const pageSizes = ['10', '25', '50', '100'];
+
+        this.gridOptions = { paginacion: 100, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'datos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: false };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: true };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGridDash = true;
     };
 
     /**CLICK DE LOS BOTONES SUPERORPOR */

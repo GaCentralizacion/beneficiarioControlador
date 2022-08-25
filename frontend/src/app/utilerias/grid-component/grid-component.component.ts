@@ -10,6 +10,7 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import { MatDialog } from '@angular/material/dialog';
 import { isEmpty } from 'lodash';
 import { environment } from 'environments/environment';
+import 'devextreme/integration/jquery';
 
 @Component({
 	selector: 'app-grid-component',
