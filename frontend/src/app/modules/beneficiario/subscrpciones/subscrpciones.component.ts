@@ -112,6 +112,11 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allEmpresas = res[0];
+            this.allEmpresas.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.createInitialGrid();
         }, (error: any) => {
             this.spinner.hide();
@@ -150,7 +155,17 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allAcciones = res[0];
+            this.allAcciones.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.allSubscripciones = res[1];
+            this.allSubscripciones.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.createAccionesGrid();
             this.createSubscripcionesGrid();
             this.showInitialSubscripciones = false;
@@ -187,6 +202,11 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.spinner.hide();
             this.headerDash = res[2][0];
             this.bodyDash = res[3];
+            this.bodyDash.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.dashForm.controls.directo.setValue(true);
             this.createDashboardDirectos();
             this.showResumen = true;

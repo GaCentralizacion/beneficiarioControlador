@@ -182,6 +182,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.muestraGrid = false;
         this.gaService.getService(`personas/allPersonas?opcion=1&usuario=${this.userData.IdUsuario}`).subscribe((res: any) => {
             this.allPersonas = res[0];
+            this.allPersonas.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.createGrid();
         }, (error: any) => {
             Swal.fire({

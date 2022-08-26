@@ -382,6 +382,9 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 			if (e.data.backgroundcolor) {
 				e.rowElement.find('td').css('background', e.data.backgroundcolor);
 			}
+			if (e.data.color) {
+				e.rowElement.find('td').css('color', e.data.color);
+			}
 		}
 	}
 

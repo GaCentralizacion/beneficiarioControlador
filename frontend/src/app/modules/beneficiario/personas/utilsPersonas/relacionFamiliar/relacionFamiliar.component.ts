@@ -87,6 +87,11 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
         };
         this.gaServise.postService('personas/selAllRelacionesFamiliares', data).subscribe((res: any) => {
             this.allRelaciones = res[0];
+            this.allRelaciones.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.createGrid();
         }, (error: any) => {
             Swal.fire({
