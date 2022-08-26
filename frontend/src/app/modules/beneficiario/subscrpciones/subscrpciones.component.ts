@@ -79,6 +79,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     dataAcciones: string;
     importeAcciones: string;
     showResumen: boolean = false;
+    dataIndirectos: any;
 
     constructor(
         private gaService: GaService,
@@ -134,7 +135,6 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         if (e.data.IdPersona !== undefined || e.data.IdPersona !== null || e.data.IdPersona !== '') {
             this.dataCurrenteEmpresa = e.data;
             this.getAllTransaccionesDash();
-            // this.getAllTransaccionesByIdPersona(e.data, 1);
         } else {
             Swal.fire({
                 title: '¡Error!',
@@ -190,8 +190,15 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             });
 
             if (this.dashForm.controls.directo.value) {
+                this.dataIndirectos = [];
                 this.createDashboardDirectos();
             } else {
+                this.dataIndirectos = res[4];
+                this.dataIndirectos.forEach((value, key) => {
+                    if ((key % 2) == 0) {
+                        value.backgroundcolor = '#D9E1F2';
+                    };
+                });
                 this.createDashboardIndirectos();
             };
             this.createAccionesGrid();
@@ -217,12 +224,24 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verParticipacionIdrecta = data => {
+        const dataSuscriptor = this.dataIndirectos.filter(x => x.IdPersonaSubscripcion === data.data.IdPersonaSubscripcion);
+        if (dataSuscriptor.length === 0) {
+            Swal.fire({
+                title: '¡Información!',
+                text: `${data.data.Nombre} no cuenta con participacion indirecta`,
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
+            return
+        };
+
         const dialogRef = this.dialog.open(ShowIndirectosComponent, {
             width: '100%',
             disableClose: true,
             data: {
                 title: `Participaciones indirectas ${data.data.Nombre}`,
-                dataAccionista: data.data
+                dataAccionista: data.data,
+                dataIndirecto: dataSuscriptor
             }
         });
     };

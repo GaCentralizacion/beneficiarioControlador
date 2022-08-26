@@ -31,6 +31,7 @@ import {
 export interface SendData {
 	title: string;
 	dataAccionista: any;
+	dataIndirecto: any;
 }
 
 @Component({
@@ -50,11 +51,11 @@ export class ShowIndirectosComponent implements OnInit {
 	Editing: IEditing;
 	Columnchooser: IColumnchooser;
 	muestraGrid: boolean = false;
-	dataGrid: any = [{ idUsuario: 1, userName: 'Algo', pass: 'Algo mas', nombre: 'Es el nombre' }];
 	datosEvent: any = [];
 	retornarValores = { success: 0, data: {} };
 	titulo: string;
 	dataAccionista: any
+	dataIndirecto: any
 
 	constructor(
 		public dialog: MatDialog,
@@ -66,6 +67,7 @@ export class ShowIndirectosComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataAccionista = data.dataAccionista;
+		this.dataIndirecto = data.dataIndirecto;
 	};
 
 	ngOnInit() {
@@ -76,20 +78,22 @@ export class ShowIndirectosComponent implements OnInit {
 		this.toolbar = [];
 		this.columns = [
 			{
-				caption: 'ID USUARIO',
-				dataField: 'idUsuario'
-			},
-			{
-				caption: 'User Name',
-				dataField: 'userName'
-			},
-			{
-				caption: 'Password',
-				dataField: 'pass'
-			},
-			{
 				caption: 'Nombre',
-				dataField: 'nombre'
+				dataField: 'Nombre'
+			},
+			{
+				caption: 'Razón social',
+				dataField: 'RazonSocial'
+			},
+			{
+				caption: 'Importe directo',
+				dataType: TiposdeDato.number,
+				format: TiposdeFormato.moneda,
+				dataField: 'ImporteDirecto'
+			},
+			{
+				caption: '% participación',
+				dataField: 'Participacion'
 			}
 		]
 		/*

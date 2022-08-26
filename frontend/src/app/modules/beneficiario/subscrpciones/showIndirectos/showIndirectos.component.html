@@ -11,7 +11,7 @@
 	<mat-card style="background-color: gainsboro;">
 		<div class="row">
 			<div class="col-md-12">
-				<app-grid-component *ngIf="muestraGrid" [datos]="dataGrid" [columns]="columns"
+				<app-grid-component *ngIf="muestraGrid" [datos]="dataIndirecto" [columns]="columns"
                     [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
                     [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
                     (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar">
