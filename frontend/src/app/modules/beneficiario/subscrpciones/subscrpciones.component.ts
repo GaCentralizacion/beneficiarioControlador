@@ -24,6 +24,7 @@ import {
     TiposdeFormato
 } from 'app/interfaces';
 import { environment } from 'environments/environment';
+import { ShowIndirectosComponent } from './showIndirectos/showIndirectos.component';
 /**IMPORTS GRID */
 
 @Component({
@@ -654,7 +655,14 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verParticipacionIdrecta = data => {
-        console.log('data', data)
+        const dialogRef = this.dialog.open(ShowIndirectosComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: `Participaciones indirectas ${data.data.Nombre}`,
+                dataAccionista: data.data
+            }
+        });
     };
 
     /**CLICK DE LOS BOTONES SUPERORPOR */
