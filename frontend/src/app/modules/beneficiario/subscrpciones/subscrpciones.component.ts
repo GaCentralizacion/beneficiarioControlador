@@ -55,9 +55,13 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
     muestraGridAcciones: boolean = false;
     muestraGridSubscripciones: boolean = false;
-    muestraGridDash: boolean = false;
-    columnsDashboard: any = [];
-    toolbarDashboard: Toolbar[];
+    muestraGridDashDirecto: boolean = false;
+    columnsDashboardDirecto: any = [];
+    toolbarDashboardDirecto: Toolbar[];
+
+    muestraGridDashIndirecto: boolean = false;
+    toolbarDashboardIndirecto: Toolbar[];
+    columnsDashboardIndirecto: any = [];
     /**GRID */
     allEmpresas: any;
     dataCurrenteEmpresa: any;
@@ -91,7 +95,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.dashForm = this._formBuilder.group({
-            tipoBusqueda: [1]
+            tipoBusqueda: [1],
+            directo: [true]
         });
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllEmpresas();
@@ -162,6 +167,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
     getAllTransaccionesDash = tipo => {
         this.showResumen = false;
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
         if (tipo === 1) {
             this.tituloAcciones = 'Acciones suscritas';
             this.tituloImporte = 'Importe suscrito';
@@ -179,7 +186,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.spinner.hide();
             this.headerDash = res[2][0];
             this.bodyDash = res[3];
-            this.createInitialDashboard();
+            this.dashForm.controls.directo.setValue(true);
+            this.createDashboardDirectos();
             this.showResumen = true;
         }, (error: any) => {
             this.spinner.hide();
@@ -497,10 +505,69 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.muestraGridSubscripciones = true;
     };
 
-    createInitialDashboard = () => {
-        this.muestraGridDash = false;
-        this.toolbarDashboard = [];
-        this.columnsDashboard = [
+    createDashboardDirectos = () => {
+        this.muestraGridDashDirecto = false;
+        this.toolbarDashboardDirecto = [];
+        this.columnsDashboardDirecto = [
+            {
+                caption: 'Nombre',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Importe directo',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
+                dataField: 'ImporteDirecto',
+                cssClass: 'directo'
+            },
+            {
+                caption: '% particiáción directa',
+                dataType: TiposdeDato.number,
+                dataField: 'ParticipacionDirecto',
+                cssClass: 'directo'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+        const pageSizes = ['10', '25', '50', '100'];
+
+        this.gridOptions = { paginacion: 100, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'accionistasDirectos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: false };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: true };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGridDashDirecto = true;
+    };
+
+    createDashboardIndirectos = () => {
+        this.muestraGridDashIndirecto = false;
+        this.toolbarDashboardIndirecto = [];
+        this.columnsDashboardIndirecto = [
             {
                 caption: 'Nombre',
                 dataField: 'Nombre'
@@ -543,7 +610,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         /*
         Parametros de Exploracion
         */
-        this.exportExcel = { enabled: true, fileName: 'datos' };
+        this.exportExcel = { enabled: true, fileName: 'accionistasIndirectos' };
         // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
         this.columnHiding = { hide: false };
         // ******************PARAMETROS DE PARA CHECKBOX**************** */
@@ -567,7 +634,17 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         Parametros de Scroll
         */
         this.scroll = { mode: 'standard' };
-        this.muestraGridDash = true;
+        this.muestraGridDashIndirecto = true;
+    };
+
+    tipoDashFn = e => {
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
+        if (e) {
+            this.createDashboardDirectos();
+        } else {
+            this.createDashboardIndirectos();
+        };
     };
 
     /**CLICK DE LOS BOTONES SUPERORPOR */
