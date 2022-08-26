@@ -18,12 +18,13 @@ var suscripciones = function (conf) {
 suscripciones.prototype.post_selAcciones = function (req, res, next) {
     var self = this;
 
-    const { Opcion, IdPersona, Tipo } = req.body;
+    const { Opcion, IdPersona, Tipo, Participacion } = req.body;
 
     var params = [
         { name: 'Opcion', value: Opcion, type: self.model.types.INT },
         { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
-        { name: 'Tipo', value: Tipo, type: self.model.types.INT }
+        { name: 'Tipo', value: Tipo, type: self.model.types.INT },
+        { name: 'Participacion', value: Participacion, type: self.model.types.INT }
     ];
 
     this.model.queryAllRecordSet('[dbo].[Sel_AccionesTransaccion]', params, function (error, result) {

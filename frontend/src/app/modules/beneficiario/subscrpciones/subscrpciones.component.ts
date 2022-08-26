@@ -133,8 +133,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.focusTabs = 0;
         if (e.data.IdPersona !== undefined || e.data.IdPersona !== null || e.data.IdPersona !== '') {
             this.dataCurrenteEmpresa = e.data;
-            this.getAllTransaccionesByIdPersona(e.data);
-            this.getAllTransaccionesDash(1);
+            this.getAllTransaccionesDash();
+            // this.getAllTransaccionesByIdPersona(e.data, 1);
         } else {
             Swal.fire({
                 title: '¡Error!',
@@ -145,31 +145,60 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         };
     };
 
-    getAllTransaccionesByIdPersona = dataPersona => {
+    getAllTransaccionesDash = () => {
         this.spinner.show();
+        this.showResumen = false;
+        this.showInitialSubscripciones = true;
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
+        if (this.dashForm.controls.tipoBusqueda.value === 1) {
+            this.tituloAcciones = 'Acciones suscritas';
+            this.tituloImporte = 'Importe suscrito';
+        } else if (this.dashForm.controls.tipoBusqueda.value === 2) {
+            this.tituloAcciones = 'Acciones pagadas';
+            this.tituloImporte = 'Importe pagado';
+        };
+
         const data = {
             Opcion: 2,
-            IdPersona: dataPersona.IdPersona,
-            Tipo: null
+            IdPersona: this.dataCurrenteEmpresa.IdPersona,
+            Tipo: this.dashForm.controls.tipoBusqueda.value,
+            Participacion: this.dashForm.controls.directo.value ? 1 : 2
         };
         this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
-            this.spinner.hide();
+            /**LLENADO DATOS DAHSBOARD */
+            this.headerDash = res[2][0];
+            this.bodyDash = res[3];
+            this.bodyDash.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
+            /**LLENADO DATOS ACCIONES */
             this.allAcciones = res[0];
             this.allAcciones.forEach((value, key) => {
                 if ((key % 2) == 0) {
                     value.backgroundcolor = '#D9E1F2';
                 };
             });
+            /**LLENADO DATOS SUCRIPCIONES */
             this.allSubscripciones = res[1];
             this.allSubscripciones.forEach((value, key) => {
                 if ((key % 2) == 0) {
                     value.backgroundcolor = '#D9E1F2';
                 };
             });
+
+            if (this.dashForm.controls.directo.value) {
+                this.createDashboardDirectos();
+            } else {
+                this.createDashboardIndirectos();
+            };
             this.createAccionesGrid();
             this.createSubscripcionesGrid();
+            this.showResumen = true;
             this.showInitialSubscripciones = false;
-            this.muestraGrid = false;
+            this.spinner.hide();
         }, (error: any) => {
             this.spinner.hide();
             Swal.fire({
@@ -181,43 +210,20 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         });
     };
 
-    getAllTransaccionesDash = tipo => {
-        this.showResumen = false;
+    tipoDashFn = e => {
         this.muestraGridDashDirecto = false;
         this.muestraGridDashIndirecto = false;
-        if (tipo === 1) {
-            this.tituloAcciones = 'Acciones suscritas';
-            this.tituloImporte = 'Importe suscrito';
-        } else if (tipo === 2) {
-            this.tituloAcciones = 'Acciones pagadas';
-            this.tituloImporte = 'Importe pagado';
-        };
-        this.spinner.show();
-        const data = {
-            Opcion: 2,
-            IdPersona: this.dataCurrenteEmpresa.IdPersona,
-            Tipo: tipo
-        };
-        this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
-            this.spinner.hide();
-            this.headerDash = res[2][0];
-            this.bodyDash = res[3];
-            this.bodyDash.forEach((value, key) => {
-                if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
-                };
-            });
-            this.dashForm.controls.directo.setValue(true);
-            this.createDashboardDirectos();
-            this.showResumen = true;
-        }, (error: any) => {
-            this.spinner.hide();
-            Swal.fire({
-                title: '¡Error!',
-                text: error.error.text,
-                icon: 'error',
-                confirmButtonText: 'Cerrar'
-            });
+        this.getAllTransaccionesDash();
+    };
+
+    verParticipacionIdrecta = data => {
+        const dialogRef = this.dialog.open(ShowIndirectosComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: `Participaciones indirectas ${data.data.Nombre}`,
+                dataAccionista: data.data
+            }
         });
     };
 
@@ -233,7 +239,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             if (!result) {
-                this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
+                this.getAllTransaccionesDash();
                 Swal.fire({
                     title: '¡Información!',
                     text: 'No se guardo la suscripción',
@@ -242,7 +248,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 });
             } else {
                 if (result.success === 1) {
-                    this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
+                    this.getAllTransaccionesDash();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
@@ -258,7 +264,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     onTabChanged = e => {
         if (e === 0) {
             this.dashForm.controls.tipoBusqueda.setValue(1);
-            this.getAllTransaccionesDash(1);
+            this.dashForm.controls.directo.setValue(true);
+            this.getAllTransaccionesDash();
         } else if (e === 1) {
             this.createAccionesGrid();
         } else if (e === 2) {
@@ -664,27 +671,6 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.muestraGridDashIndirecto = true;
     };
 
-    tipoDashFn = e => {
-        this.muestraGridDashDirecto = false;
-        this.muestraGridDashIndirecto = false;
-        if (e) {
-            this.createDashboardDirectos();
-        } else {
-            this.createDashboardIndirectos();
-        };
-    };
-
-    verParticipacionIdrecta = data => {
-        const dialogRef = this.dialog.open(ShowIndirectosComponent, {
-            width: '100%',
-            disableClose: true,
-            data: {
-                title: `Participaciones indirectas ${data.data.Nombre}`,
-                dataAccionista: data.data
-            }
-        });
-    };
-
     /**CLICK DE LOS BOTONES SUPERORPOR */
     receiveMessage($event) {
         try {
@@ -698,6 +684,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.muestraGrid = false;
         this.muestraGridSubscripciones = false;
         this.muestraGridAcciones = false;
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
         this.getAllEmpresas();
     };
 
