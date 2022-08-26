@@ -68,6 +68,7 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() eliminarRelacionFamiliar = new EventEmitter<{ data }>();
 	@Output() verSubscripciones = new EventEmitter<{ data }>();
 	@Output() verDocumentoExpDigCargado = new EventEmitter<{ data }>();
+	@Output() verParticipacionIdrecta = new EventEmitter<{ data }>();
 
 	public contador = 0;
 	public contadordetail = 0;
@@ -424,6 +425,10 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	verDocumentoExpedienteDigital = data => {
 		this.verDocumentoExpDigCargado.emit({ data: data });
 	};
+
+	verParticipacionIndirectaFn = data => {
+		this.verParticipacionIdrecta.emit({ data: data });
+	}
 	//PERONSAS
 	/**FUNCIONES DE LAS COLUMNAS */
 }

@@ -598,6 +598,12 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 caption: '% participacion total',
                 dataField: 'ParticipacionTotal',
                 cssClass: 'indirecto'
+            },
+            {
+                caption: 'Participacion indirecta',
+                allowEditing: false,
+                cellTemplate: 'verParticipacionIndirecta',
+                cssClass: 'indirecto'
             }
         ];
         /*
@@ -645,6 +651,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         } else {
             this.createDashboardIndirectos();
         };
+    };
+
+    verParticipacionIdrecta = data => {
+        console.log('data', data)
     };
 
     /**CLICK DE LOS BOTONES SUPERORPOR */
