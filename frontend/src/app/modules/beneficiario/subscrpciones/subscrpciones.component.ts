@@ -568,7 +568,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 cssClass: 'directo'
             },
             {
-                caption: '% particiáción directa',
+                caption: '% participación directa',
                 dataType: TiposdeDato.number,
                 dataField: 'ParticipacionDirecto',
                 cssClass: 'directo'
@@ -627,7 +627,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 cssClass: 'directo'
             },
             {
-                caption: '% particiáción directa',
+                caption: '% participación directa',
                 dataType: TiposdeDato.number,
                 dataField: 'ParticipacionDirecto',
                 cssClass: 'directo'
@@ -637,17 +637,17 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: ''
             },
             {
-                caption: '% particiáción indirecta',
+                caption: '% participación indirecta',
                 dataField: 'ParticipacionIndirecto',
                 cssClass: 'indirecto'
             },
             {
-                caption: '% participacion total',
+                caption: '% participación total',
                 dataField: 'ParticipacionTotal',
                 cssClass: 'indirecto'
             },
             {
-                caption: 'Participacion indirecta',
+                caption: 'Participación indirecta',
                 allowEditing: false,
                 cellTemplate: 'verParticipacionIndirecta',
                 cssClass: 'indirecto'
