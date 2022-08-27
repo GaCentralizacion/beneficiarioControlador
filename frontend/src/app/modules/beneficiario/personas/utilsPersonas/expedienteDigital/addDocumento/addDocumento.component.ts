@@ -23,6 +23,7 @@ export interface SendData {
 export class AddDocumentoComponent implements OnInit {
 	@ViewChild('myInputDocument') myInputEvidenceVariable: ElementRef;
 	today = new Date();
+	limitDay: any;
 	retornarValores = { success: 0, data: {} };
 	titulo: string;
 	dataUsuario: any;
@@ -54,6 +55,7 @@ export class AddDocumentoComponent implements OnInit {
 	};
 
 	ngOnInit() {
+		console.log('today', this.today)
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 		this.documentosForm = this._formBuilder.group({
 			idDocumento: [0, Validators.min(1)],
@@ -102,6 +104,7 @@ export class AddDocumentoComponent implements OnInit {
 		} else {
 			this.showBtns = true;
 			this.dataDocumento = this.allDocumentos.filter(x => x.IdDocumento === e);
+			this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida);
 			if (this.dataDocumento[0].IdExpPer === null) {
 				this.showBtnActualizar = false;
 			} else {

@@ -24,6 +24,7 @@ import {
     TiposdeFormato
 } from 'app/interfaces';
 import { environment } from 'environments/environment';
+import { ShowIndirectosComponent } from './showIndirectos/showIndirectos.component';
 /**IMPORTS GRID */
 
 @Component({
@@ -55,6 +56,13 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
     muestraGridAcciones: boolean = false;
     muestraGridSubscripciones: boolean = false;
+    muestraGridDashDirecto: boolean = false;
+    columnsDashboardDirecto: any = [];
+    toolbarDashboardDirecto: Toolbar[];
+
+    muestraGridDashIndirecto: boolean = false;
+    toolbarDashboardIndirecto: Toolbar[];
+    columnsDashboardIndirecto: any = [];
     /**GRID */
     allEmpresas: any;
     dataCurrenteEmpresa: any;
@@ -62,6 +70,16 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     allAcciones: any;
     allSubscripciones: any;
     focusTabs: number = 0;
+
+    dashForm: FormGroup;
+    headerDash: any;
+    bodyDash: any;
+    tituloAcciones: string;
+    tituloImporte: string;
+    dataAcciones: string;
+    importeAcciones: string;
+    showResumen: boolean = false;
+    dataIndirectos: any;
 
     constructor(
         private gaService: GaService,
@@ -78,6 +96,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.dashForm = this._formBuilder.group({
+            tipoBusqueda: [1],
+            directo: [true]
+        });
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllEmpresas();
     };
@@ -91,6 +113,11 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
             this.spinner.hide();
             this.allEmpresas = res[0];
+            this.allEmpresas.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.createInitialGrid();
         }, (error: any) => {
             this.spinner.hide();
@@ -104,9 +131,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verSubscripciones = e => {
+        this.focusTabs = 0;
         if (e.data.IdPersona !== undefined || e.data.IdPersona !== null || e.data.IdPersona !== '') {
             this.dataCurrenteEmpresa = e.data;
-            this.getAllTransaccionesByIdPersona(e.data);
+            this.getAllTransaccionesDash();
         } else {
             Swal.fire({
                 title: '¡Error!',
@@ -117,20 +145,67 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         };
     };
 
-    getAllTransaccionesByIdPersona = dataPersona => {
+    getAllTransaccionesDash = () => {
         this.spinner.show();
+        this.showResumen = false;
+        this.showInitialSubscripciones = true;
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
+        if (this.dashForm.controls.tipoBusqueda.value === 1) {
+            this.tituloAcciones = 'Acciones suscritas';
+            this.tituloImporte = 'Importe suscrito';
+        } else if (this.dashForm.controls.tipoBusqueda.value === 2) {
+            this.tituloAcciones = 'Acciones pagadas';
+            this.tituloImporte = 'Importe pagado';
+        };
+
         const data = {
             Opcion: 2,
-            IdPersona: dataPersona.IdPersona
+            IdPersona: this.dataCurrenteEmpresa.IdPersona,
+            Tipo: this.dashForm.controls.tipoBusqueda.value,
+            Participacion: this.dashForm.controls.directo.value ? 1 : 2
         };
         this.gaService.postService('suscripciones/selAcciones', data).subscribe((res: any) => {
-            this.spinner.hide();
+            /**LLENADO DATOS DAHSBOARD */
+            this.headerDash = res[2][0];
+            this.bodyDash = res[3];
+            this.bodyDash.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
+            /**LLENADO DATOS ACCIONES */
             this.allAcciones = res[0];
+            this.allAcciones.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
+            /**LLENADO DATOS SUCRIPCIONES */
             this.allSubscripciones = res[1];
+            this.allSubscripciones.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
+
+            if (this.dashForm.controls.directo.value) {
+                this.dataIndirectos = [];
+                this.createDashboardDirectos();
+            } else {
+                this.dataIndirectos = res[4];
+                this.dataIndirectos.forEach((value, key) => {
+                    if ((key % 2) == 0) {
+                        value.backgroundcolor = '#D9E1F2';
+                    };
+                });
+                this.createDashboardIndirectos();
+            };
             this.createAccionesGrid();
             this.createSubscripcionesGrid();
+            this.showResumen = true;
             this.showInitialSubscripciones = false;
-            this.muestraGrid = false;
+            this.spinner.hide();
         }, (error: any) => {
             this.spinner.hide();
             Swal.fire({
@@ -139,6 +214,35 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
+        });
+    };
+
+    tipoDashFn = e => {
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
+        this.getAllTransaccionesDash();
+    };
+
+    verParticipacionIdrecta = data => {
+        const dataSuscriptor = this.dataIndirectos.filter(x => x.IdPersonaSubscripcion === data.data.IdPersonaSubscripcion);
+        if (dataSuscriptor.length === 0) {
+            Swal.fire({
+                title: '¡Información!',
+                text: `${data.data.Nombre} no cuenta con participacion indirecta`,
+                icon: 'info',
+                confirmButtonText: 'Cerrar'
+            });
+            return
+        };
+
+        const dialogRef = this.dialog.open(ShowIndirectosComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: `Participaciones indirectas ${data.data.Nombre}`,
+                dataAccionista: data.data,
+                dataIndirecto: dataSuscriptor
+            }
         });
     };
 
@@ -154,7 +258,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             if (!result) {
-                this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
+                this.getAllTransaccionesDash();
                 Swal.fire({
                     title: '¡Información!',
                     text: 'No se guardo la suscripción',
@@ -163,7 +267,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 });
             } else {
                 if (result.success === 1) {
-                    this.getAllTransaccionesByIdPersona(this.dataCurrenteEmpresa);
+                    this.getAllTransaccionesDash();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
@@ -177,9 +281,13 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     onTabChanged = e => {
-        if (e === 1) {
+        if (e === 0) {
+            this.dashForm.controls.tipoBusqueda.setValue(1);
+            this.dashForm.controls.directo.setValue(true);
+            this.getAllTransaccionesDash();
+        } else if (e === 1) {
             this.createAccionesGrid();
-        } else {
+        } else if (e === 2) {
             this.createSubscripcionesGrid()
         };
     };
@@ -274,6 +382,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             {
                 caption: 'Serie',
                 dataField: 'Serie'
+            },
+            {
+                caption: 'Capital fijo',
+                dataField: 'CapitalFijo'
             },
             {
                 caption: 'Valor unitario',
@@ -444,6 +556,144 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.muestraGridSubscripciones = true;
     };
 
+    createDashboardDirectos = () => {
+        this.muestraGridDashDirecto = false;
+        this.toolbarDashboardDirecto = [];
+        this.columnsDashboardDirecto = [
+            {
+                caption: 'Nombre',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Importe directo',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
+                dataField: 'ImporteDirecto',
+                cssClass: 'directo'
+            },
+            {
+                caption: '% participación directa',
+                dataType: TiposdeDato.number,
+                dataField: 'ParticipacionDirecto',
+                cssClass: 'directo'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+        const pageSizes = ['10', '25', '50', '100'];
+
+        this.gridOptions = { paginacion: 100, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'accionistasDirectos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: false };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: true };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGridDashDirecto = true;
+    };
+
+    createDashboardIndirectos = () => {
+        this.muestraGridDashIndirecto = false;
+        this.toolbarDashboardIndirecto = [];
+        this.columnsDashboardIndirecto = [
+            {
+                caption: 'Nombre',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Importe directo',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.moneda,
+                dataField: 'ImporteDirecto',
+                cssClass: 'directo'
+            },
+            {
+                caption: '% participación directa',
+                dataType: TiposdeDato.number,
+                dataField: 'ParticipacionDirecto',
+                cssClass: 'directo'
+            },
+            {
+                caption: '',
+                dataField: ''
+            },
+            {
+                caption: '% participación indirecta',
+                dataField: 'ParticipacionIndirecto',
+                cssClass: 'indirecto'
+            },
+            {
+                caption: '% participación total',
+                dataField: 'ParticipacionTotal',
+                cssClass: 'indirecto'
+            },
+            {
+                caption: 'Participación indirecta',
+                allowEditing: false,
+                cellTemplate: 'verParticipacionIndirecta',
+                cssClass: 'indirecto'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+        const pageSizes = ['10', '25', '50', '100'];
+
+        this.gridOptions = { paginacion: 100, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'accionistasIndirectos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: false };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: true };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGridDashIndirecto = true;
+    };
+
     /**CLICK DE LOS BOTONES SUPERORPOR */
     receiveMessage($event) {
         try {
@@ -457,6 +707,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         this.muestraGrid = false;
         this.muestraGridSubscripciones = false;
         this.muestraGridAcciones = false;
+        this.muestraGridDashDirecto = false;
+        this.muestraGridDashIndirecto = false;
         this.getAllEmpresas();
     };
 

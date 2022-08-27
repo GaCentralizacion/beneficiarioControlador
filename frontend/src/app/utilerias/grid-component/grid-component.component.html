@@ -135,6 +135,15 @@
 		</div>
 		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verParticipacionIndirecta'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verParticipacionIndirectaFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		
+
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
 		<div *dxTemplate="let data of 'foto'" class="foto">

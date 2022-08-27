@@ -10,6 +10,7 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import { MatDialog } from '@angular/material/dialog';
 import { isEmpty } from 'lodash';
 import { environment } from 'environments/environment';
+import 'devextreme/integration/jquery';
 
 @Component({
 	selector: 'app-grid-component',
@@ -67,6 +68,7 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() eliminarRelacionFamiliar = new EventEmitter<{ data }>();
 	@Output() verSubscripciones = new EventEmitter<{ data }>();
 	@Output() verDocumentoExpDigCargado = new EventEmitter<{ data }>();
+	@Output() verParticipacionIdrecta = new EventEmitter<{ data }>();
 
 	public contador = 0;
 	public contadordetail = 0;
@@ -380,6 +382,9 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 			if (e.data.backgroundcolor) {
 				e.rowElement.find('td').css('background', e.data.backgroundcolor);
 			}
+			if (e.data.color) {
+				e.rowElement.find('td').css('color', e.data.color);
+			}
 		}
 	}
 
@@ -423,6 +428,10 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	verDocumentoExpedienteDigital = data => {
 		this.verDocumentoExpDigCargado.emit({ data: data });
 	};
+
+	verParticipacionIndirectaFn = data => {
+		this.verParticipacionIdrecta.emit({ data: data });
+	}
 	//PERONSAS
 	/**FUNCIONES DE LAS COLUMNAS */
 }

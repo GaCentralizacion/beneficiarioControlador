@@ -81,6 +81,11 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
         };
         this.gaService.postService('personas/selDocumentosExpediente', data).subscribe((res: any) => {
             this.allDocumentos = res[0];
+            this.allDocumentos.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#D9E1F2';
+                };
+            });
             this.createGrid();
         }, (error: any) => {
             Swal.fire({

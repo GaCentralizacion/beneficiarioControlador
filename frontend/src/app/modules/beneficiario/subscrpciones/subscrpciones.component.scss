@@ -1,7 +1,48 @@
 .pull-left {
-    float: left !important;
-  }
-  
-  .pull-right {
-    float: right !important;
-  }
+  float: left !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+mat-form-field {
+  width: 100% !important;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 0 8px, 0 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #EAECEE;
+}
+
+::ng-deep #gridContainer .dx-header-row .directo{
+  background-color: #002C66;
+  color: white;
+  font-weight: bold;
+}
+
+::ng-deep #gridContainer .dx-header-row .indirecto{
+  background-color: #004299;
+  color: white;
+  font-weight: bold;
+}
+
+//OCULTA EL TOTOAL DE REGISTROS
+// ::ng-deep #gridContainer .informer {
+//   height: 70px;
+//   width: 150px;
+//   text-align: center;
+//   color: #fff;
+//   display: none;
+// }
