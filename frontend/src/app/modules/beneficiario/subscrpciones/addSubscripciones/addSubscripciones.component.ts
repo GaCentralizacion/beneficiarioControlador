@@ -286,15 +286,30 @@ export class AddSubscripcionesComponent implements OnInit {
 	};
 
 	cantidadOnChangeEvent = e => {
-		if (e !== 0 || e !== '' || e !== null || e !== undefined) {
+		let cantidadParse = this.getValInt(e);
+		if (cantidadParse !== 0 || cantidadParse !== null || cantidadParse !== undefined) {
 			if (this.subscripcionesForm.controls.cantidad.invalid) {
 				this.subscripcionesForm.controls.importe.setValue(null);
 			} else {
-				let importe = (this.subscripcionesForm.controls.valorUnitario.value * e);
+				let importe = (this.subscripcionesForm.controls.valorUnitario.value * cantidadParse);
 				this.subscripcionesForm.controls.importe.setValue(importe);
+				if (this.subscripcionesForm.controls.precioVenta.value !== null) {
+					this.precioUnitarioVentaOnChangeEvent(this.subscripcionesForm.controls.precioVenta.value);
+				} else {
+					this.subscripcionesForm.controls.importeVenta.setValue(null);
+				}
 			};
 		} else {
 			this.subscripcionesForm.controls.importe.setValue(null);
+		};
+	};
+
+	precioUnitarioVentaOnChangeEvent = e => {
+		if (e !== 0 || e !== '' || e !== null || e !== undefined) {
+			let importe = (this.subscripcionesForm.controls.cantidad.value * this.getValFloat(e));
+			this.subscripcionesForm.controls.importeVenta.setValue(importe);
+		} else {
+			this.subscripcionesForm.controls.importeVenta.setValue(null);
 		};
 	};
 
@@ -394,10 +409,15 @@ export class AddSubscripcionesComponent implements OnInit {
 		return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
 	};
 
-	getVal() {
-		var val = this.value.toString().replace("$", "");
+	getValFloat(valor) {
+		let val = valor.toString().replace("$", "");
 		val = val.replace(",", "");
-		this.value = parseInt(val);
-		this.subscripcionesForm.controls["cantidad"].setValue(parseInt(val));
+		return parseFloat(val);
+	};
+
+	getValInt(valor) {
+		let val = valor.toString().replace("$", "");
+		val = val.replace(",", "");
+		return parseInt(val);
 	};
 };

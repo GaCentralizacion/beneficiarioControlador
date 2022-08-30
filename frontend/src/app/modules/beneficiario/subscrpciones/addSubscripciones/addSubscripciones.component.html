@@ -137,7 +137,7 @@
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
 									type="text" placeholder="Precio unitario de venta" formControlName="precioVenta"
-									autocomplete="off">
+									autocomplete="off" (keyup)="precioUnitarioVentaOnChangeEvent($event.target.value)">
 								<mat-error>
 									Ingrese el precio unitario de venta
 								</mat-error>
@@ -148,7 +148,7 @@
 							<mat-label>Importe de venta</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
-								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+								<input readonly matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
 									type="text" placeholder="Importe de venta" formControlName="importeVenta"
 									autocomplete="off">
 								<mat-error>
