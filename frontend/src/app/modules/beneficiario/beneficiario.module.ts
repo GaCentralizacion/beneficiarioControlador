@@ -20,6 +20,7 @@ import { ExpedienteDigitalComponent } from './personas/utilsPersonas/expedienteD
 import { AddDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/addDocumento/addDocumento.component';
 import { ShowDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/showDocumento/showDocumento.component';
 import { ShowIndirectosComponent } from './subscrpciones/showIndirectos/showIndirectos.component';
+import { DecimalMask } from 'app/utilerias/pipes/decimal-mask.directive';
 
 @NgModule({
     declarations: [
@@ -36,7 +37,8 @@ import { ShowIndirectosComponent } from './subscrpciones/showIndirectos/showIndi
         ExpedienteDigitalComponent,
         AddDocumentoComponent,
         ShowDocumentoComponent,
-        ShowIndirectosComponent
+        ShowIndirectosComponent,
+        DecimalMask
     ],
     imports: [
         CommonModule,

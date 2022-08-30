@@ -74,7 +74,8 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
         FechaAduisicion,
         Observaciones,
         PrecioUnitarioVenta,
-        ImporteVenta
+        ImporteVenta,
+        Dictamen
     } = req.body;
 
     var params = [
@@ -88,7 +89,8 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
         { name: 'FechaAduisicion', value: FechaAduisicion, type: self.model.types.STRING },
         { name: 'Observaciones', value: Observaciones, type: self.model.types.STRING },
         { name: 'PrecioUnitarioVenta', value: PrecioUnitarioVenta, type: self.model.types.DECIMAL },
-        { name: 'ImporteVenta', value: ImporteVenta, type: self.model.types.DECIMAL }
+        { name: 'ImporteVenta', value: ImporteVenta, type: self.model.types.DECIMAL },
+        { name: 'Dictamen', value: Dictamen, type: self.model.types.STRING }
     ];
 
     this.model.queryAllRecordSet('[dbo].[Ins_Subscripciones]', params, function (error, result) {
