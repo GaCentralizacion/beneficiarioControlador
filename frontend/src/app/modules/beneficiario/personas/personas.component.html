@@ -30,7 +30,7 @@
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
         <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
-        (selectedTabChange)="onTabChanged($event.index);">
+        (selectedTabChange)="onTabChanged($event);">
             <!-- Datos Generales -->
             <mat-tab label="Datos de persona">
                 <mat-card>
@@ -67,7 +67,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoMoralOption?.length === 0">
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdTipoMoralOption?.Nombre}}</mat-label>
-                                    <mat-select formControlName="idTipoMor">
+                                    <mat-select formControlName="idTipoMor" (selectionChange)="changeTipoMoral($event.value)">
                                         <mat-option [value]="0">
                                             Seleccione una opción
                                         </mat-option>
@@ -239,7 +239,7 @@
             <!-- Datos Generales -->
 
             <!-- COMPONENETE CONTACTOS -->
-            <mat-tab *ngIf="!hiddenForm" label="Medios de contacto">
+            <mat-tab *ngIf="!hiddenForm && showContactos" label="Medios de contacto">
                 <mat-card>
                     <div class="row justify-content-start align-items-center">
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
@@ -248,20 +248,27 @@
                             <h5 *ngIf="!actualizarPersona">Medios de contacto</h5>
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <button class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
+                            <button *ngIf="!moralInterna" class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
                                 <i class="fas fa-plus"></i>
                             </button>
-                            <button class="btn btn-danger pull-right" (click)="removeContacto()">
+                            <button *ngIf="!moralInterna" class="btn btn-danger pull-right" (click)="removeContacto()">
                                 <i class="fas fa-minus"></i>
                             </button>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div *ngIf="!moralInterna" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <app-contactos *ngFor="let contacto of arrayAllContactos"
                                 [catTipoContacto]="catTipoContacto" [arrayAllContactos]="arrayAllContactos"
                                 [currentIdContacto]="this.arrayAllContactos.length"
                                 [actualizarPersona]="actualizarPersona"></app-contactos>
+                        </div>
+                        <div *ngIf="moralInterna" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-grid-component *ngIf="muestraGridMoralInterna" [datos]="dataPersonaMoralInterna" [columns]="columnsMoralInterna" [gridOptions]="gridOptionsMoralInterna"
+                            [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                            [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                            (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbarMoralInterna">
+                        </app-grid-component>
                         </div>
                     </div>
                 </mat-card>
