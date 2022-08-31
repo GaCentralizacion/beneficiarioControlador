@@ -184,7 +184,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.allPersonas = res[0];
             this.allPersonas.forEach((value, key) => {
                 if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
+                    value.backgroundcolor = '#F4F6F6';
                 };
             });
             this.createGrid();

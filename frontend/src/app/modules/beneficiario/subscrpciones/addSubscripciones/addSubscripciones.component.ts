@@ -343,7 +343,7 @@ export class AddSubscripcionesComponent implements OnInit {
 					IdPersonaDestino: this.subscripcionesForm.controls.personaDestino.value === 0 ? null : this.subscripcionesForm.controls.personaDestino.value,
 					Serie: this.subscripcionesForm.controls.serie.value,
 					Cantidad: this.subscripcionesForm.controls.cantidad.value,
-					FechaAduisicion: this.subscripcionesForm.controls.fechaAdqusicion.value,
+					FechaAdquisicion: this.subscripcionesForm.controls.fechaAdqusicion.value,
 					Observaciones: this.subscripcionesForm.controls.observaciones.value,
 					PrecioUnitarioVenta: this.subscripcionesForm.controls.precioVenta.value === 0 ? null : this.subscripcionesForm.controls.precioVenta.value,
 					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value,
