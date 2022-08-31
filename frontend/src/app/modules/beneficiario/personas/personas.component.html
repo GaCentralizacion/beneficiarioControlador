@@ -29,7 +29,8 @@
 
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
-        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs">
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
+        (selectedTabChange)="onTabChanged($event.index);">
             <!-- Datos Generales -->
             <mat-tab label="Datos de persona">
                 <mat-card>

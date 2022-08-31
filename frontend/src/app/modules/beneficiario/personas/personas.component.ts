@@ -10,6 +10,8 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.component';
 import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
 import { environment } from 'environments/environment';
+import { RelacionFamiliarComponent } from './utilsPersonas/relacionFamiliar/relacionFamiliar.component';
+import { ExpedienteDigitalComponent } from './utilsPersonas/expedienteDigital/expedienteDigital.component';
 
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
@@ -41,6 +43,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     today = new Date();
     @ViewChild(ContactosComponent) contactoComponent: ContactosComponent;
     @ViewChild(DomiciliosComponent) domicilioComponent: DomiciliosComponent;
+    @ViewChild(RelacionFamiliarComponent) relacionFamiliarComponent: RelacionFamiliarComponent;
+    @ViewChild(ExpedienteDigitalComponent) expedienteDigitalComponent: ExpedienteDigitalComponent;
     idMenuApp: number = 0;
 
     /**Grid */
@@ -805,6 +809,16 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.muestraGrid = true;
     };
 
+    onTabChanged = e => {
+        if (this.actualizarPersona) {
+            if (e === 3) {
+                this.relacionFamiliarComponent.getAllRelacionesFamiliares();
+            } else if (e === 4) {
+                this.expedienteDigitalComponent.getAllDocuments();
+            };
+        };
+    };
+
     datosMessage = e => {
         this.datosEvent = e.data;
     };
@@ -1199,6 +1213,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     FechaDiaCorrecto(fecha) {
         return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
-    }
+    };
 
 };
