@@ -115,7 +115,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.allEmpresas = res[0];
             this.allEmpresas.forEach((value, key) => {
                 if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
+                    value.backgroundcolor = '#F4F6F6';
                 };
             });
             this.createInitialGrid();
@@ -171,21 +171,21 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.bodyDash = res[3];
             this.bodyDash.forEach((value, key) => {
                 if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
+                    value.backgroundcolor = '#F4F6F6';
                 };
             });
             /**LLENADO DATOS ACCIONES */
             this.allAcciones = res[0];
             this.allAcciones.forEach((value, key) => {
                 if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
+                    value.backgroundcolor = '#F4F6F6';
                 };
             });
             /**LLENADO DATOS SUCRIPCIONES */
             this.allSubscripciones = res[1];
             this.allSubscripciones.forEach((value, key) => {
                 if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
+                    value.backgroundcolor = '#F4F6F6';
                 };
             });
 
@@ -196,7 +196,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 this.dataIndirectos = res[4];
                 this.dataIndirectos.forEach((value, key) => {
                     if ((key % 2) == 0) {
-                        value.backgroundcolor = '#D9E1F2';
+                        value.backgroundcolor = '#F4F6F6';
                     };
                 });
                 this.createDashboardIndirectos();
@@ -648,13 +648,12 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             {
                 caption: '% participación total',
                 dataField: 'ParticipacionTotal',
-                cssClass: 'indirecto'
+                cssClass: 'participacionTotalCss'
             },
             {
                 caption: 'Participación indirecta',
                 allowEditing: false,
-                cellTemplate: 'verParticipacionIndirecta',
-                cssClass: 'indirecto'
+                cellTemplate: 'verParticipacionIndirecta'
             }
         ];
         /*

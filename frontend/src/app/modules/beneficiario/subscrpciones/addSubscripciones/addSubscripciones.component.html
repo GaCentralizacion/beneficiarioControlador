@@ -137,7 +137,7 @@
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
 									type="text" placeholder="Precio unitario de venta" formControlName="precioVenta"
-									autocomplete="off">
+									autocomplete="off" (keyup)="precioUnitarioVentaOnChangeEvent($event.target.value)">
 								<mat-error>
 									Ingrese el precio unitario de venta
 								</mat-error>
@@ -148,7 +148,7 @@
 							<mat-label>Importe de venta</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
-								<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
+								<input readonly matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }"
 									type="text" placeholder="Importe de venta" formControlName="importeVenta"
 									autocomplete="off">
 								<mat-error>
@@ -168,6 +168,16 @@
 									Seleccione una fecha de adquisición
 								</mat-error>
 							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showFieldsImportePrecioVenta && showAllFrom">
+							<mat-slide-toggle color="primary" formControlName="aplicaDictamen" style="padding-top: 30px;">
+								<mat-label *ngIf="subscripcionesForm.controls.aplicaDictamen.value">
+									Aplica dictamen
+								</mat-label>
+								<mat-label *ngIf="!subscripcionesForm.controls.aplicaDictamen.value">
+									No aplica dictamen
+								</mat-label>
+							</mat-slide-toggle>
 						</div>
 					</div>
 					<div class="row">

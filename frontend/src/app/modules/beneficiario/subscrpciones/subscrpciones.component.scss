@@ -38,6 +38,12 @@ tr:nth-child(even) {
   font-weight: bold;
 }
 
+::ng-deep #gridContainer .dx-header-row .participacionTotalCss{
+  background-color: #00B050;
+  color: white;
+  font-weight: bold;
+}
+
 //OCULTA EL TOTOAL DE REGISTROS
 // ::ng-deep #gridContainer .informer {
 //   height: 70px;

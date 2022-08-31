@@ -5,8 +5,6 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
-import { filter } from 'rxjs/operators';
-import { filters } from '../../../../mock-api/apps/mailbox/data';
 
 /**
  * Obtenemos el Mensaje a mostrar
@@ -44,6 +42,8 @@ export class AddSubscripcionesComponent implements OnInit {
 	today = new Date();
 	fechaAquisicionInput: any;
 	placeHolderCantidad: string = 'Máximo';
+	value: number;
+	datoType: string = 'number';
 
 	constructor(
 		public dialog: MatDialog,
@@ -84,6 +84,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			importeVenta: [Validators.required],
 			observaciones: ['', Validators.maxLength(this.maxLengthTextArea)],
 			fechaAdqusicion: ['', Validators.required],
+			aplicaDictamen: [false]
 		});
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 		this.getAllSubscritores();
@@ -164,6 +165,7 @@ export class AddSubscripcionesComponent implements OnInit {
 		this.subscripcionesForm.controls.valorUnitario.markAsTouched();
 		this.subscripcionesForm.controls.importe.setValue(null);
 		this.subscripcionesForm.controls.importe.markAsTouched();
+		this.subscripcionesForm.controls.aplicaDictamen.setValue(false);
 		this.conceptoSelecionado = []
 		this.conceptoSelecionado = this.allConceptos.filter(x => x.IdConcepto === e);
 		if (this.conceptoSelecionado[0].AplicaPersonaDestino !== 0) {
@@ -284,15 +286,30 @@ export class AddSubscripcionesComponent implements OnInit {
 	};
 
 	cantidadOnChangeEvent = e => {
-		if (e !== 0 || e !== '' || e !== null || e !== undefined) {
+		let cantidadParse = this.getValInt(e);
+		if (cantidadParse !== 0 || cantidadParse !== null || cantidadParse !== undefined) {
 			if (this.subscripcionesForm.controls.cantidad.invalid) {
 				this.subscripcionesForm.controls.importe.setValue(null);
 			} else {
-				let importe = (this.subscripcionesForm.controls.valorUnitario.value * e);
+				let importe = (this.subscripcionesForm.controls.valorUnitario.value * cantidadParse);
 				this.subscripcionesForm.controls.importe.setValue(importe);
+				if (this.subscripcionesForm.controls.precioVenta.value !== null) {
+					this.precioUnitarioVentaOnChangeEvent(this.subscripcionesForm.controls.precioVenta.value);
+				} else {
+					this.subscripcionesForm.controls.importeVenta.setValue(null);
+				}
 			};
 		} else {
 			this.subscripcionesForm.controls.importe.setValue(null);
+		};
+	};
+
+	precioUnitarioVentaOnChangeEvent = e => {
+		if (e !== 0 || e !== '' || e !== null || e !== undefined) {
+			let importe = (this.subscripcionesForm.controls.cantidad.value * this.getValFloat(e));
+			this.subscripcionesForm.controls.importeVenta.setValue(importe);
+		} else {
+			this.subscripcionesForm.controls.importeVenta.setValue(null);
 		};
 	};
 
@@ -326,10 +343,11 @@ export class AddSubscripcionesComponent implements OnInit {
 					IdPersonaDestino: this.subscripcionesForm.controls.personaDestino.value === 0 ? null : this.subscripcionesForm.controls.personaDestino.value,
 					Serie: this.subscripcionesForm.controls.serie.value,
 					Cantidad: this.subscripcionesForm.controls.cantidad.value,
-					FechaAduisicion: this.subscripcionesForm.controls.fechaAdqusicion.value,
+					FechaAdquisicion: this.subscripcionesForm.controls.fechaAdqusicion.value,
 					Observaciones: this.subscripcionesForm.controls.observaciones.value,
 					PrecioUnitarioVenta: this.subscripcionesForm.controls.precioVenta.value === 0 ? null : this.subscripcionesForm.controls.precioVenta.value,
-					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value
+					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value,
+					Dictamen: this.showFieldsImportePrecioVenta ? this.subscripcionesForm.controls.aplicaDictamen.value : null
 				};
 
 				this.gaService.postService('suscripciones/insSuscripciones', dataSend).subscribe((res: any) => {
@@ -389,5 +407,17 @@ export class AddSubscripcionesComponent implements OnInit {
 
 	FechaDiaCorrecto(fecha) {
 		return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
+	};
+
+	getValFloat(valor) {
+		let val = valor.toString().replace("$", "");
+		val = val.replace(",", "");
+		return parseFloat(val);
+	};
+
+	getValInt(valor) {
+		let val = valor.toString().replace("$", "");
+		val = val.replace(",", "");
+		return parseInt(val);
 	};
 };

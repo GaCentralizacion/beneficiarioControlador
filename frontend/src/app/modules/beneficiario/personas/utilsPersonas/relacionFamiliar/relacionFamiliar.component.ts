@@ -89,7 +89,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
             this.allRelaciones = res[0];
             this.allRelaciones.forEach((value, key) => {
                 if ((key % 2) == 0) {
-                    value.backgroundcolor = '#D9E1F2';
+                    value.backgroundcolor = '#F4F6F6';
                 };
             });
             this.createGrid();

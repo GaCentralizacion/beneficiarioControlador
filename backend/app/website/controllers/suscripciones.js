@@ -71,10 +71,11 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
         IdPersonaDestino,
         Serie,
         Cantidad,
-        FechaAduisicion,
+        FechaAdquisicion,
         Observaciones,
         PrecioUnitarioVenta,
-        ImporteVenta
+        ImporteVenta,
+        Dictamen
     } = req.body;
 
     var params = [
@@ -85,10 +86,11 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
         { name: 'IdPersonaDestino', value: IdPersonaDestino, type: self.model.types.INT },
         { name: 'Serie', value: Serie, type: self.model.types.STRING },
         { name: 'Cantidad', value: Cantidad, type: self.model.types.INT },
-        { name: 'FechaAduisicion', value: FechaAduisicion, type: self.model.types.STRING },
+        { name: 'FechaAdquisicion', value: FechaAdquisicion, type: self.model.types.STRING },
         { name: 'Observaciones', value: Observaciones, type: self.model.types.STRING },
         { name: 'PrecioUnitarioVenta', value: PrecioUnitarioVenta, type: self.model.types.DECIMAL },
-        { name: 'ImporteVenta', value: ImporteVenta, type: self.model.types.DECIMAL }
+        { name: 'ImporteVenta', value: ImporteVenta, type: self.model.types.DECIMAL },
+        { name: 'Dictamen', value: Dictamen, type: self.model.types.STRING }
     ];
 
     this.model.queryAllRecordSet('[dbo].[Ins_Subscripciones]', params, function (error, result) {
