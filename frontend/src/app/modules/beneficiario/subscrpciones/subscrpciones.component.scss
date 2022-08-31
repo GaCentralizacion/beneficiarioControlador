@@ -44,6 +44,14 @@ tr:nth-child(even) {
   font-weight: bold;
 }
 
+th{
+  text-align: center;
+}
+
+td{
+  text-align: center;
+}
+
 //OCULTA EL TOTOAL DE REGISTROS
 // ::ng-deep #gridContainer .informer {
 //   height: 70px;
