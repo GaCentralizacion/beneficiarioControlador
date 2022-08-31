@@ -57,6 +57,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
 
     dataUsuario: any;
     accionesUsuario: any;
+    nombrePersona: string = ''
 
     constructor(
         private fb: FormBuilder,
@@ -77,6 +78,11 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
         this.getAllRelacionesFamiliares();
+        if (this.gralDataPersona.IdTipoPer === 1) {
+            this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial} ${this.gralDataPersona.APaterno} ${this.gralDataPersona.AMaterno}`;
+        } else {
+            this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial}`;
+        };
     };
 
     getAllRelacionesFamiliares = () => {

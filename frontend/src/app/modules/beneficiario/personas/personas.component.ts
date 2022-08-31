@@ -125,6 +125,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**VARIABLES OPTIONCES */
 
     rfcMaxLenght: number = 0;
+    nombrePersona: string = '';
 
     constructor(
         private fb: FormBuilder,
@@ -219,6 +220,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getAllCatalogos = () => {
+        this.nombrePersona = '';
         this.spinner.show();
         this.gaService.getService('personas/allCatalogosAddPersonas').subscribe((res: any) => {
             if (res.length > 0) {
@@ -323,6 +325,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
             if (res.length > 0) {
                 this.getCamposForm(res[0][0].IdTipoPer);
                 this.gralDataPersona = res[0][0];
+                if (this.gralDataPersona.IdTipoPer === 1) {
+                    this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial} ${this.gralDataPersona.APaterno} ${this.gralDataPersona.AMaterno}`;
+                } else {
+                    this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial}`;
+                };
                 this.showAddPersona = true;
                 this.setDataForms(res[1], res[2]);
                 if (this.gralDataPersona?.FechaModificacion !== null) {

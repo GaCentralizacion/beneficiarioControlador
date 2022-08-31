@@ -1,9 +1,11 @@
 <div class="row">
     <div class="col-sm-12 col-md-4 col-xl-4"></div>
-    <div class="col-sm-12 col-md-4 col-xl-4"></div>
+    <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" style="text-align: center;">
+        <h5>{{nombrePersona}}</h5>
+    </div>
     <div class="col-sm-12 col-md-4 col-xl-4">
         <button *ngIf="accionesUsuario?.agregarActualizarDocs === 1" class="btn btn-success pull-right" (click)="addDocumento()">
-            Agregar / Actualizar documento
+            Agregar <i class="fas fa-plus"></i>
         </button>
     </div>
 </div>
