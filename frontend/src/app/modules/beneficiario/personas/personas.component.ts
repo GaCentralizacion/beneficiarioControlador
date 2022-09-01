@@ -384,6 +384,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         const fechaEntregaInput = this.FechaDiaCorrecto(dateObject);
         this.personaForm.controls.idTipoPersona.setValue(this.gralDataPersona.IdTipoPer);
         this.personaForm.controls.idTipoMor.setValue(this.gralDataPersona.IdTipoMoral);
+        this.personaForm.controls.regimenFiscal.setValue(this.gralDataPersona.IdRegimen === null ? 0 : this.gralDataPersona.IdRegimen);
         this.personaForm.controls.esAccionista.setValue(this.gralDataPersona.EsAccionista);
         this.personaForm.controls.nombre_razon.setValue(this.gralDataPersona.Nombre_RazonSocial);
         this.personaForm.controls.apellidoPaterno.setValue(this.gralDataPersona.APaterno);
@@ -400,6 +401,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         //Seteamos los contactos de la persona Si es una persona moral interna no aplica
         if (this.gralDataPersona.IdTipoPer === 2 && this.gralDataPersona.IdTipoMoral === 2) {
+            this.personaForm.controls.regimenFiscal.addValidators(Validators.min(1));
+            this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+            this.showRegimen = true;
             this.getDataContactosPersonaMoralInterna();
         } else {
             this.moralInterna = false;
@@ -486,6 +490,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.createGridMoralInterna();
                 }, 2000);
+                this.personaForm.controls.regimenFiscal.addValidators(Validators.min(1));
+                this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+                this.showRegimen = true;
                 this.moralInterna = true;
             };
         };
@@ -727,7 +734,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.spinner.show();
-
+                let regimen = null;
+                if (this.personaForm.controls.idTipoPersona.value === 2 && this.personaForm.controls.idTipoMor.value === 2) {
+                    regimen = this.personaForm.controls.regimenFiscal.value;
+                };
                 const jsonPersona = {
                     IdPersona: this.dataPersonaUpdate.IdPersona,
                     IdTipoPer: this.personaForm.controls.idTipoPersona.value,
@@ -746,6 +756,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     Identificiacion: this.personaForm.controls.datoIdentificacion.value === undefined ? '' : this.personaForm.controls.datoIdentificacion.value,
                     IdEstadoCivil: this.personaForm.controls.idEstadoCivil.value,
                     idUsuario: this.userData.IdUsuario,
+                    IdRegimenFiscal: regimen,
                     XMLContacto: xmlCotactos,
                     XMLDomicilio: xmlDomicilio
                 };

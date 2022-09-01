@@ -192,6 +192,7 @@ personas.prototype.post_updPersona = function (req, res, next) {
         Identificiacion,
         IdEstadoCivil,
         idUsuario,
+        IdRegimenFiscal,
         XMLContacto,
         XMLDomicilio
     } = req.body;
@@ -214,6 +215,7 @@ personas.prototype.post_updPersona = function (req, res, next) {
         { name: 'Identificiacion', value: Identificiacion, type: self.model.types.STRING },
         { name: 'IdEstadoCivil', value: IdEstadoCivil, type: self.model.types.INT },
         { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+        { name: 'IdRegimenFiscal', value: IdRegimenFiscal, type: self.model.types.INT },
         { name: 'XMLContacto', value: XMLContacto, type: self.model.types.XML },
         { name: 'XMLDomicilio', value: XMLDomicilio, type: self.model.types.XML },
     ];
