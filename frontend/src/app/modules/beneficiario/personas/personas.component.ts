@@ -80,6 +80,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     catTipoDomicilio: any = [];
     catRelacionFamiliar: any = [];
     catTipoPatrimonial: any = [];
+    catRegimenFiscal: any = [];
     /**Variables para catalogos */
 
     /**array all todos los contactos */
@@ -127,6 +128,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     IdTipoIdentificacion: any;
     Identificiacion: any;
     IdEstadoCivil: any;
+    IdRegimenOption: any;
     /**VARIABLES OPTIONCES */
 
     rfcMaxLenght: number = 0;
@@ -136,6 +138,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     moralInterna: boolean = false;
     dataPersonaMoralInterna: any;
     showContactos: boolean = true;
+    showRegimen: boolean = false;
     /**VARIABLES PARA LA PERSONA MORAL INTERNA */
 
     constructor(
@@ -158,6 +161,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm = this._formBuilder.group({
             idTipoPersona: [0, Validators.min(1)],
             idTipoMor: [0, Validators.min(1)],
+            regimenFiscal: [0],
             esAccionista: false,
             nombre_razon: ['', Validators.required],
             apellidoPaterno: ['', Validators.required],
@@ -246,6 +250,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.catTipoDomicilio = res[7];
                 this.catRelacionFamiliar = res[8];
                 this.catTipoPatrimonial = res[9];
+                this.catRegimenFiscal = res[11];
 
                 this.initVarFormPersona();
                 if (!this.actualizarPersona) {
@@ -284,7 +289,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getCamposForm = tipoPersona => {
-
         if (tipoPersona === 0) {
             Swal.fire({
                 title: '¡Información!',
@@ -450,6 +454,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     changeTipoMoral = e => {
+        this.showRegimen = false;
+        this.personaForm.controls.regimenFiscal.setValue(0);
+        this.personaForm.controls.regimenFiscal.clearValidators();
+        this.personaForm.controls.regimenFiscal.updateValueAndValidity();
         if (!this.actualizarPersona) {
             if (e === 1) {
                 if (this.arrayAllContactos.length === 0) {
@@ -460,6 +468,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
             } else {
                 this.arrayAllContactos = [];
                 this.showContactos = false;
+                this.personaForm.controls.regimenFiscal.addValidators(Validators.min(1));
+                this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+                this.showRegimen = true;
             };
         } else {
             this.showContactos = true;
@@ -567,7 +578,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.spinner.show();
-
+                let regimen = null;
+                if (this.personaForm.controls.idTipoPersona.value === 2 && this.personaForm.controls.idTipoMor.value === 2) {
+                    regimen = this.personaForm.controls.regimenFiscal.value;
+                };
                 const jsonPersona = {
                     idTipoPersona: this.personaForm.controls.idTipoPersona.value,
                     idTipoMor: this.personaForm.controls.idTipoMor.value,
@@ -585,6 +599,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
                     idEstCivil: this.personaForm.controls.idEstadoCivil.value,
                     idUsuario: this.userData.IdUsuario,
+                    IdRegimenFiscal: regimen,
                     xmlContacto: xmlCotactos,
                     xmlDomicilio: xmlDomicilio
                 };
@@ -1174,6 +1189,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         //mat-select
         this.personaForm.controls.idTipoPersona.setValue(0);
         this.personaForm.controls.idTipoMor.setValue(0);
+        this.personaForm.controls.regimenFiscal.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
         this.personaForm.controls.idPais.setValue(0);
         this.personaForm.controls.idIdentificacion.setValue(0);
@@ -1195,6 +1211,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**RESET VARIABLES DE OPCIONES */
     resetVariablesOpciones = () => {
         this.IdTipoMoralOption = [];
+        this.IdRegimenOption = []
         this.EsAccionista = [];
         this.RFC = [];
         this.Nombre_RazonSocial = [];
@@ -1211,6 +1228,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         //mat-select
         this.personaForm.controls.idTipoMor.reset();
+        this.personaForm.controls.regimenFiscal.reset();
         this.personaForm.controls.idSexo.reset();
         this.personaForm.controls.idPais.reset();
         this.personaForm.controls.idIdentificacion.reset();
@@ -1229,6 +1247,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         //mat-select
         this.personaForm.controls.idTipoMor.setValue(0);
+        this.personaForm.controls.regimenFiscal.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
         this.personaForm.controls.idPais.setValue(0);
         this.personaForm.controls.idIdentificacion.setValue(0);
@@ -1254,6 +1273,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
         for (let data of dataBd) {
             if (data.Campo === 'IdTipoMoral') {
                 this.IdTipoMoralOption = data;
+            };
+            if (data.Campo === 'IdRegimen') {
+                this.IdRegimenOption = data;
             };
             if (data.Campo === 'EsAccionista') {
                 this.EsAccionista = data;
