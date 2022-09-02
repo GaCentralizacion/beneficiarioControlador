@@ -10,6 +10,8 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { ContactosComponent } from './utilsPersonas/contactosPersona/contactos.component';
 import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilios.component';
 import { environment } from 'environments/environment';
+import { RelacionFamiliarComponent } from './utilsPersonas/relacionFamiliar/relacionFamiliar.component';
+import { ExpedienteDigitalComponent } from './utilsPersonas/expedienteDigital/expedienteDigital.component';
 
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
@@ -41,6 +43,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     today = new Date();
     @ViewChild(ContactosComponent) contactoComponent: ContactosComponent;
     @ViewChild(DomiciliosComponent) domicilioComponent: DomiciliosComponent;
+    @ViewChild(RelacionFamiliarComponent) relacionFamiliarComponent: RelacionFamiliarComponent;
+    @ViewChild(ExpedienteDigitalComponent) expedienteDigitalComponent: ExpedienteDigitalComponent;
     idMenuApp: number = 0;
 
     /**Grid */
@@ -57,6 +61,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
     Checkbox: ICheckbox;
     Editing: IEditing;
     Columnchooser: IColumnchooser;
+
+    muestraGridMoralInterna: boolean = false
+    columnsMoralInterna = [];
+    toolbarMoralInterna: Toolbar[];
+    gridOptionsMoralInterna: IGridOptions;
     /**Grid */
 
     /**Variables para catalogos */
@@ -71,6 +80,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     catTipoDomicilio: any = [];
     catRelacionFamiliar: any = [];
     catTipoPatrimonial: any = [];
+    catRegimenFiscal: any = [];
     /**Variables para catalogos */
 
     /**array all todos los contactos */
@@ -118,9 +128,18 @@ export class PersonasComponent implements OnInit, OnDestroy {
     IdTipoIdentificacion: any;
     Identificiacion: any;
     IdEstadoCivil: any;
+    IdRegimenOption: any;
     /**VARIABLES OPTIONCES */
 
     rfcMaxLenght: number = 0;
+    nombrePersona: string = '';
+
+    /**VARIABLES PARA LA PERSONA MORAL INTERNA */
+    moralInterna: boolean = false;
+    dataPersonaMoralInterna: any;
+    showContactos: boolean = true;
+    showRegimen: boolean = false;
+    /**VARIABLES PARA LA PERSONA MORAL INTERNA */
 
     constructor(
         private fb: FormBuilder,
@@ -142,6 +161,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm = this._formBuilder.group({
             idTipoPersona: [0, Validators.min(1)],
             idTipoMor: [0, Validators.min(1)],
+            regimenFiscal: [0],
             esAccionista: false,
             nombre_razon: ['', Validators.required],
             apellidoPaterno: ['', Validators.required],
@@ -215,6 +235,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     getAllCatalogos = () => {
+        this.nombrePersona = '';
+        this.moralInterna = false;
         this.spinner.show();
         this.gaService.getService('personas/allCatalogosAddPersonas').subscribe((res: any) => {
             if (res.length > 0) {
@@ -228,6 +250,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.catTipoDomicilio = res[7];
                 this.catRelacionFamiliar = res[8];
                 this.catTipoPatrimonial = res[9];
+                this.catRegimenFiscal = res[11];
 
                 this.initVarFormPersona();
                 if (!this.actualizarPersona) {
@@ -274,6 +297,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 confirmButtonText: 'Cerrar'
             });
             this.hiddenForm = true;
+            this.showContactos = false;
         } else {
             this.spinner.show();
             this.hiddenForm = true;
@@ -286,6 +310,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 if (res[0].length > 0) {
                     this.setVariablesForm(res[0], tipoPersona);
                     this.hiddenForm = false;
+                    this.showContactos = true;
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
@@ -319,6 +344,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
             if (res.length > 0) {
                 this.getCamposForm(res[0][0].IdTipoPer);
                 this.gralDataPersona = res[0][0];
+                if (this.gralDataPersona.IdTipoPer === 1) {
+                    this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial} ${this.gralDataPersona.APaterno} ${this.gralDataPersona.AMaterno}`;
+                } else {
+                    this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial}`;
+                };
                 this.showAddPersona = true;
                 this.setDataForms(res[1], res[2]);
                 if (this.gralDataPersona?.FechaModificacion !== null) {
@@ -354,6 +384,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         const fechaEntregaInput = this.FechaDiaCorrecto(dateObject);
         this.personaForm.controls.idTipoPersona.setValue(this.gralDataPersona.IdTipoPer);
         this.personaForm.controls.idTipoMor.setValue(this.gralDataPersona.IdTipoMoral);
+        this.personaForm.controls.regimenFiscal.setValue(this.gralDataPersona.IdRegimen === null ? 0 : this.gralDataPersona.IdRegimen);
         this.personaForm.controls.esAccionista.setValue(this.gralDataPersona.EsAccionista);
         this.personaForm.controls.nombre_razon.setValue(this.gralDataPersona.Nombre_RazonSocial);
         this.personaForm.controls.apellidoPaterno.setValue(this.gralDataPersona.APaterno);
@@ -368,12 +399,20 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.rfc_identificacion.setValue(this.gralDataPersona.RFC);
         this.personaForm.controls.idEstadoCivil.setValue(this.gralDataPersona.IdEstadoCivil);
 
-        //Seteamos los contactos de la persona
-        for (let contacto of contactos) {
-            setTimeout(() => {
-                this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
-                this.arrayAllContactos.push({ id: this.currentIdContacto, data: contacto });
-            }, 200);
+        //Seteamos los contactos de la persona Si es una persona moral interna no aplica
+        if (this.gralDataPersona.IdTipoPer === 2 && this.gralDataPersona.IdTipoMoral === 2) {
+            this.personaForm.controls.regimenFiscal.addValidators(Validators.min(1));
+            this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+            this.showRegimen = true;
+            this.getDataContactosPersonaMoralInterna();
+        } else {
+            this.moralInterna = false;
+            for (let contacto of contactos) {
+                setTimeout(() => {
+                    this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+                    this.arrayAllContactos.push({ id: this.currentIdContacto, data: contacto });
+                }, 200);
+            };
         };
 
         // //Seteamos los domicilios de la persona
@@ -387,6 +426,76 @@ export class PersonasComponent implements OnInit, OnDestroy {
         // Una vez cargado todo cocultamos el spinner
         this.hiddenForm = false;
         this.spinner.hide();
+    };
+
+    getDataContactosPersonaMoralInterna = () => {
+        const data = {
+            Opcion: 3,
+            Usuario: this.userData.IdUsuario,
+            IdPersona: this.dataPersonaUpdate.IdPersona
+        };
+        this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
+            this.moralInterna = true;
+            if (res.length > 0) {
+                this.dataPersonaMoralInterna = res[0];
+                this.createGridMoralInterna();
+            } else {
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'Ocurrio un error al regresar los contactos de los representantes',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
+            };
+        }, (error: any) => {
+            Swal.fire({
+                title: '¡Error!',
+                text: error.error.text,
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+        });
+    };
+
+    changeTipoMoral = e => {
+        this.showRegimen = false;
+        this.personaForm.controls.regimenFiscal.setValue(0);
+        this.personaForm.controls.regimenFiscal.clearValidators();
+        this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+        if (!this.actualizarPersona) {
+            if (e === 1) {
+                if (this.arrayAllContactos.length === 0) {
+                    this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+                    this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+                };
+                this.showContactos = true;
+            } else {
+                this.arrayAllContactos = [];
+                this.showContactos = false;
+                this.personaForm.controls.regimenFiscal.addValidators(Validators.min(1));
+                this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+                this.showRegimen = true;
+            };
+        } else {
+            this.showContactos = true;
+            if (e === 1) {
+                if (this.arrayAllContactos.length === 0) {
+                    this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
+                    this.arrayAllContactos.push({ id: this.currentIdContacto, data: {} });
+                };
+                this.moralInterna = false;
+            } else {
+                this.arrayAllContactos = [];
+                this.getDataContactosPersonaMoralInterna();
+                setTimeout(() => {
+                    this.createGridMoralInterna();
+                }, 2000);
+                this.personaForm.controls.regimenFiscal.addValidators(Validators.min(1));
+                this.personaForm.controls.regimenFiscal.updateValueAndValidity();
+                this.showRegimen = true;
+                this.moralInterna = true;
+            };
+        };
     };
 
     addContacto = () => {
@@ -476,7 +585,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.spinner.show();
-
+                let regimen = null;
+                if (this.personaForm.controls.idTipoPersona.value === 2 && this.personaForm.controls.idTipoMor.value === 2) {
+                    regimen = this.personaForm.controls.regimenFiscal.value;
+                };
                 const jsonPersona = {
                     idTipoPersona: this.personaForm.controls.idTipoPersona.value,
                     idTipoMor: this.personaForm.controls.idTipoMor.value,
@@ -494,6 +606,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     datoIdentificacion: this.personaForm.controls.datoIdentificacion.value,
                     idEstCivil: this.personaForm.controls.idEstadoCivil.value,
                     idUsuario: this.userData.IdUsuario,
+                    IdRegimenFiscal: regimen,
                     xmlContacto: xmlCotactos,
                     xmlDomicilio: xmlDomicilio
                 };
@@ -598,7 +711,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         if (this.arrayAllContactos.length > 0) {
             xmlCotactos = '<Contactos>';
             for (let arrayContacto of this.arrayAllContactos) {
-                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext></Contacto>`;
+                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext === undefined ? '' : arrayContacto.data.ext}</Ext></Contacto>`;
             };
             xmlCotactos += '</Contactos>';
         };
@@ -621,7 +734,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.spinner.show();
-
+                let regimen = null;
+                if (this.personaForm.controls.idTipoPersona.value === 2 && this.personaForm.controls.idTipoMor.value === 2) {
+                    regimen = this.personaForm.controls.regimenFiscal.value;
+                };
                 const jsonPersona = {
                     IdPersona: this.dataPersonaUpdate.IdPersona,
                     IdTipoPer: this.personaForm.controls.idTipoPersona.value,
@@ -640,6 +756,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     Identificiacion: this.personaForm.controls.datoIdentificacion.value === undefined ? '' : this.personaForm.controls.datoIdentificacion.value,
                     IdEstadoCivil: this.personaForm.controls.idEstadoCivil.value,
                     idUsuario: this.userData.IdUsuario,
+                    IdRegimenFiscal: regimen,
                     XMLContacto: xmlCotactos,
                     XMLDomicilio: xmlDomicilio
                 };
@@ -771,7 +888,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
         /*
             Parametros de Paginacion de Grit
             */
-        const pageSizes = ['10', '25', '50', '100'];
 
         this.gridOptions = { paginacion: 10, pageSize: [20, 40, 80, 100] };
 
@@ -803,6 +919,79 @@ export class PersonasComponent implements OnInit, OnDestroy {
         */
         this.scroll = { mode: 'standard' };
         this.muestraGrid = true;
+    };
+
+    createGridMoralInterna = () => {
+        this.muestraGridMoralInterna = false;
+        this.toolbarMoralInterna = [];
+        this.columnsMoralInterna = [
+            {
+                caption: 'Nombre',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Tipo de contacto',
+                dataField: 'Descripcion'
+            },
+            {
+                caption: 'Dato',
+                dataField: 'Dato'
+            },
+            {
+                caption: 'Extensión',
+                dataField: 'Ext'
+            },
+            {
+                caption: 'Predeterminado',
+                dataField: 'Predeterminado'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+
+        this.gridOptionsMoralInterna = { paginacion: 10, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'datos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: true };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: false };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGridMoralInterna = true;
+    };
+
+    onTabChanged = e => {
+        if (this.actualizarPersona) {
+            if (e.tab.textLabel === 'Relación familiar') {
+                this.relacionFamiliarComponent.getAllRelacionesFamiliares();
+            } else if (e.tab.textLabel === 'Expediente digital') {
+                this.expedienteDigitalComponent.getAllDocuments();
+            } else if (e.tab.textLabel === 'Medios de contacto') {
+                this.createGridMoralInterna();
+            };
+        };
     };
 
     datosMessage = e => {
@@ -1011,6 +1200,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         //mat-select
         this.personaForm.controls.idTipoPersona.setValue(0);
         this.personaForm.controls.idTipoMor.setValue(0);
+        this.personaForm.controls.regimenFiscal.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
         this.personaForm.controls.idPais.setValue(0);
         this.personaForm.controls.idIdentificacion.setValue(0);
@@ -1032,6 +1222,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**RESET VARIABLES DE OPCIONES */
     resetVariablesOpciones = () => {
         this.IdTipoMoralOption = [];
+        this.IdRegimenOption = []
         this.EsAccionista = [];
         this.RFC = [];
         this.Nombre_RazonSocial = [];
@@ -1048,6 +1239,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         //mat-select
         this.personaForm.controls.idTipoMor.reset();
+        this.personaForm.controls.regimenFiscal.reset();
         this.personaForm.controls.idSexo.reset();
         this.personaForm.controls.idPais.reset();
         this.personaForm.controls.idIdentificacion.reset();
@@ -1066,6 +1258,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         //mat-select
         this.personaForm.controls.idTipoMor.setValue(0);
+        this.personaForm.controls.regimenFiscal.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
         this.personaForm.controls.idPais.setValue(0);
         this.personaForm.controls.idIdentificacion.setValue(0);
@@ -1091,6 +1284,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
         for (let data of dataBd) {
             if (data.Campo === 'IdTipoMoral') {
                 this.IdTipoMoralOption = data;
+            };
+            if (data.Campo === 'IdRegimen') {
+                this.IdRegimenOption = data;
             };
             if (data.Campo === 'EsAccionista') {
                 this.EsAccionista = data;
@@ -1199,6 +1395,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     FechaDiaCorrecto(fecha) {
         return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
-    }
+    };
 
 };

@@ -84,6 +84,7 @@ personas.prototype.post_insPersona = function (req, res, next) {
         datoIdentificacion,
         idEstCivil,
         idUsuario,
+        IdRegimenFiscal,
         xmlContacto,
         xmlDomicilio } = req.body
 
@@ -118,6 +119,7 @@ personas.prototype.post_insPersona = function (req, res, next) {
             { name: 'IdPais', value: idPais, type: self.model.types.INT },
             { name: 'Fecha_nacimiento_Constitucion', value: fechaNac_constitucion, type: self.model.types.STRING },
             { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+            { name: 'IdRegimenFiscal', value: IdRegimenFiscal, type: self.model.types.INT },
             { name: 'xmlContacto', value: xmlContacto, type: self.model.types.XML },
             { name: 'xmlDomicilio', value: xmlDomicilio, type: self.model.types.XML }
         ];
@@ -190,6 +192,7 @@ personas.prototype.post_updPersona = function (req, res, next) {
         Identificiacion,
         IdEstadoCivil,
         idUsuario,
+        IdRegimenFiscal,
         XMLContacto,
         XMLDomicilio
     } = req.body;
@@ -212,6 +215,7 @@ personas.prototype.post_updPersona = function (req, res, next) {
         { name: 'Identificiacion', value: Identificiacion, type: self.model.types.STRING },
         { name: 'IdEstadoCivil', value: IdEstadoCivil, type: self.model.types.INT },
         { name: 'Usuario', value: idUsuario, type: self.model.types.INT },
+        { name: 'IdRegimenFiscal', value: IdRegimenFiscal, type: self.model.types.INT },
         { name: 'XMLContacto', value: XMLContacto, type: self.model.types.XML },
         { name: 'XMLDomicilio', value: XMLDomicilio, type: self.model.types.XML },
     ];

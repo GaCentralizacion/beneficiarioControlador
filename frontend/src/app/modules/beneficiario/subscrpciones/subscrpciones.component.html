@@ -24,14 +24,6 @@
                 <mat-tab label="Dashboard">
                     <mat-card>
                         <div class="row">
-                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
-                            <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
-                                <h6>Dashboard {{dataCurrenteEmpresa.RazonSocial}}</h6>
-                            </div>
-                            <div class="col-sm-4 col-md-4 col-xl-4">
-                            </div>
-                        </div>
-                        <div class="row">
                             <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="dashForm">
                                 <div class="row justify-content-start align-items-center">
                                     <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2">
@@ -51,27 +43,33 @@
                                             </mat-error>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                    <div class="col-sm-12 col-md-12 col-lg-7 col-xl-7">
                                         <table>
                                             <tr>
-                                                <th style="text-align: center;">
+                                                <th>
+                                                    Razón social
+                                                </th>
+                                                <th>
                                                     {{tituloAcciones}}
                                                 </th>
-                                                <th style="text-align: center;">
+                                                <th>
                                                     {{tituloImporte}}
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="text-align: center;">
-                                                    <label>{{headerDash?.Acciones | number}}</label>
+                                                <td>
+                                                    {{dataCurrenteEmpresa.RazonSocial}}
                                                 </td>
-                                                <td style="text-align: center;">
-                                                    <label>{{headerDash?.Importe | currency}}</label>
+                                                <td>
+                                                    {{headerDash?.Acciones | number}}
+                                                </td>
+                                                <td>
+                                                    {{headerDash?.Importe | currency}}
                                                 </td>
                                             </tr>
                                         </table>
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="padding-left: 6%;">
+                                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
                                         <mat-slide-toggle color="primary" formControlName="directo" (change)="tipoDashFn($event.checked)">
                                             <mat-label *ngIf="dashForm.controls.directo.value">
                                                 Accionistas directos
@@ -109,14 +107,6 @@
                 <mat-tab label="Acciones">
                     <mat-card>
                         <div class="row">
-                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
-                            <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
-                                <h6>Acciones {{dataCurrenteEmpresa.RazonSocial}}</h6>
-                            </div>
-                            <div class="col-sm-4 col-md-4 col-xl-4">
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-sm-12 col-md-12 col-xl-12">
                                 <app-grid-component *ngIf="muestraGridAcciones" [datos]="allAcciones"
                                     [columns]="columnsAcciones" [gridOptions]="gridOptions" [exportExcel]="exportExcel"
@@ -134,7 +124,7 @@
                         <div class="row">
                             <div class="col-sm-4 col-md-4 col-xl-4"></div>
                             <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
-                                <h6>Suscripciones {{dataCurrenteEmpresa.RazonSocial}}</h6>
+                                <h5>{{dataCurrenteEmpresa.RazonSocial}}</h5>
                             </div>
                             <div class="col-sm-4 col-md-4 col-xl-4">
                             </div>
@@ -162,7 +152,7 @@
                 </div>
                 <div class="col-sm-4 col-md-4 col-xl-4"></div>
                 <div class="col-sm-4 col-md-4 col-xl-4">
-                    <button *ngIf="accionesUsuario.agregarSubscripciones === 1 && focusTabs !== 0"
+                    <button *ngIf="accionesUsuario.agregarSubscripciones === 1 && focusTabs !== 0 && focusTabs !== 1"
                         class="btn btn-success pull-right" (click)="registrarSubscripcion()">
                         Registrar <i class="fas fa-plus"></i>
                     </button>

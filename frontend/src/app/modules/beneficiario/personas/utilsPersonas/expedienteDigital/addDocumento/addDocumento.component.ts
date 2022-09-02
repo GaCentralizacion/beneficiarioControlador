@@ -55,7 +55,6 @@ export class AddDocumentoComponent implements OnInit {
 	};
 
 	ngOnInit() {
-		console.log('today', this.today)
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 		this.documentosForm = this._formBuilder.group({
 			idDocumento: [0, Validators.min(1)],

@@ -57,6 +57,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
 
     allDocumentos: any = [];
     accionesUsuario: any;
+    nombrePersona: string = ''
 
     constructor(
         private fb: FormBuilder,
@@ -73,6 +74,11 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.getAllDocuments();
+        if (this.gralDataPersona.IdTipoPer === 1) {
+            this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial} ${this.gralDataPersona.APaterno} ${this.gralDataPersona.AMaterno}`;
+        } else {
+            this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial}`;
+        };
     };
 
     getAllDocuments = () => {
