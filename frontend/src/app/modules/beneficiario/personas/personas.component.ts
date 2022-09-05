@@ -395,7 +395,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.fechaNacimiento.setValue(fechaEntregaInput);
         this.personaForm.controls.idSexo.setValue(this.gralDataPersona.IdTipoSexo);
         if (this.paisDataPersona.length === 0) {
-            this.personaForm.controls.idPais.setValue([0])
+            this.personaForm.controls.idPais.setValue([this.gralDataPersona.IdPais])
         } else {
             let array: any = [];
             for (let data of this.paisDataPersona) {
@@ -752,6 +752,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 if (this.personaForm.controls.idTipoPersona.value === 2 && this.personaForm.controls.idTipoMor.value === 2) {
                     regimen = this.personaForm.controls.regimenFiscal.value;
                 };
+                let stringPais: string = '';
+                for (let pais of this.personaForm.controls.idPais.value) {
+                    stringPais += `${pais},`;
+                };
                 const jsonPersona = {
                     IdPersona: this.dataPersonaUpdate.IdPersona,
                     IdTipoPer: this.personaForm.controls.idTipoPersona.value,
@@ -762,7 +766,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     APaterno: this.personaForm.controls.apellidoPaterno.value === undefined ? '' : this.personaForm.controls.apellidoPaterno.value,
                     AMaterno: this.personaForm.controls.apellidoMaterno.value === undefined ? '' : this.personaForm.controls.apellidoMaterno.value,
                     Alias: this.personaForm.controls.alias.value === undefined ? '' : this.personaForm.controls.alias.value,
-                    IdPais: this.personaForm.controls.idPais.value,
+                    IdPais: this.personaForm.controls.idPais.value[0], //this.personaForm.controls.idPais.value Se coloca 0 ya que se cambia para el multi pais y se manda el string de allPaises
                     Fecha_nacimiento_Constitucion: this.personaForm.controls.fechaNacimiento.value,
                     IdTipoSexo: this.personaForm.controls.idSexo.value,
                     Registro_de_poblacion: this.personaForm.controls.curp_registroPob.value === undefined ? '' : this.personaForm.controls.curp_registroPob.value,
@@ -771,6 +775,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     IdEstadoCivil: this.personaForm.controls.idEstadoCivil.value,
                     idUsuario: this.userData.IdUsuario,
                     IdRegimenFiscal: regimen,
+                    AllPaises: stringPais.substring(0, stringPais.length - 1),
                     XMLContacto: xmlCotactos,
                     XMLDomicilio: xmlDomicilio
                 };
