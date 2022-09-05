@@ -183,7 +183,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPais?.length === 0">
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdPais?.Nombre}}</mat-label>
-                                    <mat-select formControlName="idPais">
+                                    <mat-select formControlName="idPais" multiple>
                                         <mat-option [value]="0">
                                             Seleccione una opción
                                         </mat-option>
