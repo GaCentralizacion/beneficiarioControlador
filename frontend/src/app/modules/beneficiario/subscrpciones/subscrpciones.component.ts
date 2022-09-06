@@ -25,6 +25,7 @@ import {
 } from 'app/interfaces';
 import { environment } from 'environments/environment';
 import { ShowIndirectosComponent } from './showIndirectos/showIndirectos.component';
+import { PagosSuscripcionesComponent } from './pagosSuscripciones/pagosSuscripciones.component';
 /**IMPORTS GRID */
 
 @Component({
@@ -34,6 +35,8 @@ import { ShowIndirectosComponent } from './showIndirectos/showIndirectos.compone
 })
 
 export class SubscripcionesComponent implements OnInit, OnDestroy {
+    @ViewChild(PagosSuscripcionesComponent) pagosSuscripcionesComponent: PagosSuscripcionesComponent;
+
     accionesUsuario: any
     /**GRID */
     gridOptions: IGridOptions;
@@ -289,6 +292,8 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.createAccionesGrid();
         } else if (e === 2) {
             this.createSubscripcionesGrid()
+        } else if (e === 3) {
+            this.pagosSuscripcionesComponent.getDataPagos();
         };
     };
 

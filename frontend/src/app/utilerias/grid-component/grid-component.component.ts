@@ -69,6 +69,9 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() verSubscripciones = new EventEmitter<{ data }>();
 	@Output() verDocumentoExpDigCargado = new EventEmitter<{ data }>();
 	@Output() verParticipacionIdrecta = new EventEmitter<{ data }>();
+	@Output() verDictamen = new EventEmitter<{ data }>();
+	@Output() registrarPago = new EventEmitter<{ data }>();
+	@Output() verPagos = new EventEmitter<{ data }>();
 
 	public contador = 0;
 	public contadordetail = 0;
@@ -432,6 +435,19 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	verParticipacionIndirectaFn = data => {
 		this.verParticipacionIdrecta.emit({ data: data });
 	}
+
+	verDictamenFn = data => {
+		this.verDictamen.emit({ data: data })
+	};
+
+	registrarPagoFn = data => {
+		this.registrarPago.emit({ data: data })
+	};
+
+	verPagosFn = data => {
+		this.verPagos.emit({ data: data })
+	};
+
 	//PERONSAS
 	/**FUNCIONES DE LAS COLUMNAS */
 }

@@ -142,6 +142,30 @@
 			</button>
 		</div>
 		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verDictamen'" style="text-align: center;">
+			<button *ngIf="data.row.data.Dictamen === 'SI'" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'registrarPago'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="registrarPagoFn(data.row.data)">
+				<i class="fa-solid fa-money-bill"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verPagos'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verPagosFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
 		
 
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>

@@ -101,4 +101,22 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
     });
 };
 
+suscripciones.prototype.post_selPagos = function (req, res, next) {
+    var self = this;
+
+    const { Opcion, IdPersona } = req.body;
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_SuscripcionPago]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = suscripciones;
