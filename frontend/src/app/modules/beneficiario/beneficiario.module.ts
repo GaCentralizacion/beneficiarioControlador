@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { BeneficiarioRoutingModule } from './beneficiario-routing.module';
@@ -50,7 +50,8 @@ import { PagarSuscripcionComponent } from './subscrpciones/pagosSuscripciones/pa
         SharedModule
     ],
     providers: [
-        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' } // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER
+        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+        CurrencyPipe // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER
     ]
 })
 export class BeneficiarioModule { }

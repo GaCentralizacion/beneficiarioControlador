@@ -87,7 +87,7 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
         }, (error: any) => {
             Swal.fire({
                 title: '¡Error!',
-                text: 'Error 500 al regresar los pagos}',
+                text: 'Error 500 al regresar los pagos',
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
@@ -103,7 +103,8 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Pagar suscripción'
+                title: 'Pagar suscripción',
+                dataPago: e.data
             }
         });
 
@@ -111,17 +112,17 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
             if (!result) {
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo el pago de la suscripción',
+                    text: 'No se realizó ninguna acción',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
             } else {
                 if (result.success === 1) {
-                    console.log('LISTO')
+                    this.getDataPagos();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar la relacion familiar',
+                        text: 'Ocurrio un error al guardar la información',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });

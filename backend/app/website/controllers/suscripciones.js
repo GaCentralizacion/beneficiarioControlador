@@ -119,4 +119,29 @@ suscripciones.prototype.post_selPagos = function (req, res, next) {
     });
 };
 
+suscripciones.prototype.post_insPagos = function (req, res, next) {
+    var self = this;
+
+    const {
+        Usuario,
+        IdSubscripcion,
+        ImportePago,
+        FechaPago
+    } = req.body;
+
+    var params = [
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdSubscripcion', value: IdSubscripcion, type: self.model.types.INT },
+        { name: 'ImportePago', value: ImportePago, type: self.model.types.DECIMAL },
+        { name: 'FechaPago', value: FechaPago, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_SuscripcionPago]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = suscripciones;

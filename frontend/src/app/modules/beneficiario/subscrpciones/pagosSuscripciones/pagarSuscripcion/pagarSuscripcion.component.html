@@ -7,15 +7,104 @@
 		</div>
 	</mat-card>
 </div>
-<mat-card>
-	<mat-tab-group class="sm:px-2" [animationDuration]="'0'">
+<mat-card style="background-color: gainsboro;">
+	<mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
+	(selectedTabChange)="onTabChanged($event.index);">
 		<mat-tab label="Pago">
 			<mat-dialog-content class="mat-typography">
-				<mat-card style="background-color: gainsboro;">
-					<div class="row">
-						pagar
+				<div class="row">
+					<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+						<table>
+							<tr>
+								<th>
+									Acreedor
+								</th>
+								<th>
+									Deudor
+								</th>
+								<th>
+									Concepto
+								</th>
+								<th>
+									Serie
+								</th>
+								<th>
+									Cantidad
+								</th>
+								<th>
+									Valor unitario
+								</th>
+								<th>
+									Importe total
+								</th>
+								<th>
+									Pagado
+								</th>
+							</tr>
+							<tr>
+								<td>
+									{{dataPago?.Acreedor}}
+								</td>
+								<td>
+									{{dataPago?.Deudor}}
+								</td>
+								<td>
+									{{dataPago?.Concepto}}
+								</td>
+								<td>
+									{{dataPago?.Serie}}
+								</td>
+								<td>
+									{{dataPago?.Cantidad | number}}
+								</td>
+								<td>
+									{{dataPago?.ValorUnitario | currency}}
+								</td>
+								<td>
+									{{dataPago?.ImporteTotal | currency}}
+								</td>
+								<td>
+									{{dataPago?.Pagado | currency}}
+								</td>
+							</tr>
+						</table>
 					</div>
-				</mat-card>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-12">
+						<form [formGroup]="pagarSuscripcionForm" class="example-form">
+							<div class="row">
+								<div class="col-md-3">
+									<mat-form-field appearance="fill" floatLabel="always">
+										<mat-label>Importe a pagar</mat-label>
+										<i matPrefix class="fa-solid fa-dollar-sign"></i>
+										<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text" formControlName="importePago"
+											class="example-right-align">
+											<mat-error *ngIf="pagarSuscripcionForm.controls.importePago.value === 0">
+												Ingrese al valor a pagar
+											</mat-error>
+											<mat-error *ngIf="pagarSuscripcionForm.controls.importePago.value > limitPago">
+												Puedes pagar máximo {{limitPago | currency}}
+											</mat-error>
+									</mat-form-field>
+								</div>
+								<div class="col-md-3">
+									<mat-form-field appearance="fill" floatLabel="always">
+										<mat-label>Fecha pago</mat-label>
+										<input readonly [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
+											formControlName="fechaPago" placeholder="Fecha pago">
+										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+										<mat-datepicker #picker></mat-datepicker>
+										<mat-error>
+											Seleccione una fecha de pago
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 			</mat-dialog-content>
 			<mat-dialog-actions align="end">
 				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
