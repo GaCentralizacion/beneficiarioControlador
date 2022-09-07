@@ -9,6 +9,7 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PagarSuscripcionComponent } from './pagarSuscripcion/pagarSuscripcion.component';
+import { VerPagosComponent } from './verPagos/verPagos.component';
 
 /**IMPORTS GRID */
 import {
@@ -83,6 +84,11 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
         };
         this.gaServise.postService('suscripciones/selPagos', data).subscribe((res: any) => {
             this.pagos = res[0];
+            this.pagos.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#F4F6F6';
+                };
+            });
             this.createGridPagos();
         }, (error: any) => {
             Swal.fire({
@@ -132,7 +138,15 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verPagosFn = e => {
-        console.log('verPagosFn', e)
+        this.dialog.open(VerPagosComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Pagos',
+                dataPago: e.data,
+                dataCurrenteEmpresa: this.dataCurrenteEmpresa
+            }
+        });
     };
 
 

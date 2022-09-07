@@ -23,6 +23,7 @@ import { ShowIndirectosComponent } from './subscrpciones/showIndirectos/showIndi
 import { DecimalMask } from 'app/utilerias/pipes/decimal-mask.directive';
 import { PagosSuscripcionesComponent } from './subscrpciones/pagosSuscripciones/pagosSuscripciones.component';
 import { PagarSuscripcionComponent } from './subscrpciones/pagosSuscripciones/pagarSuscripcion/pagarSuscripcion.component';
+import { VerPagosComponent } from './subscrpciones/pagosSuscripciones/verPagos/verPagos.component';
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import { PagarSuscripcionComponent } from './subscrpciones/pagosSuscripciones/pa
         ShowIndirectosComponent,
         DecimalMask,
         PagosSuscripcionesComponent,
-        PagarSuscripcionComponent
+        PagarSuscripcionComponent,
+        VerPagosComponent
     ],
     imports: [
         CommonModule,

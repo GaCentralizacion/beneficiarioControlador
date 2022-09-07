@@ -144,4 +144,27 @@ suscripciones.prototype.post_insPagos = function (req, res, next) {
     });
 };
 
+suscripciones.prototype.post_selPagosByIdSuscripcion = function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        IdPersona,
+        IdSubscripcion
+    } = req.body;
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdSubscripcion', value: IdSubscripcion, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_SuscripcionPago]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = suscripciones;
