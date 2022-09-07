@@ -35,6 +35,7 @@ export class PagarSuscripcionComponent implements OnInit {
 	namePcDoc: string = '';
 	filedata: any;
 	docCargado: boolean = false;
+	guardaDictamen: boolean = true;
 
 	constructor(
 		public dialog: MatDialog,
@@ -47,8 +48,12 @@ export class PagarSuscripcionComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataPago = data.dataPago;
-		console.log('this.dataPago', this.dataPago)
 		if (this.dataPago.Dictamen === 'SI' && (this.dataPago.IdEstatusArchivo === null || this.dataPago.IdEstatusArchivo === 3)) {
+			if (this.dataPago.IdEstatusArchivo === 3) {
+				this.guardaDictamen = false;
+			} else {
+				this.guardaDictamen = true;
+			};
 			this.showTabDictamen = true;
 		} else {
 			this.showTabDictamen = false;
@@ -243,6 +248,10 @@ export class PagarSuscripcionComponent implements OnInit {
 				});
 			};
 		});
+	};
+
+	actualizarDictamen = () => {
+		console.log('Actualizamos dictamen')
 	};
 
 	closeDialog = data => {

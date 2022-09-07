@@ -232,4 +232,31 @@ suscripciones.prototype.post_saveDictamen = async function (req, res, next) {
     };
 };
 
+suscripciones.prototype.post_updEstatusDocumento = function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        Usuario,
+        IdSubscripcion,
+        IdEstatusArchivo,
+        Observacion
+    } = req.body;
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdSubscripcion', value: IdSubscripcion, type: self.model.types.INT },
+        { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
+        { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Upd_SuscripcionDocumento]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = suscripciones;

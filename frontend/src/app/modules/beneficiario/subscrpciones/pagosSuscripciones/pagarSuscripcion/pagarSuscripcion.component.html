@@ -132,8 +132,11 @@
 			</mat-dialog-content>
 			<mat-dialog-actions align="end">
 				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
-				<button class="btn btn-success" style="margin-left: 10px;" (click)="guardarDictamen()" cdkFocusInitial>
+				<button *ngIf="guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="guardarDictamen()" cdkFocusInitial>
 					Guardar dictamen <i class="fa-solid fa-floppy-disk"></i>
+				</button>
+				<button *ngIf="!guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDictamen()" cdkFocusInitial>
+					Actualizar dictamen <i class="fa-solid fa-floppy-disk"></i>
 				</button>
 			</mat-dialog-actions>
 		</mat-tab>

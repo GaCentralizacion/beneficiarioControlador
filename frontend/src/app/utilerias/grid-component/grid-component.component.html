@@ -145,7 +145,7 @@
 
 		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
 		<div *dxTemplate="let data of 'verDictamen'" style="text-align: center;">
-			<button *ngIf="data.row.data.Dictamen === 'SI'" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+			<button *ngIf="data.row.data.Dictamen === 'SI' && data.row.data.IdEstatusArchivo !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
 				<i class="fa-solid fa-eye"></i>
 			</button>
 		</div>

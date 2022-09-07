@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PagarSuscripcionComponent } from './pagarSuscripcion/pagarSuscripcion.component';
 import { VerPagosComponent } from './verPagos/verPagos.component';
+import { ShowDictamenComponent } from './showDictamen/showDictamen.component';
 
 /**IMPORTS GRID */
 import {
@@ -101,7 +102,24 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verDictamenFn = e => {
-        console.log('verDictamenFn', e);
+        const dialogRef = this.dialog.open(ShowDictamenComponent, {
+            width: '100%',
+            height: '95%',
+            disableClose: true,
+            data: {
+                title: 'Dictamen',
+                urlGet: `${e.data.RutaLectura}#toolbar=0`,
+                dataPago: e.data
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.success === 1) {
+                    this.getDataPagos();
+                };
+            };
+        });
     };
 
     registrarPagoFn = e => {
