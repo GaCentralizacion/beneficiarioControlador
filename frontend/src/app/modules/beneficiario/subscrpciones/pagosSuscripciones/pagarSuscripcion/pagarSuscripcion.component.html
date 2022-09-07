@@ -113,11 +113,20 @@
 				</button>
 			</mat-dialog-actions>
 		</mat-tab>
-		<mat-tab label="Dictamen">
+		<mat-tab label="Dictamen" *ngIf =showTabDictamen>
 			<mat-dialog-content class="mat-typography">
 				<mat-card style="background-color: gainsboro;">
 					<div class="row">
-						Dictamen
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="padding-left: 40%">
+							<div class="divFile">
+								<label style="cursor: pointer;" *ngIf="!docCargado">Selecciona un archivo <i
+										class="fa-solid fa-magnifying-glass"></i></label>
+								<label style="cursor: pointer;" *ngIf="docCargado">Documento cargado <i
+										class="fa-solid fa-circle-check"></i><br>"{{namePcDoc}}"</label>
+								<input class="hide_file" #myInputDocument type="file" accept="application/pdf"
+									name="myFile" (change)="fileEvent($event)" />
+							</div>
+						</div>
 					</div>
 				</mat-card>
 			</mat-dialog-content>

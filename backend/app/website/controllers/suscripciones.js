@@ -1,6 +1,9 @@
 var suscripcionesView = require('../views/referencia'),
     suscripcionesModel = require('../models/dataAccess');
 
+var logicSave = require('../utils/logicSaveFile');
+var fs = require("fs");
+
 var suscripciones = function (conf) {
     this.conf = conf || {};
 
@@ -165,6 +168,68 @@ suscripciones.prototype.post_selPagosByIdSuscripcion = function (req, res, next)
             result: result
         });
     });
+};
+
+suscripciones.prototype.post_saveDictamen = async function (req, res, next) {
+    var self = this;
+
+    const {
+        b64File,
+        Usuario,
+        IdSubscripcion,
+        NombreArchivo,
+        Carpeta,
+        CarpetaHeredado,
+        RutaGuardado
+    } = req.body;
+
+    var params = [
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdSubscripcion', value: IdSubscripcion, type: self.model.types.INT }
+    ];
+
+    const resLogic = await logicSave.saveDocumentoLogic(b64File, NombreArchivo, Carpeta, RutaGuardado);
+
+    if (resLogic.success === 1) {
+        if (fs.existsSync(`${RutaGuardado}${Carpeta}\\\\${NombreArchivo}`)) {
+            if (CarpetaHeredado === '') {
+                this.model.queryAllRecordSet('[dbo].[Ins_SuscripcionDocumento]', params, function (error, result) {
+                    self.view.expositor(res, {
+                        error: error,
+                        result: result
+                    });
+                });
+            } else {
+                const resLogicHeredado = await logicSave.saveDocumentoLogic(b64File, NombreArchivo, CarpetaHeredado, RutaGuardado);
+                if (resLogicHeredado.success === 1) {
+                    if (fs.existsSync(`${RutaGuardado}${CarpetaHeredado}\\\\${NombreArchivo}`)) {
+                        this.model.queryAllRecordSet('[dbo].[Ins_SuscripcionDocumento]', params, function (error, result) {
+                            self.view.expositor(res, {
+                                error: error,
+                                result: result
+                            });
+                        });
+                    } else {
+                        self.view.expositor(res, {
+                            result: [[{ Codigo: -1, Mensaje: 'No se guardo el documento heredado fisicamente.' }]]
+                        });
+                    };
+                } else {
+                    self.view.expositor(res, {
+                        result: [[{ Codigo: -1, Mensaje: 'Error al intentar guardar el documento heredado.' }]]
+                    });
+                };
+            };
+        } else {
+            self.view.expositor(res, {
+                result: [[{ Codigo: -1, Mensaje: 'No se guardo el documento fisicamente.' }]]
+            });
+        };
+    } else {
+        self.view.expositor(res, {
+            result: [[{ Codigo: -1, Mensaje: 'Error al intentar guardar el documento.' }]]
+        });
+    };
 };
 
 module.exports = suscripciones;

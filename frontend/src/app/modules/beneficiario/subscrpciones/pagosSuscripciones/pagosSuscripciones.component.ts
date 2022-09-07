@@ -101,7 +101,7 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verDictamenFn = e => {
-        console.log('verDictamenFn', e)
+        console.log('verDictamenFn', e);
     };
 
     registrarPagoFn = e => {

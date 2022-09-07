@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -21,6 +21,7 @@ export interface SendData {
 	styleUrls: ['./pagarSuscripcion.component.scss']
 })
 export class PagarSuscripcionComponent implements OnInit {
+	@ViewChild('myInputDocument') myInputEvidenceVariable: ElementRef;
 	retornarValores = { success: 0, data: {} };
 	titulo: string;
 	dataPago: any
@@ -30,6 +31,10 @@ export class PagarSuscripcionComponent implements OnInit {
 	pagarSuscripcionForm: FormGroup;
 	focusTabs: number = 0;
 	limitPago: number = 0;
+	showTabDictamen: boolean = false;
+	namePcDoc: string = '';
+	filedata: any;
+	docCargado: boolean = false;
 
 	constructor(
 		public dialog: MatDialog,
@@ -42,7 +47,12 @@ export class PagarSuscripcionComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataPago = data.dataPago;
-
+		console.log('this.dataPago', this.dataPago)
+		if (this.dataPago.Dictamen === 'SI' && (this.dataPago.IdEstatusArchivo === null || this.dataPago.IdEstatusArchivo === 3)) {
+			this.showTabDictamen = true;
+		} else {
+			this.showTabDictamen = false;
+		};
 	};
 
 	ngOnInit() {
@@ -56,12 +66,16 @@ export class PagarSuscripcionComponent implements OnInit {
 	};
 
 	onTabChanged = e => {
-		if (e === 1) {
+		if (e === 0) {
 			this.titulo = 'Pagar suscripción';
 			this.pagarSuscripcionForm.reset();
 			this.pagarSuscripcionForm.controls.importePago.setValue(0);
 		} else {
 			this.titulo = 'Agregar dictamen';
+			this.filedata = '';
+			this.myInputEvidenceVariable.nativeElement.value = "";
+			this.docCargado = false;
+			this.namePcDoc = '';
 		};
 	};
 
@@ -132,12 +146,116 @@ export class PagarSuscripcionComponent implements OnInit {
 		});
 	};
 
+	async fileEvent(e) {
+		try {
+			if (e.target.files[0].type === "application/pdf") {
+				this.namePcDoc = e.target.files[0].name;
+				this.filedata = await this.toBase64(e.target.files[0]);
+				this.docCargado = true;
+			} else {
+				this.filedata = '';
+				this.myInputEvidenceVariable.nativeElement.value = "";
+				this.docCargado = false;
+				this.namePcDoc = '';
+				Swal.fire({
+					title: '¡Información!',
+					text: 'Debe cargar un documento pdf',
+					icon: 'info',
+					confirmButtonText: 'Cerrar'
+				});
+			};
+		} catch (error) {
+			this.filedata = '';
+			this.myInputEvidenceVariable.nativeElement.value = "";
+			this.docCargado = false;
+			this.namePcDoc = '';
+			Swal.fire({
+				title: '¡Información!',
+				text: 'Debe cargar un documento pdf',
+				icon: 'info',
+				confirmButtonText: 'Cerrar'
+			});
+		};
+	};
+
 	guardarDictamen = () => {
-		console.log('PGuardar dictamen')
+		if (this.filedata === '' || this.filedata === null || this.filedata === undefined) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Seleccione un archivo',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.filedata = '';
+			this.myInputEvidenceVariable.nativeElement.value = "";
+			return
+		};
+
+		Swal.fire({
+			title: `¿Quieres guardar el Dictamen?`,
+			showDenyButton: true,
+			// showCancelButton: true,
+			confirmButtonText: 'Guardar',
+			denyButtonText: `Cancelar`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				this.spinner.show();
+				const data = {
+					b64File: this.filedata,
+					Usuario: this.dataUsuario.IdUsuario,
+					IdSubscripcion: this.dataPago.IdSubscripcion,
+					NombreArchivo: this.dataPago.Archivo,
+					Carpeta: this.dataPago.Carpeta,
+					CarpetaHeredado: this.dataPago.CarpetaHeredado,
+					RutaGuardado: this.dataPago.RutaGuardado
+				};
+
+				this.gaService.postService('suscripciones/saveDictamen', data).subscribe((res: any) => {
+					this.spinner.hide();
+					if (res[0][0].Codigo > 0) {
+						Swal.fire({
+							title: '¡Listo!',
+							text: res[0][0].Mensaje,
+							icon: 'success',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 1;
+						this.closeDialog(this.retornarValores);
+					} else {
+						this.retornarValores.success = 0;
+						this.closeDialog(this.retornarValores);
+					};
+				}, (error: any) => {
+					this.spinner.hide();
+					Swal.fire({
+						title: '¡Error!',
+						text: 'Error 500 al guardar el documento',
+						icon: 'error',
+						confirmButtonText: 'Cerrar'
+					});
+				});
+			} else if (result.isDenied) {
+				Swal.fire({
+					title: '¡Información!',
+					text: 'No se guardo el documento',
+					icon: 'info',
+					confirmButtonText: 'Cerrar'
+				});
+			};
+		});
 	};
 
 	closeDialog = data => {
 		this.dialogRef.close(data);
 	};
+
+	/**CONVER FILE TO BASE64 */
+	toBase64 = file => new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result);
+		reader.onerror = error => reject(error);
+	});
+	/**CONVER FILE TO BASE64 */
 
 }
