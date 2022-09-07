@@ -222,6 +222,11 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
                 cellTemplate: 'verDictamen'
             },
             {
+                caption: 'Estatus Dictamen',
+                allowEditing: false,
+                cellTemplate: 'estatusDictamen'
+            },
+            {
                 caption: 'Fecha Adquisición',
                 dataField: 'FechaAdquisicion'
             },

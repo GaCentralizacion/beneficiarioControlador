@@ -54,14 +54,14 @@
         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4"></div>
         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
             <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;">
+                <div *ngIf="accionesUsuario.aprobarDictamen === 1" class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;">
                     <label style="font-size: 20px;">Aprobar</label><br>
                     <button class="btn btn-circle-like" title="Aprobar Documento" (click)="aprobarDocumento()">
                         <i class="fa-solid fa-thumbs-up"></i>
                     </button>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4"></div>
-                <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;">
+                <div *ngIf="accionesUsuario.rechazarDictamen === 1" class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;">
                     <label style="font-size: 20px;">Rechazar</label><br>
                     <button class="btn btn-circle-disLike" title="Rechazar Documento"
                         (click)="showComentariosRechazoDocumento(1)">

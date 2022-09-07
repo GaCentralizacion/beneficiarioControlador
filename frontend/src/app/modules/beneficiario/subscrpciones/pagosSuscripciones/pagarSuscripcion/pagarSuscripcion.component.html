@@ -108,7 +108,7 @@
 			</mat-dialog-content>
 			<mat-dialog-actions align="end">
 				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
-				<button class="btn btn-success" style="margin-left: 10px;" (click)="pagarSuscripcion()" cdkFocusInitial>
+				<button *ngIf="accionesUsuario.pagarSuscripcion === 1" class="btn btn-success" style="margin-left: 10px;" (click)="pagarSuscripcion()" cdkFocusInitial>
 					Pagar suscripción <i class="fa-solid fa-money-bill"></i>
 				</button>
 			</mat-dialog-actions>
@@ -132,10 +132,10 @@
 			</mat-dialog-content>
 			<mat-dialog-actions align="end">
 				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
-				<button *ngIf="guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="guardarDictamen()" cdkFocusInitial>
+				<button *ngIf="accionesUsuario.agregarDictamen === 1 && guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="guardarDictamen()" cdkFocusInitial>
 					Guardar dictamen <i class="fa-solid fa-floppy-disk"></i>
 				</button>
-				<button *ngIf="!guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDictamen()" cdkFocusInitial>
+				<button *ngIf="accionesUsuario.actualizarDictamen === 1 && !guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDictamen()" cdkFocusInitial>
 					Actualizar dictamen <i class="fa-solid fa-floppy-disk"></i>
 				</button>
 			</mat-dialog-actions>

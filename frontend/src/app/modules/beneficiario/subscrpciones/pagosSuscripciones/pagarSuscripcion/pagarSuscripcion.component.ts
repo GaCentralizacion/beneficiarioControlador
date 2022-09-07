@@ -36,6 +36,7 @@ export class PagarSuscripcionComponent implements OnInit {
 	filedata: any;
 	docCargado: boolean = false;
 	guardaDictamen: boolean = true;
+	accionesUsuario: any;
 
 	constructor(
 		public dialog: MatDialog,
@@ -61,6 +62,7 @@ export class PagarSuscripcionComponent implements OnInit {
 	};
 
 	ngOnInit() {
+		this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 		this.limitDay = new Date(this.dataPago.FechaAdquisicion);
 		this.limitPago = (this.dataPago.ImporteTotal - this.dataPago.Pagado);

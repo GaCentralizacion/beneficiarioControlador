@@ -151,9 +151,20 @@
 		</div>
 		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
+		<div *dxTemplate="let data of 'estatusDictamen'">
+			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4, 
+							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1, 
+							'estatusError' : data.row.data.IdEstatusArchivo === 2,
+							'estatusError' : data.row.data.IdEstatusArchivo === 3}">
+				<label class="center"> {{data.row.data.Estatus}} </label>
+			</div>
+		</div>
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+
 		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
 		<div *dxTemplate="let data of 'registrarPago'" style="text-align: center;">
-			<button class="btn btn-circle btns-grids btn-hover" (click)="registrarPagoFn(data.row.data)">
+			<button *ngIf="accionesUsuario.registrarPagos === 1" class="btn btn-circle btns-grids btn-hover" (click)="registrarPagoFn(data.row.data)">
 				<i class="fa-solid fa-money-bill"></i>
 			</button>
 		</div>
