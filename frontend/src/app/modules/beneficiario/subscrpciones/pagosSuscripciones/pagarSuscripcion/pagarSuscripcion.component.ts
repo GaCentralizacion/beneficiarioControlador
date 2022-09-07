@@ -251,7 +251,80 @@ export class PagarSuscripcionComponent implements OnInit {
 	};
 
 	actualizarDictamen = () => {
-		console.log('Actualizamos dictamen')
+		if (this.filedata === '' || this.filedata === null || this.filedata === undefined) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Seleccione un archivo',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.filedata = '';
+			this.myInputEvidenceVariable.nativeElement.value = "";
+			return
+		};
+
+		Swal.fire({
+			title: `¿Quieres actualizar el dictamen?`,
+			showDenyButton: true,
+			// showCancelButton: true,
+			confirmButtonText: 'Actualizar',
+			denyButtonText: `Cancelar`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				const data = {
+					Opcion: 1,
+					Usuario: this.dataUsuario.IdUsuario,
+					IdSubscripcion: this.dataPago.IdSubscripcion,
+					NombreArchivo: this.dataPago.Archivo,
+					ArchivoRespaldo: this.dataPago.ArchivoRespaldo,
+					Carpeta: this.dataPago.Carpeta,
+					CarpetaHeredado: this.dataPago.CarpetaHeredado,
+					RutaGuardado: this.dataPago.RutaGuardado,
+					RutaRespaldo: this.dataPago.RutaRespaldo,
+					b64File: this.filedata,
+					RutaRespaldoHeredado: this.dataPago.RutaRespaldoHeredado
+				};
+
+				this.spinner.show();
+				this.gaService.postService('suscripciones/updDictamen', data).subscribe((res: any) => {
+					this.spinner.hide();
+					if (res[0][0].Codigo > 0) {
+						Swal.fire({
+							title: '¡Listo!',
+							text: res[0][0].Mensaje,
+							icon: 'success',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 1;
+						this.closeDialog(this.retornarValores);
+					} else {
+						Swal.fire({
+							title: '¡Alto!',
+							text: res[0][0].Mensaje,
+							icon: 'error',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 0;
+						this.closeDialog(this.retornarValores);
+					};
+				}, (error: any) => {
+					this.spinner.hide();
+					Swal.fire({
+						title: '¡Error!',
+						text: 'Error 500 al actualizar el documento',
+						icon: 'error',
+						confirmButtonText: 'Cerrar'
+					});
+				});
+			} else if (result.isDenied) {
+				Swal.fire({
+					title: '¡Información!',
+					text: 'No se actualizo el documento',
+					icon: 'info',
+					confirmButtonText: 'Cerrar'
+				});
+			};
+		});
 	};
 
 	closeDialog = data => {

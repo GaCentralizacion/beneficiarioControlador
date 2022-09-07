@@ -259,4 +259,71 @@ suscripciones.prototype.post_updEstatusDocumento = function (req, res, next) {
     });
 };
 
+suscripciones.prototype.post_updDictamen = async function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        Usuario,
+        IdSubscripcion,
+        NombreArchivo,
+        ArchivoRespaldo,
+        Carpeta,
+        CarpetaHeredado,
+        RutaGuardado,
+        RutaRespaldo,
+        b64File,
+        RutaRespaldoHeredado
+    } = req.body
+
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdSubscripcion', value: IdSubscripcion, type: self.model.types.INT }
+    ];
+
+    const logicSaveRes = await logicSave.updateLogicDocumento(b64File, NombreArchivo, Carpeta, RutaGuardado, ArchivoRespaldo, RutaRespaldo);
+    if (logicSaveRes.success === 1) {
+        if (fs.existsSync(`${RutaGuardado}${Carpeta}\\\\${NombreArchivo}`)) {
+            if (CarpetaHeredado === '') {
+                this.model.queryAllRecordSet('[dbo].[Upd_SuscripcionDocumento]', params, function (error, result) {
+                    self.view.expositor(res, {
+                        error: error,
+                        result: result
+                    });
+                });
+            } else {
+                const logicSaveResHeredado = await logicSave.updateLogicDocumento(b64File, NombreArchivo, CarpetaHeredado, RutaGuardado, ArchivoRespaldo, RutaRespaldoHeredado);
+                if (logicSaveResHeredado.success === 1) {
+                    if (fs.existsSync(`${RutaGuardado}${CarpetaHeredado}\\\\${NombreArchivo}`)) {
+                        this.model.queryAllRecordSet('[dbo].[Upd_SuscripcionDocumento]', params, function (error, result) {
+                            self.view.expositor(res, {
+                                error: error,
+                                result: result
+                            });
+                        });
+                    } else {
+                        self.view.expositor(res, {
+                            result: [[{ Codigo: -1, Mensaje: 'Error no se guardo el archivo heredado' }]]
+                        });
+                    };
+                } else {
+                    self.view.expositor(res, {
+                        result: [[{ Codigo: -1, Mensaje: 'Error al guardar el archivo heredado' }]]
+                    });
+                };
+            };
+        } else {
+            self.view.expositor(res, {
+                result: [[{ Codigo: -1, Mensaje: 'Error al guardar el archivo' }]]
+            });
+        };
+    } else {
+        self.view.expositor(res, {
+            result: [[{ Codigo: -1, Mensaje: logicSaveRes.msg }]]
+        });
+    };
+};
+
 module.exports = suscripciones;
