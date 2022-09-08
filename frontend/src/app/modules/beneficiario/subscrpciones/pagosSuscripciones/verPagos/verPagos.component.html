@@ -1,0 +1,30 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row" style="width: 100%;">
+			<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;">
+				<h5>{{titulo}}</h5>
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+				<button type="button" class="btn btn-danger pull-right" [mat-dialog-close]="0">
+					<i class="fa-solid fa-circle-xmark"></i>
+				</button>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-card style="background-color: gainsboro;">
+	<mat-dialog-content class="mat-typography">
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+				<app-grid-component *ngIf="muestraGridPago" [datos]="allDataPagos" [columns]="columns" [gridOptions]="gridOptions"
+                [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox"
+                [Editing]="Editing" [Columnchooser]="Columnchooser" [searchPanel]="searchPanel"
+                [scroll]="scroll" (messageEvent)="receiveMessage($event)"
+                (datosevent)='datosMessage($event)' [toolbar]="toolbar" >
+            </app-grid-component>
+			</div>
+		</div>
+	</mat-dialog-content>
+</mat-card>

@@ -9,6 +9,8 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
 import { PagarSuscripcionComponent } from './pagarSuscripcion/pagarSuscripcion.component';
+import { VerPagosComponent } from './verPagos/verPagos.component';
+import { ShowDictamenComponent } from './showDictamen/showDictamen.component';
 
 /**IMPORTS GRID */
 import {
@@ -83,11 +85,16 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
         };
         this.gaServise.postService('suscripciones/selPagos', data).subscribe((res: any) => {
             this.pagos = res[0];
+            this.pagos.forEach((value, key) => {
+                if ((key % 2) == 0) {
+                    value.backgroundcolor = '#F4F6F6';
+                };
+            });
             this.createGridPagos();
         }, (error: any) => {
             Swal.fire({
                 title: '¡Error!',
-                text: 'Error 500 al regresar los pagos}',
+                text: 'Error 500 al regresar los pagos',
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
@@ -95,7 +102,24 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verDictamenFn = e => {
-        console.log('verDictamenFn', e)
+        const dialogRef = this.dialog.open(ShowDictamenComponent, {
+            width: '100%',
+            height: '95%',
+            disableClose: true,
+            data: {
+                title: 'Dictamen',
+                urlGet: `${e.data.RutaLectura}#toolbar=0`,
+                dataPago: e.data
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.success === 1) {
+                    this.getDataPagos();
+                };
+            };
+        });
     };
 
     registrarPagoFn = e => {
@@ -103,7 +127,8 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Pagar suscripción'
+                title: 'Pagar suscripción',
+                dataPago: e.data
             }
         });
 
@@ -111,17 +136,17 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
             if (!result) {
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo el pago de la suscripción',
+                    text: 'No se realizó ninguna acción',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
             } else {
                 if (result.success === 1) {
-                    console.log('LISTO')
+                    this.getDataPagos();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar la relacion familiar',
+                        text: 'Ocurrio un error al guardar la información',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
@@ -131,7 +156,15 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verPagosFn = e => {
-        console.log('verPagosFn', e)
+        this.dialog.open(VerPagosComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Pagos',
+                dataPago: e.data,
+                dataCurrenteEmpresa: this.dataCurrenteEmpresa
+            }
+        });
     };
 
 
@@ -187,6 +220,11 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
                 caption: 'Ver dictamen',
                 allowEditing: false,
                 cellTemplate: 'verDictamen'
+            },
+            {
+                caption: 'Estatus Dictamen',
+                allowEditing: false,
+                cellTemplate: 'estatusDictamen'
             },
             {
                 caption: 'Fecha Adquisición',
