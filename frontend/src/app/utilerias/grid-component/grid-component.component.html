@@ -143,13 +143,13 @@
 		</div>
 		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
 
-		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 		<div *dxTemplate="let data of 'verDictamen'" style="text-align: center;">
 			<button *ngIf="data.row.data.Dictamen === 'SI' && data.row.data.IdEstatusArchivo !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
 				<i class="fa-solid fa-eye"></i>
 			</button>
 		</div>
-		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 
 		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
 		<div *dxTemplate="let data of 'estatusDictamen'">
@@ -162,22 +162,29 @@
 		</div>
 		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
 
-		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<!-- -------------------- TEMPLATE PARA REGISTRAR LOS PAGOS ------------------------------------------>
 		<div *dxTemplate="let data of 'registrarPago'" style="text-align: center;">
 			<button *ngIf="accionesUsuario.registrarPagos === 1" class="btn btn-circle btns-grids btn-hover" (click)="registrarPagoFn(data.row.data)">
 				<i class="fa-solid fa-money-bill"></i>
 			</button>
 		</div>
-		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<!-- -------------------- TEMPLATE PARA REGISTRAR LOS PAGOS ------------------------------------------>
 
-		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<!-- -------------------- TEMPLATE PARA VER LOS PAGOS ------------------------------------------>
 		<div *dxTemplate="let data of 'verPagos'" style="text-align: center;">
 			<button class="btn btn-circle btns-grids btn-hover" (click)="verPagosFn(data.row.data)">
 				<i class="fa-solid fa-eye"></i>
 			</button>
 		</div>
-		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<!-- -------------------- TEMPLATE PARA VER LOS PAGOS ------------------------------------------>
 		
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verDictamenSuscripciones'" style="text-align: center;">
+			<button *ngIf="data.row.data.Dictamen === 'SI' && data.row.data.RutaLectura !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 

@@ -524,7 +524,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             {
                 caption: 'Ver dictamen',
                 allowEditing: false,
-                cellTemplate: 'verDictamen'
+                cellTemplate: 'verDictamenSuscripciones'
             },
             {
                 caption: 'Ver pagos',
