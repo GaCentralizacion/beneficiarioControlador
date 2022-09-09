@@ -27,6 +27,7 @@ import { environment } from 'environments/environment';
 import { ShowIndirectosComponent } from './showIndirectos/showIndirectos.component';
 import { PagosSuscripcionesComponent } from './pagosSuscripciones/pagosSuscripciones.component';
 import { VerPagosComponent } from './pagosSuscripciones/verPagos/verPagos.component';
+import { ShowDictamenComponent } from './pagosSuscripciones/showDictamen/showDictamen.component';
 /**IMPORTS GRID */
 
 @Component({
@@ -714,25 +715,16 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     };
 
     verDictamenFn = e => {
-        console.log('e', e)
-        // const dialogRef = this.dialog.open(ShowDictamenComponent, {
-        //     width: '100%',
-        //     height: '95%',
-        //     disableClose: true,
-        //     data: {
-        //         title: 'Dictamen',
-        //         urlGet: `${e.data.RutaLectura}#toolbar=0`,
-        //         dataPago: e.data
-        //     }
-        // });
-
-        // dialogRef.afterClosed().subscribe(result => {
-        //     if (result) {
-        //         if (result.success === 1) {
-        //             this.getDataPagos();
-        //         };
-        //     };
-        // });
+        this.dialog.open(ShowDictamenComponent, {
+            width: '100%',
+            height: '95%',
+            disableClose: true,
+            data: {
+                title: 'Dictamen',
+                urlGet: `${e.data.RutaLectura}#toolbar=0`,
+                dataPago: e.data
+            }
+        });
     };
 
     verPagosFn = e => {
