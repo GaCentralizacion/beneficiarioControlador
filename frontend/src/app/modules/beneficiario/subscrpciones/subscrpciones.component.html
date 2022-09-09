@@ -136,7 +136,7 @@
                                     [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox"
                                     [Editing]="Editing" [Columnchooser]="Columnchooser" [searchPanel]="searchPanel"
                                     [scroll]="scroll" (messageEvent)="receiveMessage($event)"
-                                    (datosevent)='datosMessage($event)' [toolbar]="toolbarSubscripciones">
+                                    (datosevent)='datosMessage($event)' [toolbar]="toolbarSubscripciones" (verDictamen)="verDictamenFn($event)" (verPagos)="verPagosFn($event)">
                                 </app-grid-component>
                             </div>
                         </div>

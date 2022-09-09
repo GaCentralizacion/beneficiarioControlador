@@ -26,6 +26,7 @@ import {
 import { environment } from 'environments/environment';
 import { ShowIndirectosComponent } from './showIndirectos/showIndirectos.component';
 import { PagosSuscripcionesComponent } from './pagosSuscripciones/pagosSuscripciones.component';
+import { VerPagosComponent } from './pagosSuscripciones/verPagos/verPagos.component';
 /**IMPORTS GRID */
 
 @Component({
@@ -520,9 +521,23 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Dictamen'
             },
             {
+                caption: 'Ver dictamen',
+                allowEditing: false,
+                cellTemplate: 'verDictamen'
+            },
+            {
+                caption: 'Ver pagos',
+                allowEditing: false,
+                cellTemplate: 'verPagos'
+            },
+            {
+                caption: 'Pagado',
+                dataField: 'Pagada'
+            },
+            {
                 caption: 'Usuario alta',
                 dataField: 'UsuarioAlta'
-            }
+            },
         ];
         /*
             Parametros de Paginacion de Grit
@@ -696,6 +711,45 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
         */
         this.scroll = { mode: 'standard' };
         this.muestraGridDashIndirecto = true;
+    };
+
+    verDictamenFn = e => {
+        console.log('e', e)
+        // const dialogRef = this.dialog.open(ShowDictamenComponent, {
+        //     width: '100%',
+        //     height: '95%',
+        //     disableClose: true,
+        //     data: {
+        //         title: 'Dictamen',
+        //         urlGet: `${e.data.RutaLectura}#toolbar=0`,
+        //         dataPago: e.data
+        //     }
+        // });
+
+        // dialogRef.afterClosed().subscribe(result => {
+        //     if (result) {
+        //         if (result.success === 1) {
+        //             this.getDataPagos();
+        //         };
+        //     };
+        // });
+    };
+
+    verPagosFn = e => {
+        const data = {
+            IdSubscripcion: e.data.IdSubscripcion,
+            Deudor: e.data.PersonaSuscripcion,
+            Acreedor: e.data.PersonaDestino === '' ? this.dataCurrenteEmpresa.RazonSocial : e.data.PersonaDestino
+        };
+        this.dialog.open(VerPagosComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Pagos',
+                dataPago: data,
+                dataCurrenteEmpresa: this.dataCurrenteEmpresa
+            }
+        });
     };
 
     /**CLICK DE LOS BOTONES SUPERORPOR */
