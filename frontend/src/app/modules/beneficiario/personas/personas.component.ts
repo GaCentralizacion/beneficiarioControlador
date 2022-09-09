@@ -379,6 +379,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     setDataForms = (contactos: any, domicilios: any) => {
+        this.arrayAllContactos = [];
+        this.arrayAllDomicilios = [];
         //Seteamos los valores generales de la persona
         let date = this.gralDataPersona.Fecha_nacimiento_Constitucion.split('T')[0];
         let dateParts = date.split("/");
@@ -1005,6 +1007,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
     onTabChanged = e => {
         if (this.actualizarPersona) {
             if (e.tab.textLabel === 'Datos de persona') {
+                this.getDataPersonaById();
+            } else if (e.tab.textLabel === 'Medios de contacto') {
+                this.getDataPersonaById();
+            } else if (e.tab.textLabel === 'Domicilios') {
                 this.getDataPersonaById();
             } else if (e.tab.textLabel === 'Relación familiar') {
                 this.relacionFamiliarComponent.getAllRelacionesFamiliares();
