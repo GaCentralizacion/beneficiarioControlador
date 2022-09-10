@@ -73,6 +73,7 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() registrarPago = new EventEmitter<{ data }>();
 	@Output() verPagos = new EventEmitter<{ data }>();
 	@Output() actualizarContacto = new EventEmitter<{ data }>();
+	@Output() eliminarContacto = new EventEmitter<{ data }>();
 
 	public contador = 0;
 	public contadordetail = 0;
@@ -451,7 +452,11 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 
 	actualizarContactoFn = data => {
 		this.actualizarContacto.emit({ data: data });
-	}
+	};
+
+	eliminarContactoFn = data => {
+		this.eliminarContacto.emit({ data: data });
+	};
 
 	//PERONSAS
 	/**FUNCIONES DE LAS COLUMNAS */

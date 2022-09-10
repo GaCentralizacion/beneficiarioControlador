@@ -3,7 +3,8 @@
         <app-grid-component *ngIf="muestraGridContactos" [datos]="allContactos" [columns]="columns" [gridOptions]="gridOptions"
         [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
         [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
-        (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar" (actualizarContacto)="actualizarContacto($event)">
+        (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar" (actualizarContacto)="actualizarContacto($event)" 
+        (eliminarContacto)="eliminarContacto($event)">
     </app-grid-component>
     </div>
 </div>

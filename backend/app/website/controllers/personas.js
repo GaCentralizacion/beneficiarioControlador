@@ -521,4 +521,68 @@ personas.prototype.post_updateDocumento = async function (req, res, next) {
     };
 };
 
+personas.prototype.post_insContactoPersona = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdPersona,
+        IdTipoContacto,
+        Dato,
+        Predeterminado,
+        Ext,
+        PersonaContacto,
+        Usuario
+    } = req.body
+
+    var params = [
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdTipoContacto', value: IdTipoContacto, type: self.model.types.INT },
+        { name: 'Dato', value: Dato, type: self.model.types.STRING },
+        { name: 'Predeterminado', value: Predeterminado, type: self.model.types.STRING },
+        { name: 'Ext', value: Ext, type: self.model.types.STRING },
+        { name: 'PersonaContacto', value: PersonaContacto, type: self.model.types.STRING },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_ContactoPersona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+personas.prototype.post_updContactoPersona = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdContacto,
+        IdTipoContacto,
+        Dato,
+        Predeterminado,
+        Ext,
+        PersonaContacto,
+        Usuario,
+        Opcion
+    } = req.body
+
+    var params = [
+        { name: 'IdContacto', value: IdContacto, type: self.model.types.INT },
+        { name: 'IdTipoContacto', value: IdTipoContacto, type: self.model.types.INT },
+        { name: 'Dato', value: Dato, type: self.model.types.STRING },
+        { name: 'Predeterminado', value: Predeterminado, type: self.model.types.STRING },
+        { name: 'Ext', value: Ext, type: self.model.types.STRING },
+        { name: 'PersonaContacto', value: PersonaContacto, type: self.model.types.STRING },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Upd_ContactoPersona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;

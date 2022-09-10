@@ -7,6 +7,7 @@ import { GaService } from 'app/services/ga.service';
 import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
 import { ContactosModalComponent } from './contactosModal/contactosModal.component';
+import { NgxSpinnerService } from "ngx-spinner";
 
 /**IMPORTS GRID */
 import {
@@ -65,7 +66,8 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
-        private gaService: GaService
+        private gaService: GaService,
+        private spinner: NgxSpinnerService
     ) { }
 
     ngOnDestroy(): void {
@@ -132,7 +134,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                 });
             } else {
                 if (result.success === 1) {
-                    console.log('guardamos el contacto y refrescamos')
+                    this.getDataContactosPersona();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
@@ -168,7 +170,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                 });
             } else {
                 if (result.success === 1) {
-                    console.log('actualizamos el contacto y refrescamos')
+                    this.getDataContactosPersona();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
@@ -177,6 +179,65 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                         confirmButtonText: 'Cerrar'
                     });
                 };
+            };
+        });
+    };
+
+    eliminarContacto = e => {
+        Swal.fire({
+            title: `¿Estas seguro de eliminar el contacto?`,
+            showDenyButton: true,
+            // showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            denyButtonText: `Cancelar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.spinner.show();
+                const data = {
+                    IdContacto: e.data.IdContacto,
+                    IdTipoContacto: e.data.idTipoCont,
+                    Dato: e.data.dato,
+                    Predeterminado: e.data.predeterminado,
+                    Ext: e.data.value,
+                    PersonaContacto: e.data.personaContactar,
+                    Usuario: this.userData.IdUsuario,
+                    Opcion: 2
+                };
+
+                this.gaService.postService('personas/updContactoPersona', data).subscribe((res: any) => {
+                    this.spinner.hide();
+                    if (res[0][0].Codigo < 0) {
+                        Swal.fire({
+                            title: '¡Alto!',
+                            text: res[0][0].Mensaje,
+                            icon: 'warning',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '¡Listo!',
+                            text: res[0][0].Mensaje,
+                            icon: 'success',
+                            confirmButtonText: 'Cerrar'
+                        });
+                        this.getDataContactosPersona();
+                    };
+                }, (error: any) => {
+                    this.spinner.hide();
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
+                });
+            } else if (result.isDenied) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo elimino el contacto.',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
             };
         });
     };
@@ -201,6 +262,10 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                 caption: 'Predeterminado',
                 allowEditing: false,
                 cellTemplate: 'contactosPredeterminados'
+            },
+            {
+                caption: 'Persona a contactar',
+                dataField: 'personaContactar'
             },
             {
                 caption: 'Editar',
@@ -243,6 +308,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         this.scroll = { mode: 'standard' };
         this.muestraGridContactos = true;
     };
+
     redirect(url: string) {
         this.router.navigateByUrl(url);
     };

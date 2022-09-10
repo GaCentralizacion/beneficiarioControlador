@@ -556,7 +556,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         if (this.arrayAllContactos.length > 0) {
             xmlCotactos = '<Contactos>';
             for (let arrayContacto of this.arrayAllContactos) {
-                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext></Contacto>`;
+                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext}</Ext><PersonaContacto>${arrayContacto.data.personaContactar}</PersonaContacto></Contacto>`;
             };
             xmlCotactos += '</Contactos>';
         };

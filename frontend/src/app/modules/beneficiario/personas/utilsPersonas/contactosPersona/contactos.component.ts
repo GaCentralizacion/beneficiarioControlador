@@ -54,7 +54,8 @@ export class ContactosComponent implements OnInit, OnDestroy {
             idTipCont: [0, Validators.min(1)],
             dato: ['', Validators.required],
             predeterminado: false,
-            ext: ''
+            ext: '',
+            personaContactar: ''
         });
 
         if (this.actualizarPersona) {
@@ -79,6 +80,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
                 this.contactosPersonaForm.controls.dato.setValue(contacto.data?.dato !== '' ? contacto.data?.dato : '');
                 this.contactosPersonaForm.controls.predeterminado.setValue(contacto.data?.predeterminado);
                 this.contactosPersonaForm.controls.ext.setValue(contacto.data?.ext);
+                this.contactosPersonaForm.controls.personaContactar.setValue(contacto.data?.personaContactar);
             };
         };
     };
