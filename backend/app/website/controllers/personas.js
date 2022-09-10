@@ -585,4 +585,51 @@ personas.prototype.post_updContactoPersona = function (req, res, next) {
     });
 };
 
+personas.prototype.post_insDomiciliosPersona = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdPersona,
+        idTipDom,
+        esFiscal,
+        calle,
+        numExt,
+        numInt,
+        cp,
+        colonia_asentamiento,
+        delegacion_municipio,
+        ciudad_estado,
+        pais,
+        calle1,
+        calle2,
+        predeterminado,
+        Usuario
+    } = req.body
+
+    var params = [
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdTipDom', value: idTipDom, type: self.model.types.INT },
+        { name: 'EsFiscal', value: esFiscal, type: self.model.types.STRING },
+        { name: 'Calle', value: calle, type: self.model.types.STRING },
+        { name: 'NumExt', value: numExt, type: self.model.types.STRING },
+        { name: 'NumInt', value: numInt, type: self.model.types.STRING },
+        { name: 'Cp', value: cp, type: self.model.types.STRING },
+        { name: 'Colonia_asentamiento', value: colonia_asentamiento, type: self.model.types.STRING },
+        { name: 'Delegacion_municipio', value: delegacion_municipio, type: self.model.types.STRING },
+        { name: 'Ciudad_estado', value: ciudad_estado, type: self.model.types.STRING },
+        { name: 'Pais', value: pais, type: self.model.types.STRING },
+        { name: 'Calle1', value: calle1, type: self.model.types.STRING },
+        { name: 'Calle2', value: calle2, type: self.model.types.STRING },
+        { name: 'Predeterminado', value: predeterminado, type: self.model.types.STRING },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_DomicilioPersona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = personas;

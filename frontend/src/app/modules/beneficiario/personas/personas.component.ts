@@ -833,6 +833,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.contactosPersonaUpdComponent.AddContactos()
     };
 
+    showModalDomicilios = () => {
+        this.domiciliosPersonaUpdComponent.AddDomicilios()
+    };
+
     datosMessage = e => {
         this.datosEvent = e.data;
     };

@@ -28,6 +28,7 @@ import { ShowDictamenComponent } from './subscrpciones/pagosSuscripciones/showDi
 import { ContactosPersonaUpdComponent } from './personas/utilsPersonas/contactosPersonaUpd/contactosPersonaUpd.component';
 import { ContactosModalComponent } from './personas/utilsPersonas/contactosPersonaUpd/contactosModal/contactosModal.component';
 import { DomiciliosPersonaUpdComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
+import { DomiciliosModalComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosModal/domiciliosModal.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +53,8 @@ import { DomiciliosPersonaUpdComponent } from './personas/utilsPersonas/domicili
         ShowDictamenComponent,
         ContactosPersonaUpdComponent,
         ContactosModalComponent,
-        DomiciliosPersonaUpdComponent
+        DomiciliosPersonaUpdComponent,
+        DomiciliosModalComponent
     ],
     imports: [
         CommonModule,
@@ -60,8 +62,8 @@ import { DomiciliosPersonaUpdComponent } from './personas/utilsPersonas/domicili
         SharedModule
     ],
     providers: [
-        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-        CurrencyPipe // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER
+        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER
+        CurrencyPipe //Se agrega para poder usar el currency.transform
     ]
 })
 export class BeneficiarioModule { }

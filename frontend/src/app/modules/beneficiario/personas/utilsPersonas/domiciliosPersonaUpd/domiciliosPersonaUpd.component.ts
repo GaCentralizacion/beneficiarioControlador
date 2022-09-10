@@ -9,6 +9,7 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
 import { environment } from 'environments/environment';
+import { DomiciliosModalComponent } from './domiciliosModal/domiciliosModal.component';
 
 /**IMPORTS GRID */
 import {
@@ -38,6 +39,7 @@ const REGEX_CP = /^[0-9]{5}$/;
 export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
     /**INPUTUS OUTPUTS */
     @Input() gralDataPersona: any;
+    @Input() catTipoDomicilio: any;
     /**INPUTUS OUTPUTS */
 
     /**Grid */
@@ -109,6 +111,42 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
+        });
+    };
+
+    AddDomicilios = () => {
+        const dialogRef = this.dialog.open(DomiciliosModalComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Agregar Domicilio',
+                dataPersona: this.gralDataPersona,
+                dataDomicilio: null,
+                agregar: true,
+                catTipoDomicilio: this.catTipoDomicilio
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo ningun contacto',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    this.getDataDomiciliosPersona();
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un erro al guardar el contacto',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
         });
     };
 
