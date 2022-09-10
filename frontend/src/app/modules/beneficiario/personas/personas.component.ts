@@ -13,6 +13,8 @@ import { environment } from 'environments/environment';
 import { RelacionFamiliarComponent } from './utilsPersonas/relacionFamiliar/relacionFamiliar.component';
 import { ExpedienteDigitalComponent } from './utilsPersonas/expedienteDigital/expedienteDigital.component';
 import { ContactosPersonaUpdComponent } from './utilsPersonas/contactosPersonaUpd/contactosPersonaUpd.component';
+import { DomiciliosPersonaUpdComponent } from './utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
+
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 
@@ -46,6 +48,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     @ViewChild(RelacionFamiliarComponent) relacionFamiliarComponent: RelacionFamiliarComponent;
     @ViewChild(ExpedienteDigitalComponent) expedienteDigitalComponent: ExpedienteDigitalComponent;
     @ViewChild(ContactosPersonaUpdComponent) contactosPersonaUpdComponent: ContactosPersonaUpdComponent;
+    @ViewChild(DomiciliosPersonaUpdComponent) domiciliosPersonaUpdComponent: DomiciliosPersonaUpdComponent;
     idMenuApp: number = 0;
 
     /**Grid */
@@ -814,10 +817,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 if (this.moralInterna) {
                     this.createGridMoralInterna();
                 } else {
-                    console.log('No es moral inter')
+                    this.contactosPersonaUpdComponent.getDataContactosPersona();
                 };
             } else if (e.tab.textLabel === 'Domicilios') {
-                // this.getDataPersonaById();
+                this.domiciliosPersonaUpdComponent.getDataDomiciliosPersona();
             } else if (e.tab.textLabel === 'Relación familiar') {
                 this.relacionFamiliarComponent.getAllRelacionesFamiliares();
             } else if (e.tab.textLabel === 'Expediente digital') {

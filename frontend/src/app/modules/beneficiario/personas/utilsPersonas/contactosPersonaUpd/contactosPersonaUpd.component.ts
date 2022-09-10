@@ -24,8 +24,6 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
-import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
-import { FuseAlertService } from '../../../../../../@fuse/components/alert/alert.service';
 /**IMPORTS GRID */
 
 @Component({
@@ -44,7 +42,6 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
     allContactos: any;
 
     /**Grid */
-    allPersonas: any;
     datosEvent: any = [];
     muestraGrid: boolean = false;
     gridOptions: IGridOptions;

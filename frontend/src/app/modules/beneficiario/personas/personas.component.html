@@ -308,20 +308,23 @@
                             <h5 *ngIf="!actualizarPersona">Domicilios</h5>
                         </div>
                         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                            <button class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addDomicilio()">
+                            <!-- <button class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addDomicilio()">
                                 <i class="fas fa-plus"></i>
                             </button>
                             <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
                                 <i class="fas fa-minus"></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="!actualizarPersona">
                             <app-domicilios *ngFor="let domicilio of arrayAllDomicilios"
                                 [catTipoDomicilio]="catTipoDomicilio" [arrayAllDomicilios]="arrayAllDomicilios"
                                 [currentIdDomicilio]="arrayAllDomicilios.length"
                                 [actualizarPersona]="actualizarPersona"></app-domicilios>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="actualizarPersona">
+                                <app-domiciliosPersonaUpd *ngIf="actualizarPersona" [gralDataPersona]="gralDataPersona"></app-domiciliosPersonaUpd>
                         </div>
                     </div>
                 </mat-card>
