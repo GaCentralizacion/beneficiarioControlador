@@ -264,12 +264,15 @@
                             <h5 *ngIf="actualizarPersona">{{nombrePersona}}</h5>
                             <h5 *ngIf="!actualizarPersona">Medios de contacto</h5>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" *ngIf="!moralInterna && !actualizarPersona" >
-                            <button *ngIf="!moralInterna" class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <button *ngIf="!moralInterna && !actualizarPersona" class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
                                 <i class="fas fa-plus"></i>
                             </button>
-                            <button *ngIf="!moralInterna" class="btn btn-danger pull-right" (click)="removeContacto()">
+                            <button *ngIf="!moralInterna && !actualizarPersona" class="btn btn-danger pull-right" (click)="removeContacto()">
                                 <i class="fas fa-minus"></i>
+                            </button>
+                            <button *ngIf="!moralInterna && actualizarPersona" class="btn btn-success pull-right" (click)="showModalContacto()">
+                                Agregar <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
@@ -281,7 +284,7 @@
                                 [actualizarPersona]="actualizarPersona"></app-contactos>
                         </div>
                         <div *ngIf="!moralInterna && actualizarPersona" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <app-contactosPersonaUpd [gralDataPersona]="gralDataPersona"></app-contactosPersonaUpd>
+                            <app-contactosPersonaUpd [gralDataPersona]="gralDataPersona" [catTipoContacto]="catTipoContacto"></app-contactosPersonaUpd>
                         </div>
                         <div *ngIf="moralInterna" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <app-grid-component *ngIf="muestraGridMoralInterna" [datos]="dataPersonaMoralInterna" [columns]="columnsMoralInterna" [gridOptions]="gridOptionsMoralInterna"

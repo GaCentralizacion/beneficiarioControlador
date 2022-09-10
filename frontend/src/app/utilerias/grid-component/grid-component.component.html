@@ -193,6 +193,14 @@
 		</div>
 		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'actualizaContacto'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="actualizarContactoFn(data.row.data)">
+				<i class="fa-solid fa-file-pen"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
+
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
 		<div *dxTemplate="let data of 'foto'" class="foto">

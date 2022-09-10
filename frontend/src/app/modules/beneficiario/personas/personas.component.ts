@@ -12,7 +12,7 @@ import { DomiciliosComponent } from './utilsPersonas/domiciliosPersona/domicilio
 import { environment } from 'environments/environment';
 import { RelacionFamiliarComponent } from './utilsPersonas/relacionFamiliar/relacionFamiliar.component';
 import { ExpedienteDigitalComponent } from './utilsPersonas/expedienteDigital/expedienteDigital.component';
-
+import { ContactosPersonaUpdComponent } from './utilsPersonas/contactosPersonaUpd/contactosPersonaUpd.component';
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 
@@ -45,6 +45,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     @ViewChild(DomiciliosComponent) domicilioComponent: DomiciliosComponent;
     @ViewChild(RelacionFamiliarComponent) relacionFamiliarComponent: RelacionFamiliarComponent;
     @ViewChild(ExpedienteDigitalComponent) expedienteDigitalComponent: ExpedienteDigitalComponent;
+    @ViewChild(ContactosPersonaUpdComponent) contactosPersonaUpdComponent: ContactosPersonaUpdComponent;
     idMenuApp: number = 0;
 
     /**Grid */
@@ -823,6 +824,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.expedienteDigitalComponent.getAllDocuments();
             };
         };
+    };
+
+    showModalContacto = () => {
+        this.contactosPersonaUpdComponent.AddContactos()
     };
 
     datosMessage = e => {

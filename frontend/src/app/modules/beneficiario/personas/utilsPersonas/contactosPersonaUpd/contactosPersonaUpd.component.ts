@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { GaService } from 'app/services/ga.service';
 import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
+import { ContactosModalComponent } from './contactosModal/contactosModal.component';
 
 /**IMPORTS GRID */
 import {
@@ -22,9 +23,9 @@ import {
     TiposdeDato,
     TiposdeFormato
 } from 'app/interfaces';
+import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
+import { FuseAlertService } from '../../../../../../@fuse/components/alert/alert.service';
 /**IMPORTS GRID */
-
-const VALID_REGEX_MAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 @Component({
     selector: 'app-contactosPersonaUpd',
@@ -35,6 +36,7 @@ const VALID_REGEX_MAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|("
 export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
     /**INPUTUS OUTPUTS */
     @Input() gralDataPersona: any;
+    @Input() catTipoContacto: any;
     /**INPUTUS OUTPUTS */
 
     userData: any;
@@ -72,7 +74,6 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.userData = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
         this.getDataContactosPersona();
-        console.log('ContactosPersonaUpdComponent WORKS', this.gralDataPersona)
     };
 
     getDataContactosPersona = () => {
@@ -84,7 +85,6 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
             if (res.length > 0) {
                 this.allContactos = res[1];
-                console.log('this.allContactos', this.allContactos)
                 this.allContactos.forEach((value, key) => {
                     if ((key % 2) == 0) {
                         value.backgroundcolor = '#F4F6F6';
@@ -109,6 +109,78 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         });
     };
 
+    AddContactos = () => {
+        const dialogRef = this.dialog.open(ContactosModalComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Agregar Contacto',
+                dataPersona: this.gralDataPersona,
+                dataContacto: null,
+                agregar: true,
+                catTipoContacto: this.catTipoContacto
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo ningun contacto',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    console.log('guardamos el contacto y refrescamos')
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un erro al guardar el contacto',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
+        });
+    };
+
+    actualizarContacto = e => {
+        const dialogRef = this.dialog.open(ContactosModalComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Actualizar Contacto',
+                dataPersona: this.gralDataPersona,
+                dataContacto: e.data,
+                agregar: false,
+                catTipoContacto: this.catTipoContacto
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se actualizo ningun contacto',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    console.log('actualizamos el contacto y refrescamos')
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un error al actualizar el contacto',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
+        });
+    };
+
     createGridContactos = () => {
         this.muestraGridContactos = false;
         this.toolbar = [];
@@ -129,6 +201,11 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                 caption: 'Predeterminado',
                 allowEditing: false,
                 cellTemplate: 'contactosPredeterminados'
+            },
+            {
+                caption: 'Editar',
+                allowEditing: false,
+                cellTemplate: 'actualizaContacto'
             }
         ];
         /*

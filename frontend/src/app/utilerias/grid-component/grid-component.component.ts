@@ -72,6 +72,7 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() verDictamen = new EventEmitter<{ data }>();
 	@Output() registrarPago = new EventEmitter<{ data }>();
 	@Output() verPagos = new EventEmitter<{ data }>();
+	@Output() actualizarContacto = new EventEmitter<{ data }>();
 
 	public contador = 0;
 	public contadordetail = 0;
@@ -437,16 +438,20 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	}
 
 	verDictamenFn = data => {
-		this.verDictamen.emit({ data: data })
+		this.verDictamen.emit({ data: data });
 	};
 
 	registrarPagoFn = data => {
-		this.registrarPago.emit({ data: data })
+		this.registrarPago.emit({ data: data });
 	};
 
 	verPagosFn = data => {
-		this.verPagos.emit({ data: data })
+		this.verPagos.emit({ data: data });
 	};
+
+	actualizarContactoFn = data => {
+		this.actualizarContacto.emit({ data: data });
+	}
 
 	//PERONSAS
 	/**FUNCIONES DE LAS COLUMNAS */
