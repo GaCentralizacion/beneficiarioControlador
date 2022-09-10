@@ -264,7 +264,7 @@
                             <h5 *ngIf="actualizarPersona">{{nombrePersona}}</h5>
                             <h5 *ngIf="!actualizarPersona">Medios de contacto</h5>
                         </div>
-                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" *ngIf="!moralInterna && !actualizarPersona" >
                             <button *ngIf="!moralInterna" class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
                                 <i class="fas fa-plus"></i>
                             </button>
@@ -274,11 +274,14 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div *ngIf="!moralInterna" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div *ngIf="!moralInterna && !actualizarPersona" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <app-contactos *ngFor="let contacto of arrayAllContactos"
                                 [catTipoContacto]="catTipoContacto" [arrayAllContactos]="arrayAllContactos"
                                 [currentIdContacto]="this.arrayAllContactos.length"
                                 [actualizarPersona]="actualizarPersona"></app-contactos>
+                        </div>
+                        <div *ngIf="!moralInterna && actualizarPersona" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-contactosPersonaUpd [gralDataPersona]="gralDataPersona"></app-contactosPersonaUpd>
                         </div>
                         <div *ngIf="moralInterna" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <app-grid-component *ngIf="muestraGridMoralInterna" [datos]="dataPersonaMoralInterna" [columns]="columnsMoralInterna" [gridOptions]="gridOptionsMoralInterna"
@@ -357,7 +360,7 @@
                     (click)="savePersona()" [hidden]="actualizarPersona">
                     Guardar <i class="fa-solid fa-floppy-disk"></i>
                 </button>
-                <button *ngIf="accionesUsuario?.editarPersona === 1 && (focusTabs === 0 || focusTabs === 1 || focusTabs === 2)" class="btn btn-success pull-right"
+                <button *ngIf="accionesUsuario?.editarPersona === 1 && focusTabs === 0" class="btn btn-success pull-right"
                     (click)="updatePersona()" [hidden]="!actualizarPersona">
                     Actualizar <i class="fa-solid fa-arrows-rotate"></i>
                 </button>

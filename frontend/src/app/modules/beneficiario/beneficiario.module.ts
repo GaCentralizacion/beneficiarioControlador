@@ -25,6 +25,7 @@ import { PagosSuscripcionesComponent } from './subscrpciones/pagosSuscripciones/
 import { PagarSuscripcionComponent } from './subscrpciones/pagosSuscripciones/pagarSuscripcion/pagarSuscripcion.component';
 import { VerPagosComponent } from './subscrpciones/pagosSuscripciones/verPagos/verPagos.component';
 import { ShowDictamenComponent } from './subscrpciones/pagosSuscripciones/showDictamen/showDictamen.component';
+import { ContactosPersonaUpdComponent } from './personas/utilsPersonas/contactosPersonaUpd/contactosPersonaUpd.component';
 
 @NgModule({
     declarations: [
@@ -46,7 +47,8 @@ import { ShowDictamenComponent } from './subscrpciones/pagosSuscripciones/showDi
         PagosSuscripcionesComponent,
         PagarSuscripcionComponent,
         VerPagosComponent,
-        ShowDictamenComponent
+        ShowDictamenComponent,
+        ContactosPersonaUpdComponent
     ],
     imports: [
         CommonModule,

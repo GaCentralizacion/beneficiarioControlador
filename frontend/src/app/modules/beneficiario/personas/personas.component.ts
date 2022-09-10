@@ -810,15 +810,17 @@ export class PersonasComponent implements OnInit, OnDestroy {
             if (e.tab.textLabel === 'Datos de persona') {
                 this.getDataPersonaById();
             } else if (e.tab.textLabel === 'Medios de contacto') {
-                // this.getDataPersonaById();
+                if (this.moralInterna) {
+                    this.createGridMoralInterna();
+                } else {
+                    console.log('No es moral inter')
+                };
             } else if (e.tab.textLabel === 'Domicilios') {
                 // this.getDataPersonaById();
             } else if (e.tab.textLabel === 'Relación familiar') {
                 this.relacionFamiliarComponent.getAllRelacionesFamiliares();
             } else if (e.tab.textLabel === 'Expediente digital') {
                 this.expedienteDigitalComponent.getAllDocuments();
-            } else if (e.tab.textLabel === 'Medios de contacto') {
-                this.createGridMoralInterna();
             };
         };
     };

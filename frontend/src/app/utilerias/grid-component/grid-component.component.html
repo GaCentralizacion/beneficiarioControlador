@@ -186,6 +186,13 @@
 		</div>
 		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'contactosPredeterminados'" style="text-align: center;">
+			<label *ngIf="data.row.data.predeterminado">SI</label>
+			<label *ngIf="!data.row.data.predeterminado">NO</label>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
+
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 
 		<div *dxTemplate="let data of 'foto'" class="foto">
