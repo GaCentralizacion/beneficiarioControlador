@@ -352,7 +352,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     this.nombrePersona = `${this.gralDataPersona.Nombre_RazonSocial}`;
                 };
                 this.showAddPersona = true;
-                this.setDataForms(res[1], res[2]);
+                this.setDataForms();
                 if (this.gralDataPersona?.FechaModificacion !== null) {
                     let dateModificacion = `${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[2]}/${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[1]}/${this.gralDataPersona?.FechaModificacion.split('T')[0].split('-')[0]}`;
                     this.textModificacion = `Modificado el ${dateModificacion} por ${this.gralDataPersona?.NombUsuarioModificacion}`;
@@ -378,9 +378,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         });
     };
 
-    setDataForms = (contactos: any, domicilios: any) => {
-        this.arrayAllContactos = [];
-        this.arrayAllDomicilios = [];
+    setDataForms = () => {
+        this.spinner.show();
         //Seteamos los valores generales de la persona
         let date = this.gralDataPersona.Fecha_nacimiento_Constitucion.split('T')[0];
         let dateParts = date.split("/");
@@ -419,22 +418,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.getDataContactosPersonaMoralInterna();
         } else {
             this.moralInterna = false;
-            for (let contacto of contactos) {
-                setTimeout(() => {
-                    this.currentIdContacto = `${this.stringIdContacto}${this.arrayAllContactos.length + 1}`;
-                    this.arrayAllContactos.push({ id: this.currentIdContacto, data: contacto });
-                }, 200);
-            };
+            this.personaForm.controls.regimenFiscal.clearValidators();
+            this.personaForm.controls.regimenFiscal.updateValueAndValidity();
         };
-
-        // //Seteamos los domicilios de la persona
-        for (let domicilio of domicilios) {
-            setTimeout(() => {
-                this.currentIdContacto = `${this.stringIdDomicilio}${this.arrayAllDomicilios.length + 1}`;
-                this.arrayAllDomicilios.push({ id: this.currentIdContacto, data: domicilio });
-            }, 200);
-        };
-
         // Una vez cargado todo cocultamos el spinner
         this.hiddenForm = false;
         this.spinner.hide();
@@ -538,11 +524,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.personaForm.markAllAsTouched();
             return;
         };
-        // const validaPersona = this.validaFormPersona();
-        // if (validaPersona.success === 0) {
-        //     Swal.fire(validaPersona.msg, '', 'warning');
-        //     return
-        // };
 
         const validaContactosPersona = this.validaFormsContactos();
         if (validaContactosPersona.success === 0) {
@@ -691,55 +672,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.personaForm.markAllAsTouched();
             return;
         };
-        // const validaPersona = this.validaFormPersona();
-        // if (validaPersona.success === 0) {
-        //     Swal.fire(validaPersona.msg, '', 'warning');
-        //     return
-        // };
-
-        const validaContactosPersona = this.validaFormsContactos();
-        if (validaContactosPersona.success === 0) {
-            this.focusTabs = 1;
-            Swal.fire({
-                title: '¡Alto!',
-                text: validaContactosPersona.msg,
-                icon: 'warning',
-                confirmButtonText: 'Cerrar'
-            });
-            this.contactoComponent.setManualError();
-            return
-        };
-
-        const validaDomicilioPeronsa = this.validaFormsDomicilios();
-        if (validaDomicilioPeronsa.success === 0) {
-            this.focusTabs = 2;
-            Swal.fire({
-                title: '¡Alto!',
-                text: validaDomicilioPeronsa.msg,
-                icon: 'warning',
-                confirmButtonText: 'Cerrar'
-            });
-            this.domicilioComponent.setManualError();
-            return
-        };
-
-        let xmlCotactos = ''
-        if (this.arrayAllContactos.length > 0) {
-            xmlCotactos = '<Contactos>';
-            for (let arrayContacto of this.arrayAllContactos) {
-                xmlCotactos += `<Contacto><IdTipoContacto>${arrayContacto.data.idTipCont}</IdTipoContacto><Dato>${arrayContacto.data.dato === undefined ? '' : arrayContacto.data.dato}</Dato><Predeterminado>${arrayContacto.data.predeterminado ? 1 : 0}</Predeterminado><Ext>${arrayContacto.data.ext === undefined ? '' : arrayContacto.data.ext}</Ext></Contacto>`;
-            };
-            xmlCotactos += '</Contactos>';
-        };
-
-        let xmlDomicilio = '';
-        if (this.arrayAllDomicilios.length > 0) {
-            xmlDomicilio = '<Domicilios>';
-            for (let arrayDomicilio of this.arrayAllDomicilios) {
-                xmlDomicilio += `<Domicilio><IdTipoDomicilio>${arrayDomicilio.data.idTipDom}</IdTipoDomicilio><EsFiscal>${arrayDomicilio.data.esFiscal ? 1 : 0}</EsFiscal><Calle>${arrayDomicilio.data.calle}</Calle><NumExterior>${arrayDomicilio.data.numExt}</NumExterior><NumInterior>${arrayDomicilio.data.numInt === undefined ? '' : arrayDomicilio.data.numInt}</NumInterior><CodigoPostal>${arrayDomicilio.data.cp}</CodigoPostal><Colonia_Asentamiento>${arrayDomicilio.data.colonia_asentamiento}</Colonia_Asentamiento><Delegacion_Municipio>${arrayDomicilio.data.delegacion_municipio}</Delegacion_Municipio><Ciudad_Estado>${arrayDomicilio.data.ciudad_estado}</Ciudad_Estado><Pais>${arrayDomicilio.data.pais === undefined ? '' : arrayDomicilio.data.pais}</Pais><Entre_calle1>${arrayDomicilio.data.calle1 === undefined ? '' : arrayDomicilio.data.calle1}</Entre_calle1><Entre_calle2>${arrayDomicilio.data.calle2 === undefined ? '' : arrayDomicilio.data.calle2}</Entre_calle2><Predeterminado>${arrayDomicilio.data.predeterminado ? 1 : 0}</Predeterminado></Domicilio>`;
-            };
-            xmlDomicilio += '</Domicilios>';
-        };
 
         Swal.fire({
             title: `¿Quieres actualizar los datos de ${this.personaForm.controls.nombre_razon.value}?`,
@@ -778,8 +710,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     idUsuario: this.userData.IdUsuario,
                     IdRegimenFiscal: regimen,
                     AllPaises: stringPais.substring(0, stringPais.length - 1),
-                    XMLContacto: xmlCotactos,
-                    XMLDomicilio: xmlDomicilio
+                    XMLContacto: null,
+                    XMLDomicilio: null
                 };
 
                 this.gaService.postService('personas/updPersona', jsonPersona).subscribe((res: any) => {
@@ -873,145 +805,14 @@ export class PersonasComponent implements OnInit, OnDestroy {
         };
     };
 
-    createGrid = () => {
-        this.toolbar = [];
-        this.columns = [
-            {
-                caption: 'RFC',
-                dataField: 'RFC'
-            },
-            {
-                caption: 'Nombre / Razón',
-                dataField: 'Nombre'
-            },
-            {
-                caption: 'Tipo de persona',
-                dataField: 'TipoPer'
-            },
-            {
-                caption: 'Tipo de empresa',
-                dataField: 'TipoMor'
-            },
-            {
-                caption: 'Es accionista',
-                dataField: 'EsAccionista'
-            },
-            {
-                caption: 'Alias',
-                dataField: 'Alias'
-            },
-            {
-                caption: 'Editar',
-                allowEditing: false,
-                cellTemplate: 'crudPersonas'
-            }
-        ];
-        /*
-            Parametros de Paginacion de Grit
-            */
-
-        this.gridOptions = { paginacion: 10, pageSize: [20, 40, 80, 100] };
-
-        /*
-        Parametros de Exploracion
-        */
-        this.exportExcel = { enabled: true, fileName: 'datos' };
-        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
-        this.columnHiding = { hide: true };
-        // ******************PARAMETROS DE PARA CHECKBOX**************** */
-        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
-        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
-        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
-        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
-        this.Columnchooser = { columnchooser: false };
-
-        /*
-        Parametros de Search
-        */
-        this.searchPanel = {
-            visible: true,
-            width: 200,
-            placeholder: 'Buscar...',
-            filterRow: true
-        };
-
-        /*
-        Parametros de Scroll
-        */
-        this.scroll = { mode: 'standard' };
-        this.muestraGrid = true;
-    };
-
-    createGridMoralInterna = () => {
-        this.muestraGridMoralInterna = false;
-        this.toolbarMoralInterna = [];
-        this.columnsMoralInterna = [
-
-            {
-                caption: 'Puesto',
-                dataField: 'Puesto'
-            },
-            {
-                caption: 'Nombre',
-                dataField: 'Nombre'
-            },
-            {
-                caption: 'Tipo de contacto',
-                dataField: 'Descripcion'
-            },
-            {
-                caption: 'Dato',
-                dataField: 'Dato'
-            },
-            {
-                caption: 'Extensión',
-                dataField: 'Ext'
-            }
-        ];
-        /*
-            Parametros de Paginacion de Grit
-            */
-
-        this.gridOptionsMoralInterna = { paginacion: 10, pageSize: [20, 40, 80, 100] };
-
-        /*
-        Parametros de Exploracion
-        */
-        this.exportExcel = { enabled: true, fileName: 'datos' };
-        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
-        this.columnHiding = { hide: true };
-        // ******************PARAMETROS DE PARA CHECKBOX**************** */
-        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
-        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
-        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
-        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
-        this.Columnchooser = { columnchooser: false };
-
-        /*
-        Parametros de Search
-        */
-        this.searchPanel = {
-            visible: true,
-            width: 200,
-            placeholder: 'Buscar...',
-            filterRow: true
-        };
-
-        /*
-        Parametros de Scroll
-        */
-        this.scroll = { mode: 'standard' };
-        this.muestraGridMoralInterna = true;
-    };
-
-    onTabChanged = e => {
+    onTabChanged = (e) => {
         if (this.actualizarPersona) {
             if (e.tab.textLabel === 'Datos de persona') {
                 this.getDataPersonaById();
             } else if (e.tab.textLabel === 'Medios de contacto') {
-                this.getDataPersonaById();
+                // this.getDataPersonaById();
             } else if (e.tab.textLabel === 'Domicilios') {
-                this.getDataPersonaById();
+                // this.getDataPersonaById();
             } else if (e.tab.textLabel === 'Relación familiar') {
                 this.relacionFamiliarComponent.getAllRelacionesFamiliares();
             } else if (e.tab.textLabel === 'Expediente digital') {
@@ -1049,53 +850,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
     /**
      * #REGION VALIDA FORMULARIOS
      */
-
-    validaFormPersona = () => {
-        if (this.personaForm.controls.idTipoPersona.value === null || this.personaForm.controls.idTipoPersona.value === undefined || this.personaForm.controls.idTipoPersona.value === 0) {
-            return { success: 0, msg: 'Debes seleccionar el tipo de personas' }
-        };
-        if (this.personaForm.controls.idTipoMor.value === null || this.personaForm.controls.idTipoMor.value === undefined || this.personaForm.controls.idTipoMor.value === 0) {
-            return { success: 0, msg: 'Debes seleccionar el tipo moral' }
-        };
-        if (this.personaForm.controls.nombre_razon.value === null || this.personaForm.controls.nombre_razon.value === undefined || this.personaForm.controls.nombre_razon.value === '') {
-            return { success: 0, msg: 'Debes insertar el nombre del usuario' }
-        };
-        if (this.personaForm.controls.apellidoPaterno.value === null || this.personaForm.controls.apellidoPaterno.value === undefined || this.personaForm.controls.apellidoPaterno.value === '') {
-            return { success: 0, msg: 'Debes insertar el apellido paterno del usuario' }
-        };
-        if (this.personaForm.controls.apellidoMaterno.value === null || this.personaForm.controls.apellidoMaterno.value === undefined || this.personaForm.controls.apellidoMaterno.value === '') {
-            return { success: 0, msg: 'Debes insertar el apellido materno del usuario' }
-        };
-        if (this.personaForm.controls.alias.value === null || this.personaForm.controls.alias.value === undefined || this.personaForm.controls.alias.value === '') {
-            return { success: 0, msg: 'Debes insertar el alias del usuario' }
-        };
-        if (this.personaForm.controls.fechaNacimiento.value === null || this.personaForm.controls.fechaNacimiento.value === undefined || this.personaForm.controls.fechaNacimiento.value === '') {
-            return { success: 0, msg: 'Debes seleccionar la fecha del usuario' }
-        };
-        if (this.personaForm.controls.idSexo.value === null || this.personaForm.controls.idSexo.value === undefined || this.personaForm.controls.idSexo.value === 0) {
-            return { success: 0, msg: 'Debes seleccionar el sexo de personas' }
-        };
-        if (this.personaForm.controls.idPais.value === null || this.personaForm.controls.idPais.value === undefined || this.personaForm.controls.idPais.value === 0) {
-            return { success: 0, msg: 'Debes seleccionar el pais de personas' }
-        };
-        if (this.personaForm.controls.curp_registroPob.value === null || this.personaForm.controls.curp_registroPob.value === undefined || this.personaForm.controls.curp_registroPob.value === '') {
-            return { success: 0, msg: 'Debes insertar el curp o registro de poblacion del usuario' }
-        };
-        if (this.personaForm.controls.idIdentificacion.value === null || this.personaForm.controls.idIdentificacion.value === undefined || this.personaForm.controls.idIdentificacion.value === 0) {
-            return { success: 0, msg: 'Debes seleccionar el tipo de identificacion de personas' }
-        };
-        if (this.personaForm.controls.datoIdentificacion.value === null || this.personaForm.controls.datoIdentificacion.value === undefined || this.personaForm.controls.datoIdentificacion.value === '') {
-            return { success: 0, msg: 'Debes insertar el dato de la identificacion' }
-        };
-        if (this.personaForm.controls.rfc_identificacion.value === null || this.personaForm.controls.rfc_identificacion.value === undefined || this.personaForm.controls.rfc_identificacion.value === '') {
-            return { success: 0, msg: 'Debes insertar el rfc del usuario' };
-        };
-        if (this.personaForm.controls.idEstadoCivil.value === null || this.personaForm.controls.idEstadoCivil.value === undefined || this.personaForm.controls.idEstadoCivil.value === 0) {
-            return { success: 0, msg: 'Debes Seleccionar el estado civil del usuario' }
-        };
-
-        return { success: 1, msg: '' }
-    };
 
     validaFormsContactos = () => {
         let totalDatoPredeterminadoCelular: number = 0;
@@ -1367,6 +1121,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.rfcMaxLenght = 13;
             this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_FIS)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
             this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
+            console.log('Hola')
+            this.personaForm.controls.regimenFiscal.clearValidators();
+            this.personaForm.controls.regimenFiscal.updateValueAndValidity();
         };
 
         if (tipoPersona === 2) {
@@ -1425,4 +1182,138 @@ export class PersonasComponent implements OnInit, OnDestroy {
         return new Date(new Date(fecha).getTime() + new Date(fecha).getTimezoneOffset() * 60000)
     };
 
+    //#region CREA GRIDS
+
+    createGrid = () => {
+        this.toolbar = [];
+        this.columns = [
+            {
+                caption: 'RFC',
+                dataField: 'RFC'
+            },
+            {
+                caption: 'Nombre / Razón',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Tipo de persona',
+                dataField: 'TipoPer'
+            },
+            {
+                caption: 'Tipo de empresa',
+                dataField: 'TipoMor'
+            },
+            {
+                caption: 'Es accionista',
+                dataField: 'EsAccionista'
+            },
+            {
+                caption: 'Alias',
+                dataField: 'Alias'
+            },
+            {
+                caption: 'Editar',
+                allowEditing: false,
+                cellTemplate: 'crudPersonas'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+
+        this.gridOptions = { paginacion: 10, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'datos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: true };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: false };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGrid = true;
+    };
+
+    createGridMoralInterna = () => {
+        this.muestraGridMoralInterna = false;
+        this.toolbarMoralInterna = [];
+        this.columnsMoralInterna = [
+
+            {
+                caption: 'Puesto',
+                dataField: 'Puesto'
+            },
+            {
+                caption: 'Nombre',
+                dataField: 'Nombre'
+            },
+            {
+                caption: 'Tipo de contacto',
+                dataField: 'Descripcion'
+            },
+            {
+                caption: 'Dato',
+                dataField: 'Dato'
+            },
+            {
+                caption: 'Extensión',
+                dataField: 'Ext'
+            }
+        ];
+        /*
+            Parametros de Paginacion de Grit
+            */
+
+        this.gridOptionsMoralInterna = { paginacion: 10, pageSize: [20, 40, 80, 100] };
+
+        /*
+        Parametros de Exploracion
+        */
+        this.exportExcel = { enabled: true, fileName: 'datos' };
+        // ******************PARAMETROS DE COLUMNAS RESPONSIVAS EN CASO DE NO USAR HIDDING PRIORITY**************** */
+        this.columnHiding = { hide: true };
+        // ******************PARAMETROS DE PARA CHECKBOX**************** */
+        this.Checkbox = { checkboxmode: 'none' };  // *desactivar con none multiple para seleccionar*/
+        // ******************PARAMETROS DE PARA EDITAR GRID**************** */
+        this.Editing = { allowupdate: false, mode: 'cell' }; // *cambiar a batch para editar varias celdas a la vez*/
+        // ******************PARAMETROS DE PARA SELECCION DE COLUMNAS**************** */
+        this.Columnchooser = { columnchooser: false };
+
+        /*
+        Parametros de Search
+        */
+        this.searchPanel = {
+            visible: true,
+            width: 200,
+            placeholder: 'Buscar...',
+            filterRow: true
+        };
+
+        /*
+        Parametros de Scroll
+        */
+        this.scroll = { mode: 'standard' };
+        this.muestraGridMoralInterna = true;
+    };
+
+    //#endregion CREA GRIDS
 };
