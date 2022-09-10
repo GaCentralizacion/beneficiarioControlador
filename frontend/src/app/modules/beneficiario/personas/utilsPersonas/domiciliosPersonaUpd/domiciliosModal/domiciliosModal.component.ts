@@ -74,6 +74,21 @@ export class DomiciliosModalComponent implements OnInit {
 				predeterminado: false
 			});
 		} else {
+			this.domiciliosForm = this._formBuilder.group({
+				idTipDom: [this.dataDomicilio.idTipDom, Validators.min(1)],
+				esFiscal: this.dataDomicilio.esFiscal,
+				calle: [this.dataDomicilio.calle, Validators.required],
+				numExt: [this.dataDomicilio.numExt, Validators.required],
+				numInt: [this.dataDomicilio.numInt],
+				cp: [this.dataDomicilio.cp, (Validators.required, Validators.pattern(REGEX_CP))],
+				colonia_asentamiento: [this.dataDomicilio.colonia_asentamiento, Validators.required],
+				delegacion_municipio: [this.dataDomicilio.delegacion_municipio, Validators.required],
+				ciudad_estado: [this.dataDomicilio.ciudad_estado, Validators.required],
+				pais: [this.dataDomicilio.pais, Validators.required],
+				calle1: [this.dataDomicilio.calle1],
+				calle2: [this.dataDomicilio.calle2],
+				predeterminado: this.dataDomicilio.predeterminado
+			});
 			this.searchCodigoPostal = false;
 		};
 	};
@@ -200,6 +215,85 @@ export class DomiciliosModalComponent implements OnInit {
 				Swal.fire({
 					title: '¡Información!',
 					text: 'No se guardo guardo el domicilio.',
+					icon: 'info',
+					confirmButtonText: 'Cerrar'
+				});
+			};
+		});
+	};
+
+	actualizarDomicilio = () => {
+		if (this.domiciliosForm.invalid) {
+			Swal.fire({
+				title: '¡Alto!',
+				text: 'Completa los campos obligatorios',
+				icon: 'warning',
+				confirmButtonText: 'Cerrar'
+			});
+			this.domiciliosForm.markAllAsTouched();
+			return;
+		};
+
+		Swal.fire({
+			title: `¿Estas seguro de actualizar el domicilio?`,
+			showDenyButton: true,
+			// showCancelButton: true,
+			confirmButtonText: 'Actualizar',
+			denyButtonText: `Cancelar`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				this.spinner.show();
+				const data = {
+					IdDomicilio: this.dataDomicilio.IdDomicilio,
+					idTipDom: this.domiciliosForm.controls.idTipDom.value,
+					esFiscal: this.domiciliosForm.controls.esFiscal.value,
+					calle: this.domiciliosForm.controls.calle.value,
+					numExt: this.domiciliosForm.controls.numExt.value,
+					numInt: this.domiciliosForm.controls.numInt.value,
+					cp: this.domiciliosForm.controls.cp.value,
+					colonia_asentamiento: this.domiciliosForm.controls.colonia_asentamiento.value,
+					delegacion_municipio: this.domiciliosForm.controls.delegacion_municipio.value,
+					ciudad_estado: this.domiciliosForm.controls.ciudad_estado.value,
+					pais: this.domiciliosForm.controls.pais.value,
+					calle1: this.domiciliosForm.controls.calle1.value,
+					calle2: this.domiciliosForm.controls.calle2.value,
+					predeterminado: this.domiciliosForm.controls.predeterminado.value,
+					Usuario: this.dataUsuario.IdUsuario,
+					Opcion: 1
+				};
+
+				this.gaService.postService('personas/updDomiciliosPersona', data).subscribe((res: any) => {
+					this.spinner.hide();
+					if (res[0][0].Codigo < 0) {
+						Swal.fire({
+							title: '¡Alto!',
+							text: res[0][0].Mensaje,
+							icon: 'warning',
+							confirmButtonText: 'Cerrar'
+						});
+					} else {
+						Swal.fire({
+							title: '¡Listo!',
+							text: res[0][0].Mensaje,
+							icon: 'success',
+							confirmButtonText: 'Cerrar'
+						});
+						this.retornarValores.success = 1;
+						this.closeDialog(this.retornarValores);
+					};
+				}, (error: any) => {
+					this.spinner.hide();
+					Swal.fire({
+						title: '¡Error!',
+						text: error.error.text,
+						icon: 'error',
+						confirmButtonText: 'Cerrar'
+					});
+				});
+			} else if (result.isDenied) {
+				Swal.fire({
+					title: '¡Información!',
+					text: 'No se actualizo el domicilio.',
 					icon: 'info',
 					confirmButtonText: 'Cerrar'
 				});

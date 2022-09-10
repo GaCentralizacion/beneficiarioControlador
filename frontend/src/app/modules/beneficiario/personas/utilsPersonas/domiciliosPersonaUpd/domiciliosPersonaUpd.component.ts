@@ -94,7 +94,6 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
                         value.backgroundcolor = '#F4F6F6';
                     };
                 });
-                console.log('this.allDomicilios', this.allDomicilios)
                 this.createGridDomicilios();
             } else {
                 Swal.fire({
@@ -131,7 +130,7 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
             if (!result) {
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo ningun contacto',
+                    text: 'No se guardo ningun domicilio',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
@@ -141,7 +140,7 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar el contacto',
+                        text: 'Ocurrio un error al guardar el domicilio',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
@@ -151,11 +150,106 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
     };
 
     actualizarDomicilio = e => {
-        console.log('e', e)
+        const dialogRef = this.dialog.open(DomiciliosModalComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Agregar Domicilio',
+                dataPersona: this.gralDataPersona,
+                dataDomicilio: e.data,
+                agregar: false,
+                catTipoDomicilio: this.catTipoDomicilio
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se actualizo ningun domicilio',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    this.getDataDomiciliosPersona();
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un erroe al actualizar el domicilio',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
+        });
     };
 
     eliminarDomicilio = e => {
-        console.log('e', e)
+        Swal.fire({
+            title: `¿Estas seguro de eliminar el domicilio?`,
+            showDenyButton: true,
+            // showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            denyButtonText: `Cancelar`,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.spinner.show();
+                const data = {
+                    IdDomicilio: e.data.IdDomicilio,
+                    idTipDom: e.data.idTipDom,
+                    esFiscal: e.data.esFiscal,
+                    calle: e.data.calle,
+                    numExt: e.data.numExt,
+                    numInt: e.data.numInt,
+                    cp: e.data.cp,
+                    colonia_asentamiento: e.data.colonia_asentamiento,
+                    delegacion_municipio: e.data.delegacion_municipio,
+                    ciudad_estado: e.data.ciudad_estado,
+                    pais: e.data.pais,
+                    calle1: e.data.calle1,
+                    calle2: e.data.calle2,
+                    predeterminado: e.data.predeterminado,
+                    Usuario: this.userData.IdUsuario,
+                    Opcion: 2
+                };
+
+                this.gaService.postService('personas/updDomiciliosPersona', data).subscribe((res: any) => {
+                    this.spinner.hide();
+                    if (res[0][0].Codigo < 0) {
+                        Swal.fire({
+                            title: '¡Alto!',
+                            text: res[0][0].Mensaje,
+                            icon: 'warning',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '¡Listo!',
+                            text: res[0][0].Mensaje,
+                            icon: 'success',
+                            confirmButtonText: 'Cerrar'
+                        });
+                        this.getDataDomiciliosPersona();
+                    };
+                }, (error: any) => {
+                    this.spinner.hide();
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
+                });
+            } else if (result.isDenied) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se elimino el domicilio.',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            };
+        });
     };
 
     createGridDomicilios = () => {
@@ -189,6 +283,16 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
             {
                 caption: 'Código postal',
                 dataField: 'cp'
+            },
+            {
+                caption: 'Predeterminado',
+                allowEditing: false,
+                cellTemplate: 'domiciliosPredeterminados'
+            },
+            {
+                caption: 'Domicilio fiscal',
+                allowEditing: false,
+                cellTemplate: 'domicilioFiscal'
             },
             {
                 caption: 'Editar',
