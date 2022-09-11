@@ -291,8 +291,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.dashForm.controls.directo.setValue(true);
             this.getAllTransaccionesDash();
         } else if (e === 1) {
+            this.getAllTransaccionesDash();
             this.createAccionesGrid();
         } else if (e === 2) {
+            this.getAllTransaccionesDash();
             this.createSubscripcionesGrid()
         } else if (e === 3) {
             this.pagosSuscripcionesComponent.getDataPagos();

@@ -81,6 +81,7 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
     };
 
     getDataDomiciliosPersona = () => {
+        this.muestraGridDomicilios = false;
         const data = {
             Opcion: 2,
             Usuario: this.userData.IdUsuario,

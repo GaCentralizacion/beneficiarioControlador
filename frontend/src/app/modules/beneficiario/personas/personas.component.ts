@@ -818,9 +818,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     this.createGridMoralInterna();
                 } else {
                     this.contactosPersonaUpdComponent.getDataContactosPersona();
+                    this.contactosPersonaUpdComponent.createGridContactos();
                 };
             } else if (e.tab.textLabel === 'Domicilios') {
                 this.domiciliosPersonaUpdComponent.getDataDomiciliosPersona();
+                this.domiciliosPersonaUpdComponent.createGridDomicilios();
             } else if (e.tab.textLabel === 'Relación familiar') {
                 this.relacionFamiliarComponent.getAllRelacionesFamiliares();
             } else if (e.tab.textLabel === 'Expediente digital') {
@@ -1135,7 +1137,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.rfcMaxLenght = 13;
             this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_FIS)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
             this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
-            console.log('Hola')
+
             this.personaForm.controls.regimenFiscal.clearValidators();
             this.personaForm.controls.regimenFiscal.updateValueAndValidity();
         };
