@@ -262,28 +262,8 @@ export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
                 dataField: 'TipoDomicilio'
             },
             {
-                caption: 'Calle',
-                dataField: 'calle'
-            },
-            {
-                caption: '# exterior',
-                dataField: 'numExt'
-            },
-            {
-                caption: '# interior',
-                dataField: 'numInt'
-            },
-            {
-                caption: 'Colonia / Asentamiento',
-                dataField: 'colonia_asentamiento'
-            },
-            {
-                caption: 'Delegación / Municipio',
-                dataField: 'delegacion_municipio'
-            },
-            {
-                caption: 'Código postal',
-                dataField: 'cp'
+                caption: 'Dirección',
+                dataField: 'DireccionCompleta'
             },
             {
                 caption: 'Predeterminado',

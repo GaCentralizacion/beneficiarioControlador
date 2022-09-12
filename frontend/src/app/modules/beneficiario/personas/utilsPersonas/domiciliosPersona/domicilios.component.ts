@@ -81,7 +81,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             pais: ['', Validators.required],
             calle1: [''],
             calle2: [''],
-            predeterminado: false
+            predeterminado: true
         });
 
         this.idDomicilio = `${this.stringIdDomicilio}${this.currentIdDomicilio}`;

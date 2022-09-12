@@ -517,6 +517,24 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     savePersona = () => {
+
+        console.log('idTipoPersona', this.personaForm.controls.idTipoPersona.invalid);
+        console.log('idTipoMor', this.personaForm.controls.idTipoMor.invalid);
+        console.log('regimenFiscal', this.personaForm.controls.regimenFiscal.invalid);
+        console.log('esAccionista', this.personaForm.controls.esAccionista.invalid);
+        console.log('nombre_razon', this.personaForm.controls.nombre_razon.invalid);
+        console.log('apellidoPaterno', this.personaForm.controls.apellidoPaterno.invalid);
+        console.log('apellidoMaterno', this.personaForm.controls.apellidoMaterno.invalid);
+        console.log('alias', this.personaForm.controls.alias.invalid);
+        console.log('fechaNacimiento', this.personaForm.controls.fechaNacimiento.invalid);
+        console.log('idSexo', this.personaForm.controls.idSexo.invalid);
+        console.log('idPais', this.personaForm.controls.idPais.invalid);
+        console.log('curp_registroPob', this.personaForm.controls.curp_registroPob.invalid);
+        console.log('idIdentificacion', this.personaForm.controls.idIdentificacion.invalid);
+        console.log('datoIdentificacion', this.personaForm.controls.datoIdentificacion.invalid);
+        console.log('rfc_identificacion', this.personaForm.controls.rfc_identificacion.invalid);
+        console.log('idEstadoCivil', this.personaForm.controls.idEstadoCivil.invalid);
+
         if (this.personaForm.invalid) {
             Swal.fire({
                 title: '¡Alto!',
@@ -665,6 +683,24 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     updatePersona = () => {
+
+        console.log('idTipoPersona', this.personaForm.controls.idTipoPersona.invalid);
+        console.log('idTipoMor', this.personaForm.controls.idTipoMor.invalid);
+        console.log('regimenFiscal', this.personaForm.controls.regimenFiscal.invalid);
+        console.log('esAccionista', this.personaForm.controls.esAccionista.invalid);
+        console.log('nombre_razon', this.personaForm.controls.nombre_razon.invalid);
+        console.log('apellidoPaterno', this.personaForm.controls.apellidoPaterno.invalid);
+        console.log('apellidoMaterno', this.personaForm.controls.apellidoMaterno.invalid);
+        console.log('alias', this.personaForm.controls.alias.invalid);
+        console.log('fechaNacimiento', this.personaForm.controls.fechaNacimiento.invalid);
+        console.log('idSexo', this.personaForm.controls.idSexo.invalid);
+        console.log('idPais', this.personaForm.controls.idPais.invalid);
+        console.log('curp_registroPob', this.personaForm.controls.curp_registroPob.invalid);
+        console.log('idIdentificacion', this.personaForm.controls.idIdentificacion.invalid);
+        console.log('datoIdentificacion', this.personaForm.controls.datoIdentificacion.invalid);
+        console.log('rfc_identificacion', this.personaForm.controls.rfc_identificacion.invalid);
+        console.log('idEstadoCivil', this.personaForm.controls.idEstadoCivil.invalid);
+
         if (this.personaForm.invalid) {
             Swal.fire({
                 title: '¡Alto!',
