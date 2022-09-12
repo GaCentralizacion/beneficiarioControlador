@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTable } from '@angular/material/table';
+import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
 import { GaService } from 'app/services/ga.service';
-import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
-import { ContactosModalComponent } from './contactosModal/contactosModal.component';
 import { NgxSpinnerService } from "ngx-spinner";
+import { environment } from 'environments/environment';
+import { DomiciliosModalComponent } from './domiciliosModal/domiciliosModal.component';
 
 /**IMPORTS GRID */
 import {
@@ -26,24 +28,23 @@ import {
 } from 'app/interfaces';
 /**IMPORTS GRID */
 
+const REGEX_CP = /^[0-9]{5}$/;
+
 @Component({
-    selector: 'app-contactosPersonaUpd',
-    templateUrl: './contactosPersonaUpd.component.html',
-    styleUrls: ['./contactosPersonaUpd.component.scss']
+    selector: 'app-domiciliosPersonaUpd',
+    templateUrl: './domiciliosPersonaUpd.component.html',
+    styleUrls: ['./domiciliosPersonaUpd.component.scss']
 })
 
-export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
+export class DomiciliosPersonaUpdComponent implements OnInit, OnDestroy {
     /**INPUTUS OUTPUTS */
     @Input() gralDataPersona: any;
-    @Input() catTipoContacto: any;
+    @Input() catTipoDomicilio: any;
     /**INPUTUS OUTPUTS */
 
-    userData: any;
-    allContactos: any;
-
     /**Grid */
+    allDomicilios: any;
     datosEvent: any = [];
-    muestraGrid: boolean = false;
     gridOptions: IGridOptions;
     columns = [];
     exportExcel: IExportExcel;
@@ -54,8 +55,10 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
     Checkbox: ICheckbox;
     Editing: IEditing;
     Columnchooser: IColumnchooser;
-    muestraGridContactos: boolean = false;
+    muestraGridDomicilios: boolean = false;
     /**Grid */
+
+    userData: any
 
     constructor(
         private fb: FormBuilder,
@@ -65,17 +68,20 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         private _snackBar: MatSnackBar,
         private gaService: GaService,
         private spinner: NgxSpinnerService
-    ) { }
+    ) {
+
+    }
 
     ngOnDestroy(): void {
     }
 
     ngOnInit(): void {
         this.userData = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
-        this.getDataContactosPersona();
+        this.getDataDomiciliosPersona();
     };
 
-    getDataContactosPersona = () => {
+    getDataDomiciliosPersona = () => {
+        this.muestraGridDomicilios = false;
         const data = {
             Opcion: 2,
             Usuario: this.userData.IdUsuario,
@@ -83,13 +89,13 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         };
         this.gaService.postService('personas/selPersona', data).subscribe((res: any) => {
             if (res.length > 0) {
-                this.allContactos = res[1];
-                this.allContactos.forEach((value, key) => {
+                this.allDomicilios = res[2];
+                this.allDomicilios.forEach((value, key) => {
                     if ((key % 2) == 0) {
                         value.backgroundcolor = '#F4F6F6';
                     };
                 });
-                this.createGridContactos();
+                this.createGridDomicilios();
             } else {
                 Swal.fire({
                     title: '¡Alto!',
@@ -108,16 +114,16 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         });
     };
 
-    AddContactos = () => {
-        const dialogRef = this.dialog.open(ContactosModalComponent, {
+    AddDomicilios = () => {
+        const dialogRef = this.dialog.open(DomiciliosModalComponent, {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Agregar Contacto',
+                title: 'Agregar Domicilio',
                 dataPersona: this.gralDataPersona,
-                dataContacto: null,
+                dataDomicilio: null,
                 agregar: true,
-                catTipoContacto: this.catTipoContacto
+                catTipoDomicilio: this.catTipoDomicilio
             }
         });
 
@@ -125,17 +131,17 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
             if (!result) {
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo ningun contacto',
+                    text: 'No se guardo ningun domicilio',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
             } else {
                 if (result.success === 1) {
-                    this.getDataContactosPersona();
+                    this.getDataDomiciliosPersona();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar el contacto',
+                        text: 'Ocurrio un error al guardar el domicilio',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
@@ -144,16 +150,16 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         });
     };
 
-    actualizarContacto = e => {
-        const dialogRef = this.dialog.open(ContactosModalComponent, {
+    actualizarDomicilio = e => {
+        const dialogRef = this.dialog.open(DomiciliosModalComponent, {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Actualizar Contacto',
+                title: 'Agregar Domicilio',
                 dataPersona: this.gralDataPersona,
-                dataContacto: e.data,
+                dataDomicilio: e.data,
                 agregar: false,
-                catTipoContacto: this.catTipoContacto
+                catTipoDomicilio: this.catTipoDomicilio
             }
         });
 
@@ -161,17 +167,17 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
             if (!result) {
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se actualizo ningun contacto',
+                    text: 'No se actualizo ningun domicilio',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
             } else {
                 if (result.success === 1) {
-                    this.getDataContactosPersona();
+                    this.getDataDomiciliosPersona();
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un error al actualizar el contacto',
+                        text: 'Ocurrio un erroe al actualizar el domicilio',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
@@ -180,9 +186,9 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         });
     };
 
-    eliminarContacto = e => {
+    eliminarDomicilio = e => {
         Swal.fire({
-            title: `¿Estas seguro de eliminar el contacto?`,
+            title: `¿Estas seguro de eliminar el domicilio?`,
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Eliminar',
@@ -191,17 +197,25 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
             if (result.isConfirmed) {
                 this.spinner.show();
                 const data = {
-                    IdContacto: e.data.IdContacto,
-                    IdTipoContacto: e.data.idTipoCont,
-                    Dato: e.data.dato,
-                    Predeterminado: e.data.predeterminado,
-                    Ext: e.data.value,
-                    PersonaContacto: e.data.personaContactar,
+                    IdDomicilio: e.data.IdDomicilio,
+                    idTipDom: e.data.idTipDom,
+                    esFiscal: e.data.esFiscal,
+                    calle: e.data.calle,
+                    numExt: e.data.numExt,
+                    numInt: e.data.numInt,
+                    cp: e.data.cp,
+                    colonia_asentamiento: e.data.colonia_asentamiento,
+                    delegacion_municipio: e.data.delegacion_municipio,
+                    ciudad_estado: e.data.ciudad_estado,
+                    pais: e.data.pais,
+                    calle1: e.data.calle1,
+                    calle2: e.data.calle2,
+                    predeterminado: e.data.predeterminado,
                     Usuario: this.userData.IdUsuario,
                     Opcion: 2
                 };
 
-                this.gaService.postService('personas/updContactoPersona', data).subscribe((res: any) => {
+                this.gaService.postService('personas/updDomiciliosPersona', data).subscribe((res: any) => {
                     this.spinner.hide();
                     if (res[0][0].Codigo < 0) {
                         Swal.fire({
@@ -217,7 +231,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                             icon: 'success',
                             confirmButtonText: 'Cerrar'
                         });
-                        this.getDataContactosPersona();
+                        this.getDataDomiciliosPersona();
                     };
                 }, (error: any) => {
                     this.spinner.hide();
@@ -231,7 +245,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
             } else if (result.isDenied) {
                 Swal.fire({
                     title: '¡Información!',
-                    text: 'No se guardo elimino el contacto.',
+                    text: 'No se elimino el domicilio.',
                     icon: 'info',
                     confirmButtonText: 'Cerrar'
                 });
@@ -239,35 +253,32 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         });
     };
 
-    createGridContactos = () => {
-        this.muestraGridContactos = false;
+    createGridDomicilios = () => {
+        this.muestraGridDomicilios = false;
         this.toolbar = [];
         this.columns = [
             {
-                caption: 'Tipo de contacto',
-                dataField: 'TipoContacto'
+                caption: 'Tipo de domicilio',
+                dataField: 'TipoDomicilio'
             },
             {
-                caption: 'Dato',
-                dataField: 'dato'
-            },
-            {
-                caption: 'Extensión',
-                dataField: 'ext'
+                caption: 'Dirección',
+                dataField: 'DireccionCompleta'
             },
             {
                 caption: 'Predeterminado',
                 allowEditing: false,
-                cellTemplate: 'contactosPredeterminados'
+                cellTemplate: 'domiciliosPredeterminados'
             },
             {
-                caption: 'Persona a contactar',
-                dataField: 'personaContactar'
+                caption: 'Domicilio fiscal',
+                allowEditing: false,
+                cellTemplate: 'domicilioFiscal'
             },
             {
                 caption: 'Editar',
                 allowEditing: false,
-                cellTemplate: 'actualizaContacto'
+                cellTemplate: 'actualizaDomicilio'
             }
         ];
         /*
@@ -303,7 +314,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
         Parametros de Scroll
         */
         this.scroll = { mode: 'standard' };
-        this.muestraGridContactos = true;
+        this.muestraGridDomicilios = true;
     };
 
     redirect(url: string) {

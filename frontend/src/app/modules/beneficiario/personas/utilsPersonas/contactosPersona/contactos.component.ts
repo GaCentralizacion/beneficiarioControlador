@@ -53,7 +53,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
         this.contactosPersonaForm = this._formBuilder.group({
             idTipCont: [0, Validators.min(1)],
             dato: ['', Validators.required],
-            predeterminado: false,
+            predeterminado: true,
             ext: '',
             personaContactar: ''
         });

@@ -114,7 +114,7 @@ export class RelacionFamiliarComponent implements OnInit, OnDestroy {
             width: '100%',
             disableClose: true,
             data: {
-                title: 'Agregar relacion familiar',
+                title: 'Agregar relación familiar',
                 dataPersona: this.gralDataPersona,
                 catRelacionFamiliar: this.catRelacionFamiliar,
                 catTipoPatrimonial: this.catTipoPatrimonial
