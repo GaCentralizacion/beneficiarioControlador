@@ -13,6 +13,8 @@ import { environment } from 'environments/environment';
 import { RelacionFamiliarComponent } from './utilsPersonas/relacionFamiliar/relacionFamiliar.component';
 import { ExpedienteDigitalComponent } from './utilsPersonas/expedienteDigital/expedienteDigital.component';
 import { ContactosPersonaUpdComponent } from './utilsPersonas/contactosPersonaUpd/contactosPersonaUpd.component';
+import { DomiciliosPersonaUpdComponent } from './utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
+
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 
@@ -46,6 +48,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     @ViewChild(RelacionFamiliarComponent) relacionFamiliarComponent: RelacionFamiliarComponent;
     @ViewChild(ExpedienteDigitalComponent) expedienteDigitalComponent: ExpedienteDigitalComponent;
     @ViewChild(ContactosPersonaUpdComponent) contactosPersonaUpdComponent: ContactosPersonaUpdComponent;
+    @ViewChild(DomiciliosPersonaUpdComponent) domiciliosPersonaUpdComponent: DomiciliosPersonaUpdComponent;
     idMenuApp: number = 0;
 
     /**Grid */
@@ -514,6 +517,24 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     savePersona = () => {
+
+        console.log('idTipoPersona', this.personaForm.controls.idTipoPersona.invalid);
+        console.log('idTipoMor', this.personaForm.controls.idTipoMor.invalid);
+        console.log('regimenFiscal', this.personaForm.controls.regimenFiscal.invalid);
+        console.log('esAccionista', this.personaForm.controls.esAccionista.invalid);
+        console.log('nombre_razon', this.personaForm.controls.nombre_razon.invalid);
+        console.log('apellidoPaterno', this.personaForm.controls.apellidoPaterno.invalid);
+        console.log('apellidoMaterno', this.personaForm.controls.apellidoMaterno.invalid);
+        console.log('alias', this.personaForm.controls.alias.invalid);
+        console.log('fechaNacimiento', this.personaForm.controls.fechaNacimiento.invalid);
+        console.log('idSexo', this.personaForm.controls.idSexo.invalid);
+        console.log('idPais', this.personaForm.controls.idPais.invalid);
+        console.log('curp_registroPob', this.personaForm.controls.curp_registroPob.invalid);
+        console.log('idIdentificacion', this.personaForm.controls.idIdentificacion.invalid);
+        console.log('datoIdentificacion', this.personaForm.controls.datoIdentificacion.invalid);
+        console.log('rfc_identificacion', this.personaForm.controls.rfc_identificacion.invalid);
+        console.log('idEstadoCivil', this.personaForm.controls.idEstadoCivil.invalid);
+
         if (this.personaForm.invalid) {
             Swal.fire({
                 title: '¡Alto!',
@@ -662,6 +683,24 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     updatePersona = () => {
+
+        console.log('idTipoPersona', this.personaForm.controls.idTipoPersona.invalid);
+        console.log('idTipoMor', this.personaForm.controls.idTipoMor.invalid);
+        console.log('regimenFiscal', this.personaForm.controls.regimenFiscal.invalid);
+        console.log('esAccionista', this.personaForm.controls.esAccionista.invalid);
+        console.log('nombre_razon', this.personaForm.controls.nombre_razon.invalid);
+        console.log('apellidoPaterno', this.personaForm.controls.apellidoPaterno.invalid);
+        console.log('apellidoMaterno', this.personaForm.controls.apellidoMaterno.invalid);
+        console.log('alias', this.personaForm.controls.alias.invalid);
+        console.log('fechaNacimiento', this.personaForm.controls.fechaNacimiento.invalid);
+        console.log('idSexo', this.personaForm.controls.idSexo.invalid);
+        console.log('idPais', this.personaForm.controls.idPais.invalid);
+        console.log('curp_registroPob', this.personaForm.controls.curp_registroPob.invalid);
+        console.log('idIdentificacion', this.personaForm.controls.idIdentificacion.invalid);
+        console.log('datoIdentificacion', this.personaForm.controls.datoIdentificacion.invalid);
+        console.log('rfc_identificacion', this.personaForm.controls.rfc_identificacion.invalid);
+        console.log('idEstadoCivil', this.personaForm.controls.idEstadoCivil.invalid);
+
         if (this.personaForm.invalid) {
             Swal.fire({
                 title: '¡Alto!',
@@ -814,10 +853,12 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 if (this.moralInterna) {
                     this.createGridMoralInterna();
                 } else {
-                    console.log('No es moral inter')
+                    this.contactosPersonaUpdComponent.getDataContactosPersona();
+                    this.contactosPersonaUpdComponent.createGridContactos();
                 };
             } else if (e.tab.textLabel === 'Domicilios') {
-                // this.getDataPersonaById();
+                this.domiciliosPersonaUpdComponent.getDataDomiciliosPersona();
+                this.domiciliosPersonaUpdComponent.createGridDomicilios();
             } else if (e.tab.textLabel === 'Relación familiar') {
                 this.relacionFamiliarComponent.getAllRelacionesFamiliares();
             } else if (e.tab.textLabel === 'Expediente digital') {
@@ -828,6 +869,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     showModalContacto = () => {
         this.contactosPersonaUpdComponent.AddContactos()
+    };
+
+    showModalDomicilios = () => {
+        this.domiciliosPersonaUpdComponent.AddDomicilios()
     };
 
     datosMessage = e => {
@@ -1128,7 +1173,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             this.rfcMaxLenght = 13;
             this.RFC?.Obligatorio ? this.personaForm.controls['rfc_identificacion'].addValidators([Validators.required, Validators.pattern(REGEX_RFC_FIS)]) : this.personaForm.controls['rfc_identificacion'].clearValidators()
             this.personaForm.controls['rfc_identificacion'].updateValueAndValidity();
-            console.log('Hola')
+
             this.personaForm.controls.regimenFiscal.clearValidators();
             this.personaForm.controls.regimenFiscal.updateValueAndValidity();
         };

@@ -40,6 +40,9 @@
 								<th>
 									Pagado
 								</th>
+								<th>
+									Restante
+								</th>
 							</tr>
 							<tr>
 								<td>
@@ -65,6 +68,9 @@
 								</td>
 								<td>
 									{{dataPago?.Pagado | currency}}
+								</td>
+								<td>
+									{{limitPago | currency}}
 								</td>
 							</tr>
 						</table>

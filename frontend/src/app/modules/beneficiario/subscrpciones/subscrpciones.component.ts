@@ -291,8 +291,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             this.dashForm.controls.directo.setValue(true);
             this.getAllTransaccionesDash();
         } else if (e === 1) {
+            this.getAllTransaccionesDash();
             this.createAccionesGrid();
         } else if (e === 2) {
+            this.getAllTransaccionesDash();
             this.createSubscripcionesGrid()
         } else if (e === 3) {
             this.pagosSuscripcionesComponent.getDataPagos();
@@ -391,10 +393,6 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Serie'
             },
             {
-                caption: 'Capital fijo',
-                dataField: 'CapitalFijo'
-            },
-            {
                 caption: 'Valor unitario',
                 dataType: TiposdeDato.number,
                 format: TiposdeFormato.moneda,
@@ -415,6 +413,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             {
                 caption: 'Fecha emisión',
                 dataField: 'FechaEmision'
+            },
+            {
+                caption: 'Capital fijo',
+                dataField: 'CapitalFijo'
             },
             {
                 caption: 'Usuario alta',

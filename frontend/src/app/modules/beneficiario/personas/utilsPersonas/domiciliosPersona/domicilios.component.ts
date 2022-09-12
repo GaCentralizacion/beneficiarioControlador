@@ -49,6 +49,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
     optionsColonia: string[] = [];
     optionsDelegacion: string[] = [];
     optionsCiudad: string[] = [];
+    optionsPais: string[] = [];
     /**VARIABLES AUTOCOMPLETE */
 
     constructor(
@@ -80,7 +81,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
             pais: ['', Validators.required],
             calle1: [''],
             calle2: [''],
-            predeterminado: false
+            predeterminado: true
         });
 
         this.idDomicilio = `${this.stringIdDomicilio}${this.currentIdDomicilio}`;
@@ -142,6 +143,7 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                 this.optionsColonia = [];
                 this.optionsDelegacion = [];
                 this.optionsCiudad = [];
+                this.optionsPais = [];
                 if (res[0].length > 0) {
                     for (let data of res[0]) {
                         if (this.optionsColonia.indexOf(data.Colonia_Asentamiento) === -1) {
@@ -152,6 +154,9 @@ export class DomiciliosComponent implements OnInit, OnDestroy {
                         };
                         if (this.optionsCiudad.indexOf(data.Ciudad_Estado) === -1) {
                             this.optionsCiudad.push(data.Ciudad_Estado);
+                        };
+                        if (this.optionsPais.indexOf(data.Pais) === -1) {
+                            this.optionsPais.push(data.Pais);
                         };
                     };
                 } else {
