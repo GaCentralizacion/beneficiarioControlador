@@ -7,6 +7,7 @@ import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
 
 const VALID_REGEX_MAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const VALID_REGEX_NUMBER = /^[0-9]{10}$/;
 /**
  * Obtenemos el Mensaje a mostrar
  */
@@ -68,11 +69,24 @@ export class ContactosModalComponent implements OnInit {
 				personaContactar: this.dataContacto.personaContactar,
 				ext: this.dataContacto.ext
 			});
+			this.selectContactoIntial(this.dataContacto.idTipCont);
+		};
+	};
+
+	selectContactoIntial = e => {
+		if (e === 2) {
+			this.contactoForm.controls.dato.addValidators(Validators.pattern(VALID_REGEX_MAIL));
+			this.contactoForm.controls.dato.updateValueAndValidity();
+		} else {
+			this.contactoForm.controls.dato.addValidators([Validators.required, Validators.pattern(VALID_REGEX_NUMBER)]);
+			this.contactoForm.controls.dato.updateValueAndValidity();
 		};
 	};
 
 	selectContacto = e => {
 		this.contactoForm.controls.dato.setValue('');
+		this.contactoForm.controls.dato.clearValidators();
+		this.contactoForm.controls.dato.updateValueAndValidity();
 		this.datoPlaceHolder = '';
 		if (e === 2) {
 			this.datoType = 'text';
@@ -82,7 +96,7 @@ export class ContactosModalComponent implements OnInit {
 		} else {
 			this.datoType = 'number';
 			this.datoPlaceHolder = 'Número';
-			this.contactoForm.controls.dato.addValidators(Validators.required);
+			this.contactoForm.controls.dato.addValidators([Validators.required, Validators.pattern(VALID_REGEX_NUMBER)]);
 			this.contactoForm.controls.dato.updateValueAndValidity();
 		};
 	};

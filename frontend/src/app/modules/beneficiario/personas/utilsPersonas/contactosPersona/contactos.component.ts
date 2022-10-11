@@ -7,6 +7,7 @@ import { MatTable } from '@angular/material/table';
 import { promises, resolve } from 'dns';
 
 const VALID_REGEX_MAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const VALID_REGEX_NUMBER = /^[0-9]{10}$/;
 
 @Component({
     selector: 'app-contactos',
@@ -121,6 +122,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
                     if (contacto.data.idTipCont === 0 || contacto.data.idTipCont === undefined || contacto.data.idTipCont === null) {
                         await this.createAndEmbebedDivError(idDivTipo, `${contacto.id}_tipo`, idComponentPadreTipo, 'Selecciona el tipo de contacto');
                     };
+
                     if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
                         if (contacto.data.idTipCont === 0) {
                             await this.createAndEmbebedDivError(idDivDato, `${contacto.id}_dato`, idComponentPadreDato, 'Ingresa un dato');
@@ -136,6 +138,15 @@ export class ContactosComponent implements OnInit, OnDestroy {
                         } else {
                             if (!contacto.data.dato.match(VALID_REGEX_MAIL)) {
                                 await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un email valido');
+                            };
+                        };
+                    };
+
+                    if (contacto.data.idTipCont === 1 || contacto.data.idTipCont === 3) {
+                        if (contacto.data.dato === '' || contacto.data.dato === undefined || contacto.data.dato === null) {
+                        } else {
+                            if (!contacto.data.dato.match(VALID_REGEX_NUMBER)) {
+                                await this.createAndEmbebedDivError(idDivDato, idPadreDato, idComponentPadreDato, 'Ingresa un número de 10 dígitos');
                             };
                         };
                     };

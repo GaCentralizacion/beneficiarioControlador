@@ -271,7 +271,7 @@
                             <button *ngIf="!moralInterna && !actualizarPersona" class="btn btn-danger pull-right" (click)="removeContacto()">
                                 <i class="fas fa-minus"></i>
                             </button> -->
-                            <button *ngIf="!moralInterna && actualizarPersona" class="btn btn-success pull-right" (click)="showModalContacto()">
+                            <button *ngIf="!moralInterna && actualizarPersona && accionesUsuario.altaContactosPersona === 1" class="btn btn-success pull-right" (click)="showModalContacto()">
                                 Agregar <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -314,7 +314,7 @@
                             <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
                                 <i class="fas fa-minus"></i>
                             </button> -->
-                            <button *ngIf="actualizarPersona" class="btn btn-success pull-right" (click)="showModalDomicilios()">
+                            <button *ngIf="actualizarPersona && accionesUsuario.altaDomicilioPersona === 1" class="btn btn-success pull-right" (click)="showModalDomicilios()">
                                 Agregar <i class="fas fa-plus"></i>
                             </button>
                         </div>

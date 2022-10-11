@@ -103,7 +103,7 @@ export class AddDocumentoComponent implements OnInit {
 		} else {
 			this.showBtns = true;
 			this.dataDocumento = this.allDocumentos.filter(x => x.IdDocumento === e);
-			this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida);
+			this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida + ':14:00:00');
 			if (this.dataDocumento[0].IdExpPer === null) {
 				this.showBtnActualizar = false;
 			} else {
