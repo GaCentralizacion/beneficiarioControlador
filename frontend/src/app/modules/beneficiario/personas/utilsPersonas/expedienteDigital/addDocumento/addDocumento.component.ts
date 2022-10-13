@@ -38,6 +38,9 @@ export class AddDocumentoComponent implements OnInit {
 	showBtnActualizar: boolean;
 	dataDocumento: any;
 	showFechaDocumento: boolean;
+	vigenciaDinamica: boolean;
+	allVigenciasDinamicas: any;
+	vigenciaActual: any;
 
 	constructor(
 		public dialog: MatDialog,
@@ -58,6 +61,7 @@ export class AddDocumentoComponent implements OnInit {
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 		this.documentosForm = this._formBuilder.group({
 			idDocumento: [0, Validators.min(1)],
+			idVigencias: [0],
 			fechaDocumento: [null, Validators.required]
 		});
 	};
@@ -101,25 +105,69 @@ export class AddDocumentoComponent implements OnInit {
 		if (e === 0) {
 			this.showBtns = false;
 		} else {
+			this.vigenciaDinamica = false;
+			this.documentosForm.controls.idVigencias.setValue(0);
+			this.documentosForm.controls.idVigencias.clearValidators();
+			this.documentosForm.controls.idVigencias.updateValueAndValidity();
+			this.documentosForm.controls.fechaDocumento.setValue(null);
+			this.vigenciaActual = [];
+			this.showFechaDocumento = false;
 			this.showBtns = true;
 			this.dataDocumento = this.allDocumentos.filter(x => x.IdDocumento === e);
-			this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida + ':14:00:00');
 			if (this.dataDocumento[0].IdExpPer === null) {
 				this.showBtnActualizar = false;
 			} else {
 				this.showBtnActualizar = true;
 			};
 
-			if (this.dataDocumento[0].Vigencia === '') {
-				this.documentosForm.controls.fechaDocumento.setValue(null);
-				this.documentosForm.controls.fechaDocumento.clearValidators();
-				this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
-				this.showFechaDocumento = false;
+			//TIENE VIGENCIADINAMICA NO
+			if (this.dataDocumento[0].VigenciaDinamica === 0) {
+				if (this.dataDocumento[0].Vigencia === '') {
+					this.documentosForm.controls.fechaDocumento.setValue(null);
+					this.documentosForm.controls.fechaDocumento.clearValidators();
+					this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+					this.showFechaDocumento = false;
+				} else {
+					this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida + ':14:00:00');
+					this.documentosForm.controls.fechaDocumento.addValidators(Validators.required);
+					this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+					this.showFechaDocumento = true;
+				};
 			} else {
-				this.documentosForm.controls.fechaDocumento.addValidators(Validators.required);
-				this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
-				this.showFechaDocumento = true;
+				const data = {
+					IdDocTipPer: this.dataDocumento[0].IdDocTipPer
+				};
+				this.spinner.show();
+				this.gaService.postService('personas/selVigenciasDinamicas', data).subscribe((res: any) => {
+					this.spinner.hide();
+					this.allVigenciasDinamicas = res[0];
+					this.documentosForm.controls.idVigencias.addValidators(Validators.min(1));
+					this.documentosForm.controls.idVigencias.updateValueAndValidity();
+					this.vigenciaDinamica = true;
+				}, (error: any) => {
+					this.spinner.hide();
+					Swal.fire({
+						title: '¡Error!',
+						text: 'Error 500 al traer las vigencias dinamicas.',
+						icon: 'error',
+						confirmButtonText: 'Cerrar'
+					});
+				});
 			};
+			//SI--- TRAEMOS LOS TIPO DE VIGENCIA con el IdDocTipPer Y MOSTRAMOS EL DROPDOWN 
+			//SELECCIONA EL TIPO DE VIGENCIA Y TRAEMOS LA VIGENCIA YA CON FECHAS CALCULADAS PARA EL PICKET DE FECHA
+			//SELECCIONA LA VIGENCIA Y SE CALCULA LA FECHA EN EL PICKER Y SE MUESTRA
+		};
+	};
+
+	vigenciaSelected = e => {
+		if (e === 0) {
+			this.showFechaDocumento = false;
+			this.documentosForm.controls.idVigencias.markAllAsTouched();
+		} else {
+			this.vigenciaActual = this.allVigenciasDinamicas.filter(x => x.IdTipoVigencia === e);
+			this.limitDay = new Date(this.vigenciaActual[0].FechaVigenciaPermitida + ':14:00:00');
+			this.showFechaDocumento = true;
 		};
 	};
 
@@ -164,7 +212,9 @@ export class AddDocumentoComponent implements OnInit {
 					rutaGuardado: this.dataDocumento[0].RutaGuardado,
 					fechaDocumento: this.documentosForm.controls.fechaDocumento.value,
 					idUsuario: this.dataUsuario.IdUsuario,
-					CarpetaHeredado: this.dataDocumento[0].CarpetaHeredado
+					CarpetaHeredado: this.dataDocumento[0].CarpetaHeredado,
+					vigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].Vigencia : null,
+					tipoVigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].VigenciaTipo : null
 				};
 
 				this.spinner.show();
