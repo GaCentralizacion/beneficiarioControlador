@@ -307,7 +307,9 @@ export class AddDocumentoComponent implements OnInit {
 					rutaGuardado: this.dataDocumento[0].RutaGuardado,
 					rutaRespaldo: this.dataDocumento[0].RutaRespaldo,
 					b64File: this.filedata,
-					RutaRespaldoHeredado: this.dataDocumento[0].RutaRespaldoHeredado
+					RutaRespaldoHeredado: this.dataDocumento[0].RutaRespaldoHeredado,
+					vigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].Vigencia : null,
+					tipoVigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].VigenciaTipo : null
 				};
 
 				this.spinner.show();

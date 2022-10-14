@@ -463,7 +463,9 @@ personas.prototype.post_updateDocumento = async function (req, res, next) {
         rutaGuardado,
         rutaRespaldo,
         b64File,
-        RutaRespaldoHeredado
+        RutaRespaldoHeredado,
+        vigenciaDinamica,
+        tipoVigenciaDinamica
     } = req.body
 
     const logicSaveRes = await logicSave.updateLogicDocumento(b64File, nombreDocumento, carpeta, rutaGuardado, nombreDocumentoRespaldo, rutaRespaldo);
@@ -476,7 +478,9 @@ personas.prototype.post_updateDocumento = async function (req, res, next) {
                     { name: 'IdExpPer', value: IdExpPer, type: self.model.types.INT },
                     { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
                     { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
-                    { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+                    { name: 'Observacion', value: Observacion, type: self.model.types.STRING },
+                    { name: 'vigenciaDinamica', value: vigenciaDinamica, type: self.model.types.INT },
+                    { name: 'tipoVigenciaDinamica', value: tipoVigenciaDinamica, type: self.model.types.STRING }
                 ];
 
                 this.model.queryAllRecordSet('[dbo].[Upd_DocumentosPersona]', params, function (error, result) {
@@ -495,7 +499,9 @@ personas.prototype.post_updateDocumento = async function (req, res, next) {
                             { name: 'IdExpPer', value: IdExpPer, type: self.model.types.INT },
                             { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
                             { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
-                            { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+                            { name: 'Observacion', value: Observacion, type: self.model.types.STRING },
+                            { name: 'vigenciaDinamica', value: vigenciaDinamica, type: self.model.types.INT },
+                            { name: 'tipoVigenciaDinamica', value: tipoVigenciaDinamica, type: self.model.types.STRING }
                         ];
 
                         this.model.queryAllRecordSet('[dbo].[Upd_DocumentosPersona]', params, function (error, result) {
