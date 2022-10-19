@@ -524,7 +524,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Dictamen'
             },
             {
-                caption: 'Ver dictamen',
+                caption: 'Ver archivo',
                 allowEditing: false,
                 cellTemplate: 'verDictamenSuscripciones'
             },
@@ -722,7 +722,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
             height: '95%',
             disableClose: true,
             data: {
-                title: 'Dictamen',
+                title: 'Archivo',
                 urlGet: `${e.data.RutaLectura}#toolbar=0`,
                 dataPago: e.data
             }

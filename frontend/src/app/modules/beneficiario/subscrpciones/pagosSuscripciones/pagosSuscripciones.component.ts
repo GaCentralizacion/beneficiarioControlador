@@ -85,6 +85,7 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
         };
         this.gaServise.postService('suscripciones/selPagos', data).subscribe((res: any) => {
             this.pagos = res[0];
+            console.log('this.pagos', this.pagos)
             this.pagos.forEach((value, key) => {
                 if ((key % 2) == 0) {
                     value.backgroundcolor = '#F4F6F6';
@@ -107,7 +108,7 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
             height: '95%',
             disableClose: true,
             data: {
-                title: 'Dictamen',
+                title: 'Archivo',
                 urlGet: `${e.data.RutaLectura}#toolbar=0`,
                 dataPago: e.data
             }
@@ -217,12 +218,12 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Dictamen'
             },
             {
-                caption: 'Ver dictamen',
+                caption: 'Ver archivo',
                 allowEditing: false,
                 cellTemplate: 'verDictamen'
             },
             {
-                caption: 'Estatus Dictamen',
+                caption: 'Estatus archivo',
                 allowEditing: false,
                 cellTemplate: 'estatusDictamen'
             },

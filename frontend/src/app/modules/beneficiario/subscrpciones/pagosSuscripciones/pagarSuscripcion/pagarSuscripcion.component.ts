@@ -49,7 +49,7 @@ export class PagarSuscripcionComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataPago = data.dataPago;
-		if (this.dataPago.Dictamen === 'SI' && (this.dataPago.IdEstatusArchivo === null || this.dataPago.IdEstatusArchivo === 3)) {
+		if (this.dataPago.RutaGuardado !== '' && (this.dataPago.IdEstatusArchivo === null || this.dataPago.IdEstatusArchivo === 3)) {
 			if (this.dataPago.IdEstatusArchivo === 3) {
 				this.guardaDictamen = false;
 			} else {
@@ -64,7 +64,8 @@ export class PagarSuscripcionComponent implements OnInit {
 	ngOnInit() {
 		this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
 		this.dataUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
-		this.limitDay = new Date(this.dataPago.FechaAdquisicion);
+		let stringDate = `${this.dataPago.FechaAdquisicion.split('/')[2]}-${this.dataPago.FechaAdquisicion.split('/')[1]}-${this.dataPago.FechaAdquisicion.split('/')[0]}:14:00:00`;
+		this.limitDay = new Date(stringDate);
 		this.limitPago = (this.dataPago.ImporteTotal - this.dataPago.Pagado);
 		this.pagarSuscripcionForm = this._formBuilder.group({
 			importePago: [0, [Validators.min(0.01), Validators.max(this.limitPago), Validators.required]],
@@ -78,7 +79,7 @@ export class PagarSuscripcionComponent implements OnInit {
 			this.pagarSuscripcionForm.reset();
 			this.pagarSuscripcionForm.controls.importePago.setValue(0);
 		} else {
-			this.titulo = 'Agregar dictamen';
+			this.titulo = 'Agregar archivo';
 			this.filedata = '';
 			this.myInputEvidenceVariable.nativeElement.value = "";
 			this.docCargado = false;
@@ -199,7 +200,7 @@ export class PagarSuscripcionComponent implements OnInit {
 		};
 
 		Swal.fire({
-			title: `¿Quieres guardar el Dictamen?`,
+			title: `¿Quieres guardar el documento?`,
 			showDenyButton: true,
 			// showCancelButton: true,
 			confirmButtonText: 'Guardar',

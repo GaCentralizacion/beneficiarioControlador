@@ -145,7 +145,7 @@
 
 		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 		<div *dxTemplate="let data of 'verDictamen'" style="text-align: center;">
-			<button *ngIf="data.row.data.Dictamen === 'SI' && data.row.data.IdEstatusArchivo !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+			<button *ngIf="data.row.data.RutaLectura !== '' && data.row.data.IdEstatusArchivo !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
 				<i class="fa-solid fa-eye"></i>
 			</button>
 		</div>
@@ -180,7 +180,7 @@
 		
 		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 		<div *dxTemplate="let data of 'verDictamenSuscripciones'" style="text-align: center;">
-			<button *ngIf="data.row.data.Dictamen === 'SI' && data.row.data.RutaLectura !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+			<button *ngIf="data.row.data.RutaLectura !== '' && data.row.data.RutaLectura !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
 				<i class="fa-solid fa-eye"></i>
 			</button>
 		</div>

@@ -98,7 +98,7 @@
 								<div class="col-md-3">
 									<mat-form-field appearance="fill" floatLabel="always">
 										<mat-label>Fecha pago</mat-label>
-										<input readonly [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
+										<input readonly [min]="limitDay" [max]="today" matInput [matDatepicker]="picker"
 											formControlName="fechaPago" placeholder="Fecha pago">
 										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 										<mat-datepicker #picker></mat-datepicker>
@@ -119,7 +119,7 @@
 				</button>
 			</mat-dialog-actions>
 		</mat-tab>
-		<mat-tab label="Dictamen" *ngIf =showTabDictamen>
+		<mat-tab label="Archivo" *ngIf=showTabDictamen>
 			<mat-dialog-content class="mat-typography">
 				<mat-card style="background-color: gainsboro;">
 					<div class="row">
@@ -139,10 +139,10 @@
 			<mat-dialog-actions align="end">
 				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
 				<button *ngIf="accionesUsuario.agregarDictamen === 1 && guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="guardarDictamen()" cdkFocusInitial>
-					Guardar dictamen <i class="fa-solid fa-floppy-disk"></i>
+					Guardar archivo <i class="fa-solid fa-floppy-disk"></i>
 				</button>
 				<button *ngIf="accionesUsuario.actualizarDictamen === 1 && !guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDictamen()" cdkFocusInitial>
-					Actualizar dictamen <i class="fa-solid fa-floppy-disk"></i>
+					Actualizar archivo <i class="fa-solid fa-floppy-disk"></i>
 				</button>
 			</mat-dialog-actions>
 		</mat-tab>

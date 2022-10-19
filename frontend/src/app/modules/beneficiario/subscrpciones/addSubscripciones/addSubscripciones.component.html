@@ -13,7 +13,7 @@
 			<div class="col-md-12">
 				<form [formGroup]="subscripcionesForm" class="example-form">
 					<div class="row">
-						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+						<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
 							<mat-label>Razón social</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
 								<input readonly matInput placeholder="Razón social" formControlName="razonSocial"
@@ -23,7 +23,7 @@
 								</mat-error>
 							</mat-form-field>
 						</div>
-						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+						<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
 							<mat-form-field appearance="fill" floatLabel="always">
 								<mat-label>Persona de suscripción</mat-label>
 								<mat-select formControlName="subscriptor"
@@ -58,7 +58,7 @@
 								</mat-error>
 							</mat-form-field>
 						</div>
-						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"
+						<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6"
 							*ngIf="showSelectPersonaDestino  && showAllFrom">
 							<mat-form-field appearance="fill" floatLabel="always">
 								<mat-label>Persona Destino</mat-label>
