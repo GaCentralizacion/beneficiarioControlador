@@ -9,7 +9,7 @@
         "ng": "ng",
         "start": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve --port 2010",
         "start:mem": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng serve --open",
-        "dev": "node --max_old_space_size=9192 node_modules/@angular/cli/bin/ng build --output-hashing=all",
+        "dev": "node --max_old_space_size=9192 node_modules/@angular/cli/bin/ng build --aot --output-hashing=all",
         "build:prod": "ng build --prod",
         "build:prod:mem": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod",
         "test": "ng test",
