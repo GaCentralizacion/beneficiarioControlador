@@ -78,7 +78,9 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
         Observaciones,
         PrecioUnitarioVenta,
         ImporteVenta,
-        Dictamen
+        Dictamen,
+        ValorUnitarioDestino,
+        SerieDestino
     } = req.body;
 
     var params = [
@@ -93,7 +95,9 @@ suscripciones.prototype.post_insSuscripciones = function (req, res, next) {
         { name: 'Observaciones', value: Observaciones, type: self.model.types.STRING },
         { name: 'PrecioUnitarioVenta', value: PrecioUnitarioVenta, type: self.model.types.DECIMAL },
         { name: 'ImporteVenta', value: ImporteVenta, type: self.model.types.DECIMAL },
-        { name: 'Dictamen', value: Dictamen, type: self.model.types.STRING }
+        { name: 'Dictamen', value: Dictamen, type: self.model.types.STRING },
+        { name: 'ValorUnitarioDestino', value: ValorUnitarioDestino, type: self.model.types.DECIMAL },
+        { name: 'SerieDestino', value: SerieDestino, type: self.model.types.STRING }
     ];
 
     this.model.queryAllRecordSet('[dbo].[Ins_Subscripciones]', params, function (error, result) {
@@ -324,6 +328,33 @@ suscripciones.prototype.post_updDictamen = async function (req, res, next) {
             result: [[{ Codigo: -1, Mensaje: logicSaveRes.msg }]]
         });
     };
+};
+
+suscripciones.prototype.post_selSeriesTransformacion = function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        IdPersona,
+        IdPersonaSubscripcion,
+        IdConcepto,
+        Serie
+    } = req.body;
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdPersonaSubscripcion', value: IdPersonaSubscripcion, type: self.model.types.INT },
+        { name: 'IdConcepto', value: IdConcepto, type: self.model.types.INT },
+        { name: 'Serie', value: Serie, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_Cat_RegistroSubs]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
 };
 
 module.exports = suscripciones;

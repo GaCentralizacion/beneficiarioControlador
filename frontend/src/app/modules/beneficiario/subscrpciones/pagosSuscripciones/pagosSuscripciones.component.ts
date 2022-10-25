@@ -85,7 +85,6 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
         };
         this.gaServise.postService('suscripciones/selPagos', data).subscribe((res: any) => {
             this.pagos = res[0];
-            console.log('this.pagos', this.pagos)
             this.pagos.forEach((value, key) => {
                 if ((key % 2) == 0) {
                     value.backgroundcolor = '#F4F6F6';

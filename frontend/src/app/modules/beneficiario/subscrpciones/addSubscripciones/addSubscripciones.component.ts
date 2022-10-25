@@ -44,6 +44,10 @@ export class AddSubscripcionesComponent implements OnInit {
 	placeHolderCantidad: string = 'Máximo';
 	value: number;
 	datoType: string = 'number';
+	showSerieDestino: boolean = false;
+	allSeriesTransformacion: any;
+	serieSeleccionadaTransformacion: any;
+	readOnlyValorUnitario: boolean = true;
 
 	constructor(
 		public dialog: MatDialog,
@@ -77,6 +81,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			concepto: [0, Validators.min(1)],
 			personaDestino: [0, Validators.min(1)],
 			serie: [0, Validators.min(1)],
+			serieDestino: [''],
 			valorUnitario: [null, Validators.required],
 			cantidad: [null, Validators.required],
 			importe: [null, Validators.required],
@@ -159,6 +164,11 @@ export class AddSubscripcionesComponent implements OnInit {
 	};
 
 	getAllPersonasDestino = e => {
+		this.showSerieDestino = false;
+		this.readOnlyValorUnitario = true;
+		this.subscripcionesForm.controls.serieDestino.setValue('');
+		this.subscripcionesForm.controls.serieDestino.clearValidators()
+		this.subscripcionesForm.controls.serieDestino.updateValueAndValidity();
 		this.subscripcionesForm.controls.cantidad.setValue(null);
 		this.subscripcionesForm.controls.cantidad.markAsTouched();
 		this.subscripcionesForm.controls.valorUnitario.setValue(null);
@@ -168,6 +178,14 @@ export class AddSubscripcionesComponent implements OnInit {
 		this.subscripcionesForm.controls.aplicaDictamen.setValue(false);
 		this.conceptoSelecionado = []
 		this.conceptoSelecionado = this.allConceptos.filter(x => x.IdConcepto === e);
+		if (e === 8) {
+			this.showSerieDestino = true;
+			this.subscripcionesForm.controls.serieDestino.addValidators(Validators.required);
+			this.subscripcionesForm.controls.serieDestino.updateValueAndValidity();
+			this.subscripcionesForm.controls.serieDestino.setValue('');
+			this.subscripcionesForm.controls.serieDestino.markAsTouched();
+			this.allSeriesTransformacion = [];
+		};
 		if (this.conceptoSelecionado[0].AplicaPersonaDestino !== 0) {
 			const data = {
 				Opcion: 3,
@@ -272,6 +290,10 @@ export class AddSubscripcionesComponent implements OnInit {
 				this.subscripcionesForm.controls.cantidad.updateValueAndValidity();
 			}, 500);
 			this.readOnlyeCantidad = false;
+			if (this.conceptoSelecionado[0].IdConcepto === 8) {
+				this.subscripcionesForm.controls.valorUnitario.setValue(null);
+				this.getSeriesTransformacion();
+			};
 		} else {
 			this.placeHolderCantidad = 'Máximo';
 			this.readOnlyeCantidad = true;
@@ -313,6 +335,48 @@ export class AddSubscripcionesComponent implements OnInit {
 		};
 	};
 
+	getSeriesTransformacion = () => {
+		const data = {
+			Opcion: 5,
+			IdPersona: this.dataEmpresa.IdPersona,
+			IdPersonaSubscripcion: this.subscripcionesForm.controls.subscriptor.value,
+			IdConcepto: this.conceptoSelecionado[0].IdConcepto,
+			Serie: this.subscripcionesForm.controls.serie.value
+		};
+
+		this.gaService.postService('suscripciones/selSeriesTransformacion', data).subscribe((res: any) => {
+			this.allSeriesTransformacion = res[0];
+		}, (error: any) => {
+			this.spinner.hide();
+			Swal.fire({
+				title: '¡Error!',
+				text: 'Error 500, al traer las series para realizar la transformación',
+				icon: 'error',
+				confirmButtonText: 'Cerrar'
+			});
+		});
+	};
+
+	changeSerieTransformacion = e => {
+		this.serieSeleccionadaTransformacion = [];
+		this.subscripcionesForm.controls.valorUnitario.setValue(null);
+		this.subscripcionesForm.controls.cantidad.setValue(null);
+		this.subscripcionesForm.controls.importe.setValue(null);
+		if (e === null || e === '' || e === undefined) {
+			this.subscripcionesForm.markAllAsTouched();
+			this.readOnlyValorUnitario = true;
+		} else {
+			this.serieSeleccionadaTransformacion = this.allSeriesTransformacion.filter(x => x.Serie === e);
+			if (this.serieSeleccionadaTransformacion.length > 0) {
+				this.subscripcionesForm.controls.valorUnitario.setValue(this.serieSeleccionadaTransformacion[0].ValorUnitario);
+				this.readOnlyValorUnitario = true;
+			} else {
+				this.readOnlyValorUnitario = false;
+				this.subscripcionesForm.controls.valorUnitario.setValue(null);
+			};
+		};
+	};
+
 	guardarSubscripcion = () => {
 		if (this.subscripcionesForm.invalid) {
 			Swal.fire({
@@ -347,7 +411,9 @@ export class AddSubscripcionesComponent implements OnInit {
 					Observaciones: this.subscripcionesForm.controls.observaciones.value,
 					PrecioUnitarioVenta: this.subscripcionesForm.controls.precioVenta.value === 0 ? null : this.subscripcionesForm.controls.precioVenta.value,
 					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value,
-					Dictamen: this.showFieldsImportePrecioVenta ? this.subscripcionesForm.controls.aplicaDictamen.value : null
+					Dictamen: this.showFieldsImportePrecioVenta ? this.subscripcionesForm.controls.aplicaDictamen.value : null,
+					ValorUnitarioDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.valorUnitario.value : null,
+					SerieDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.serieDestino.value : null
 				};
 
 				this.gaService.postService('suscripciones/insSuscripciones', dataSend).subscribe((res: any) => {

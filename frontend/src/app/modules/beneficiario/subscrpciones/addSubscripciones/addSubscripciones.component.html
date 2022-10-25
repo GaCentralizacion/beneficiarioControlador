@@ -92,11 +92,27 @@
 								</mat-error>
 							</mat-form-field>
 						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom && showSerieDestino">
+							<mat-label>Serie destino</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input matInput type="text" placeholder="Serie destino" formControlName="serieDestino" [matAutocomplete]="autoSerie" 
+								autocomplete="off" (ngModelChange)="changeSerieTransformacion($event)">
+								<mat-autocomplete #autoSerie="matAutocomplete">
+									<mat-option *ngFor="let option of allSeriesTransformacion" [value]="option.Serie">
+									  {{option.Serie}}
+									</mat-option>
+								  </mat-autocomplete>
+								<mat-error></mat-error>
+								<mat-error>
+									Seleccione la serie destino
+								</mat-error>
+							</mat-form-field>
+						</div>
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
 							<mat-label>Valor unitario</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
-								<input readonly matInput currencyMask
+								<input [readonly]="readOnlyValorUnitario" matInput currencyMask
 									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
 									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off">
 								<mat-error>
