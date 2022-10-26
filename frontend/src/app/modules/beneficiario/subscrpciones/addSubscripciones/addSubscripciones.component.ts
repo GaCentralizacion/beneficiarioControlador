@@ -412,7 +412,7 @@ export class AddSubscripcionesComponent implements OnInit {
 					PrecioUnitarioVenta: this.subscripcionesForm.controls.precioVenta.value === 0 ? null : this.subscripcionesForm.controls.precioVenta.value,
 					ImporteVenta: this.subscripcionesForm.controls.importeVenta.value === 0 ? null : this.subscripcionesForm.controls.importeVenta.value,
 					Dictamen: this.showFieldsImportePrecioVenta ? this.subscripcionesForm.controls.aplicaDictamen.value : null,
-					ValorUnitarioDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.valorUnitario.value : null,
+					ValorUnitarioDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.valorUnitario.value.toFixed(2) : null,
 					SerieDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.serieDestino.value : null
 				};
 
