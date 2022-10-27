@@ -520,6 +520,12 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'ImporteVenta'
             },
             {
+                caption: 'Devueltas',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
+                dataField: 'Devueltas'
+            },
+            {
                 caption: 'Dictamen',
                 dataField: 'Dictamen'
             },

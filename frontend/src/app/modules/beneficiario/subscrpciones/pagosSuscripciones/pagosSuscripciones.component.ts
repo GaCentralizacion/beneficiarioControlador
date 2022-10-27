@@ -213,6 +213,12 @@ export class PagosSuscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Pagado'
             },
             {
+                caption: 'Devueltas',
+                dataType: TiposdeDato.number,
+                format: TiposdeFormato.numberMask,
+                dataField: 'Devueltas'
+            },
+            {
                 caption: 'Dictamen',
                 dataField: 'Dictamen'
             },
