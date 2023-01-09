@@ -15,7 +15,7 @@
 					<table>
 						<tr>
 							<td>
-								<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
 									<div class="divFile">
 										<label style="cursor: pointer;" *ngIf="!docCargado">Selecciona un archivo <i
 												class="fa-solid fa-magnifying-glass"></i></label>
@@ -26,7 +26,7 @@
 									</div>
 								</div>
 							</td>
-							<td style="width: 55%">
+							<td style="width: 68%">
 								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="showForm">
 									<mat-form-field appearance="fill">
 										<mat-label>Documentos</mat-label>
@@ -46,7 +46,7 @@
 									</mat-form-field>
 								</div>
 							</td>
-							<td style="width: 55%" *ngIf="showForm && vigenciaDinamica">
+							<td style="width: 100%" *ngIf="showForm && vigenciaDinamica">
 								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
 									<mat-form-field appearance="fill">
 										<mat-label>Vigencia del documento</mat-label>
@@ -71,8 +71,7 @@
 									<mat-label>Fecha del documento</mat-label>
 									<mat-form-field appearance="fill">
 										<input readonly [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
-											formControlName="fechaDocumento"
-											placeholder="Fecha documento">
+											formControlName="fechaDocumento" placeholder="Fecha documento">
 										<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
 										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 										<mat-datepicker #picker></mat-datepicker>
