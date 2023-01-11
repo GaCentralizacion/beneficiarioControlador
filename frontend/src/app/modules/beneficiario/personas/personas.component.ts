@@ -135,6 +135,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
     Identificiacion: any;
     IdEstadoCivil: any;
     IdRegimenOption: any;
+    IdPaisNacimiento: any
     /**VARIABLES OPTIONCES */
 
     rfcMaxLenght: number = 0;
@@ -146,6 +147,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
     showContactos: boolean = true;
     showRegimen: boolean = false;
     /**VARIABLES PARA LA PERSONA MORAL INTERNA */
+
+    /**VARIABLES PARA EL PAIS DE NACIMIENTO Y LAS NACIONALIDADES ADICIONALES */
+    paisSeleccionado: boolean = true;
+    catNacionalidadesAdicionales: any = [];
+    /**VARIABLES PARA EL PAIS DE NACIMIENTO Y LAS NACIONALIDADES ADICIONALES */
 
     constructor(
         private fb: FormBuilder,
@@ -176,6 +182,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             fechaNacimiento: ['', Validators.required],
             idSexo: [0, Validators.min(1)],
             idPais: [[0], Validators.min(1)],
+            IdPaisNacimiento: [0, Validators.min(1)],
             curp_registroPob: ['', Validators.min(1)],
             idIdentificacion: [0, Validators.min(1)],
             datoIdentificacion: ['', Validators.required],
@@ -183,9 +190,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
             idEstadoCivil: [0, Validators.min(1)]
         });
 
+        /* OBTENEMOS LAS VARIABLES PARA LOS LOCALSTORAGE DE LOS ENVIORMENTS */
         this.accionesUsuario = JSON.parse(localStorage.getItem(environment._varsLocalStorage.accionesUser));
         this.menuApp = JSON.parse(localStorage.getItem(environment._varsLocalStorage.menuApp));
         this.userData = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
+
         if (!this.accionesUsuario) {
             Swal.fire({
                 title: '¡Error!',
@@ -385,6 +394,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     setDataForms = () => {
         this.spinner.show();
+        this.paisSeleccionado = true;
         //Seteamos los valores generales de la persona
         let date = this.gralDataPersona.Fecha_nacimiento_Constitucion.split('T')[0];
         let dateParts = date.split("/");
@@ -400,6 +410,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.alias.setValue(this.gralDataPersona.Alias);
         this.personaForm.controls.fechaNacimiento.setValue(fechaEntregaInput);
         this.personaForm.controls.idSexo.setValue(this.gralDataPersona.IdTipoSexo);
+        this.catNacionalidadesAdicionales = this.catPais.filter(x => x.IdPais !== this.gralDataPersona.IdPais);
+        this.paisSeleccionado = false;
         if (this.paisDataPersona.length === 0) {
             this.personaForm.controls.idPais.setValue([this.gralDataPersona.IdPais])
         } else {
@@ -409,6 +421,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             };
             this.personaForm.controls.idPais.setValue(array);
         };
+        this.personaForm.controls.IdPaisNacimiento.setValue(this.gralDataPersona.IdPais);
         this.personaForm.controls.curp_registroPob.setValue(this.gralDataPersona.Registro_de_poblacion);
         this.personaForm.controls.idIdentificacion.setValue(this.gralDataPersona.IdTipoIdentificacion);
         this.personaForm.controls.datoIdentificacion.setValue(this.gralDataPersona.Identificiacion);
@@ -498,6 +511,18 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.showRegimen = true;
                 this.moralInterna = true;
             };
+        };
+    };
+
+    paisSeleccionadoFn = e =>{
+        this.paisSeleccionado = true;
+        this.catNacionalidadesAdicionales = [];
+        this.personaForm.controls.idPais.setValue([0]);
+        if( e === 0 ){
+            this.paisSeleccionado = true;
+        }else{
+            this.catNacionalidadesAdicionales = this.catPais.filter(x => x.IdPais !== e);
+            this.paisSeleccionado = false;
         };
     };
 
@@ -618,7 +643,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     apellidoPaterno: this.personaForm.controls.apellidoPaterno.value,
                     apellidoMaterno: this.personaForm.controls.apellidoMaterno.value,
                     alias: this.personaForm.controls.alias.value,
-                    idPais: this.personaForm.controls.idPais.value[0], //this.personaForm.controls.idPais.value Se coloca 0 ya que se cambia para el multi pais y se manda el string de allPaises
+                    idPais: this.personaForm.controls.IdPaisNacimiento.value,
                     fechaNac_constitucion: this.personaForm.controls.fechaNacimiento.value,
                     idSexo: this.personaForm.controls.idSexo.value,
                     curp_registroPob: this.personaForm.controls.curp_registroPob.value,
@@ -631,6 +656,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     xmlContacto: xmlCotactos,
                     xmlDomicilio: xmlDomicilio
                 };
+                
                 this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
                     this.spinner.hide();
                     if (res.err) {
@@ -741,7 +767,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     APaterno: this.personaForm.controls.apellidoPaterno.value === undefined ? '' : this.personaForm.controls.apellidoPaterno.value,
                     AMaterno: this.personaForm.controls.apellidoMaterno.value === undefined ? '' : this.personaForm.controls.apellidoMaterno.value,
                     Alias: this.personaForm.controls.alias.value === undefined ? '' : this.personaForm.controls.alias.value,
-                    IdPais: this.personaForm.controls.idPais.value[0], //this.personaForm.controls.idPais.value Se coloca 0 ya que se cambia para el multi pais y se manda el string de allPaises
+                    IdPais: this.personaForm.controls.IdPaisNacimiento.value,
                     Fecha_nacimiento_Constitucion: this.personaForm.controls.fechaNacimiento.value,
                     IdTipoSexo: this.personaForm.controls.idSexo.value,
                     Registro_de_poblacion: this.personaForm.controls.curp_registroPob.value === undefined ? '' : this.personaForm.controls.curp_registroPob.value,
@@ -1043,6 +1069,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.regimenFiscal.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
         this.personaForm.controls.idPais.setValue([0]);
+        this.personaForm.controls.IdPaisNacimiento.setValue(0);
         this.personaForm.controls.idIdentificacion.setValue(0);
         this.personaForm.controls.idEstadoCivil.setValue(0);
         //Switch
@@ -1081,6 +1108,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.idTipoMor.reset();
         this.personaForm.controls.regimenFiscal.reset();
         this.personaForm.controls.idSexo.reset();
+        this.personaForm.controls.IdPaisNacimiento.reset();
         this.personaForm.controls.idPais.reset();
         this.personaForm.controls.idIdentificacion.reset();
         this.personaForm.controls.idEstadoCivil.reset();
@@ -1100,6 +1128,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
         this.personaForm.controls.idTipoMor.setValue(0);
         this.personaForm.controls.regimenFiscal.setValue(0);
         this.personaForm.controls.idSexo.setValue(0);
+        this.personaForm.controls.IdPaisNacimiento.setValue(0);
         this.personaForm.controls.idPais.setValue([0]);
         this.personaForm.controls.idIdentificacion.setValue(0);
         this.personaForm.controls.idEstadoCivil.setValue(0);
@@ -1167,6 +1196,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
             if (data.Campo === 'IdEstadoCivil') {
                 this.IdEstadoCivil = data;
             };
+            if(data.Campo === 'IdPaisNacimiento'){
+                this.IdPaisNacimiento = data;
+            };
         };
 
         this.IdTipoMoralOption?.Obligatorio ? this.personaForm.controls['idTipoMor'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.get('idTipoMor').clearValidators();
@@ -1201,6 +1233,9 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
         this.Alias?.Obligatorio ? this.personaForm.controls['alias'].addValidators([Validators.required]) : this.personaForm.controls['alias'].clearValidators()
         this.personaForm.controls['alias'].updateValueAndValidity();
+
+        this.IdPaisNacimiento?.Obligatorio ? this.personaForm.controls['IdPaisNacimiento'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['IdPaisNacimiento'].clearValidators()
+        this.personaForm.controls['IdPaisNacimiento'].updateValueAndValidity();
 
         this.IdPais?.Obligatorio ? this.personaForm.controls['idPais'].addValidators([Validators.min(1), Validators.required]) : this.personaForm.controls['idPais'].clearValidators()
         this.personaForm.controls['idPais'].updateValueAndValidity();

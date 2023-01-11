@@ -180,14 +180,30 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPaisNacimiento?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdPaisNacimiento?.Nombre}}</mat-label>
+                                    <mat-select formControlName="IdPaisNacimiento" (selectionChange)="paisSeleccionadoFn($event.value)">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
+                                            {{pais.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un país
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPais?.length === 0">
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdPais?.Nombre}}</mat-label>
-                                    <mat-select formControlName="idPais" multiple>
+                                    <mat-select formControlName="idPais" multiple [disabled]="paisSeleccionado">
                                         <!-- <mat-option [value]="0">
                                             Seleccione una opción
                                         </mat-option> -->
-                                        <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
+                                        <mat-option *ngFor="let pais of catNacionalidadesAdicionales" [value]="pais.IdPais">
                                             {{pais.Descripcion}}
                                         </mat-option>
                                     </mat-select>
