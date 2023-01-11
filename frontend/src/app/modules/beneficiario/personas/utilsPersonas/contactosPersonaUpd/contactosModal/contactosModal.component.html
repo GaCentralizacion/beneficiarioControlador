@@ -1,0 +1,85 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<form [formGroup]="contactoForm" class="example-form">
+					<div class="row">
+						<div class="col-md-3">
+							<mat-form-field appearance="fill">
+								<mat-label>Tipo de contacto</mat-label>
+								<mat-select formControlName="idTipCont"
+									(selectionChange)="selectContacto($event.value)">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let tipoContacto of catTipoContacto"
+										[value]="tipoContacto.IdTipoContacto">
+										{{tipoContacto.Descripcion}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Selecciona una opción
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-3">
+							<mat-label>
+								<span *ngIf="contactoForm.controls.idTipCont.value === 0">&nbsp;</span>
+								<span *ngIf="contactoForm.controls.idTipCont.value === 1">Celular</span>
+								<span *ngIf="contactoForm.controls.idTipCont.value === 2">Email</span>
+								<span *ngIf="contactoForm.controls.idTipCont.value === 3">Teléfono</span>
+							</mat-label>
+							<mat-form-field appearance="fill">
+								<input *ngIf="contactoForm.controls.idTipCont.value === 2" [type]="datoType" matInput
+									[placeholder]="datoPlaceHolder" formControlName="dato" autocomplete="off">
+								<input *ngIf="contactoForm.controls.idTipCont.value !== 2" [type]="datoType" matInput
+									[placeholder]="datoPlaceHolder" formControlName="dato" autocomplete="off"
+									onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57">
+									<mat-error *ngIf="contactoForm.controls.idTipCont.value === 1">Ingresa el celular</mat-error>
+									<mat-error *ngIf="contactoForm.controls.idTipCont.value === 2">Ingresa un email valido</mat-error>
+									<mat-error *ngIf="contactoForm.controls.idTipCont.value === 3">Ingresa el teléfono</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-3">
+							<mat-label>Extensión</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Extensión" formControlName="ext" autocomplete="off">
+							</mat-form-field>
+						</div>
+						<div class="col-md-3">
+							<mat-label>
+								Persona a contactar
+							</mat-label>
+							<mat-form-field appearance="fill">
+								<input type="text" matInput placeholder="Persona a contactar" formControlName="personaContactar" autocomplete="off">
+							</mat-form-field>            
+						</div>
+						<div class="col-md-3">
+							<mat-slide-toggle style="padding-top: 15px;" color="primary" formControlName="predeterminado">
+								Predeterminado
+							</mat-slide-toggle>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+	<button *ngIf="agregar" class="btn btn-success" style="margin-left: 10px;" (click)="guardarContacto()" cdkFocusInitial>
+		Guardar Contacto <i class="fa-solid fa-floppy-disk"></i>
+	</button>
+	<button *ngIf="!agregar" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarContacto()" cdkFocusInitial>
+		Actualizar Contacto <i class="fa-solid fa-arrows-rotate"></i>
+	</button>
+</mat-dialog-actions>

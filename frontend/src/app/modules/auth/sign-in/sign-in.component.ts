@@ -7,6 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { GaService } from '../../../services/ga.service';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from "ngx-spinner";
+import { environment } from 'environments/environment';
 
 @Component({
 	selector: 'auth-sign-in',
@@ -44,12 +45,17 @@ export class AuthSignInComponent implements OnInit {
 	 * On init
 	 */
 	ngOnInit(): void {
+		this.deleteAllLocalStorages();
 		// Create the form
 		this.signInForm = this._formBuilder.group({
 			email: ['', Validators.required],
 			password: ['', Validators.required]
 		});
-	}
+	};
+
+	deleteAllLocalStorages = () => {
+		localStorage.clear();
+	};
 
 	// -----------------------------------------------------------------------------------------------------
 	// @ Public methods
@@ -82,25 +88,38 @@ export class AuthSignInComponent implements OnInit {
 		this.gaService.postService(`login/loginUser`, data).subscribe((res: any) => {
 			if (res.err) {
 				this.spinner.hide();
-				console.log('errorRes', res.err)
 			} else {
-				if (res[0][0].success === 1) {
+				if (res[0][0].Codigo >= 1) {
 					this.spinner.hide();
-					localStorage.setItem('user', JSON.stringify(res[1][0]));
-					this._router.navigateByUrl('/beneficiario/dashboard');
+					localStorage.setItem(environment._varsLocalStorage.dataUsuario, JSON.stringify({ idRol: res[0][0].IdRol, Nombre: res[0][0].Nombre, IdUsuario: res[0][0].IdUsuario }));
+					localStorage.setItem(environment._varsLocalStorage.menuApp, JSON.stringify(res[1]));
+					let jsonAcciones = '';
+					for (let data of res[2]) {
+						jsonAcciones += `"${data.IdAccionFront}": ${data.Aplica},`
+					};
+					let lastJsonAcciones = `{${jsonAcciones.substring(0, jsonAcciones.length - 1)}}`;
+					localStorage.setItem(environment._varsLocalStorage.accionesUser, lastJsonAcciones);
+					this._router.navigateByUrl('/beneficiario/personas');
 				} else {
 					this.spinner.hide();
 					this.signInForm.enable();
 					Swal.fire({
 						title: '¡Error!',
-						text: 'Usuario y/o contraseña incorrecta.',
+						text: res[0][0].Mensaje,
 						icon: 'error',
 						confirmButtonText: 'Cerrar'
 					});
 				};
 			};
 		}, (error: any) => {
-			console.log('errorCatch', error)
+			this.spinner.hide();
+			this.signInForm.enable();
+			Swal.fire({
+				title: '¡Error!',
+				text: error.error.text,
+				icon: 'error',
+				confirmButtonText: 'Cerrar'
+			});
 		});
 	};
 };

@@ -1,289 +1,451 @@
 <div>
-    <dx-data-grid #grid id="gridContainer" [dataSource]="datos" [(selectedRowKeys)]="selectedRowKeys" [keyExpr]="id"
-      [masterDetail]="{ enabled: Detail.detail, template: 'detail'}" [showBorders]="true" [columnAutoWidth]="true"
-      [showRowLines]="Color.filas" [showColumnLines]="Color.columnas" [remoteOperations]="remoteOperations"
-      [rowAlternationEnabled]="Color.alternar" (onToolbarPreparing)="onToolbarPreparing($event)"
-      (onSelectionChanged)="onSelectionChanged($event)" (onContentReady)="onContentReady($event)"
-      (onInitialized)="onInitializedMaster($event)" (onRowUpdated)="OnRowUpdated($event)"
-      (onRowInserted)="OnRowInserted($event)" (onRowRemoved)="OnRowRemoved($event)"
-      [columnHidingEnabled]="columnHiding.hide" (onRowUpdating)="onRowUpdating($event)"
-      (onCellPrepared)="onCellPrepared($event)" (onRowPrepared)="onRowPrepared($event)"
-      (onInitNewRow)="OnInitNewRow($event)">
+	<dx-data-grid #grid id="gridContainer" [dataSource]="datos" [(selectedRowKeys)]="selectedRowKeys" [keyExpr]="id"
+		[masterDetail]="{ enabled: Detail.detail, template: 'detail'}" [showBorders]="true" [columnAutoWidth]="true"
+		[showRowLines]="Color.filas" [showColumnLines]="Color.columnas" [remoteOperations]="remoteOperations"
+		[rowAlternationEnabled]="Color.alternar" (onToolbarPreparing)="onToolbarPreparing($event)"
+		(onSelectionChanged)="onSelectionChanged($event)" (onContentReady)="onContentReady($event)"
+		(onInitialized)="onInitializedMaster($event)" (onRowUpdated)="OnRowUpdated($event)"
+		(onRowInserted)="OnRowInserted($event)" (onRowRemoved)="OnRowRemoved($event)"
+		[columnHidingEnabled]="columnHiding.hide" (onRowUpdating)="onRowUpdating($event)"
+		(onCellPrepared)="onCellPrepared($event)" (onRowPrepared)="onRowPrepared($event)"
+		(onInitNewRow)="OnInitNewRow($event)" [allowColumnResizing]="true">
 
-      <!-- -------------------- EDITAR ------------------------------------------>
-      <dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate" [allowDeleting]="Editing.allowDeleting"
-        [allowAdding]="Editing.allowAdding"></dxo-editing>
-  
-      <!-- -------------------- CHECKBOX ------------------------------------------>
-      <dxo-selection [mode]="Checkbox.checkboxmode"></dxo-selection>
-  
-      <!-- -------------------- SELECCIONADOR DE COLUMNAS ------------------------------------------>
-      <dxo-column-chooser [enabled]="Columnchooser.columnchooser" mode="select"></dxo-column-chooser>
-  
-  
-      <!-- -------------------- PAGINACION ------------------------------------------>
-      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true"></dxo-pager>
-      <dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
-  
-      <!-- -------------------- FILTROS ------------------------------------------>
-  
-      <dxo-search-panel [visible]="searchPanel.visible" [width]="searchPanel.width"
-        [placeholder]="searchPanel.placeholder"></dxo-search-panel>
-      <dxo-header-filter [visible]="searchPanel.filterHeader" [allowSearch]="true"></dxo-header-filter>
-      <dxo-header-filter [visible]="true"></dxo-header-filter>
-      <dxo-filter-row [visible]="searchPanel.filterRow"></dxo-filter-row>
-      <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-  
-      <!-- -------------------- SCROLL ------------------------------------------>
-  
-      <dxo-scrolling [mode]="scroll.mode" [rowRenderingMode]="scroll.mode"></dxo-scrolling>
-      <dxo-scrolling [columnRenderingMode]="scroll.mode" [scrollByContent]="true"></dxo-scrolling>
-  
-      <!-- -------------------- EXPORT ------------------------------------------>
-  
-      <dxo-export [fileName]="exportExcel.fileName" [enabled]="exportExcel.enabled"></dxo-export>
-  
-      <!-- -------------------- COLUMNAS ------------------------------------------>
-  
-      <dxi-column *ngFor="let column of columns" [dataField]="column.dataField" [caption]="column.caption"
-        [width]="column.width" [groupIndex]="column.groupIndex" [cellTemplate]="column.cellTemplate"
-        [hidingPriority]="column.hiddingPriority" [allowEditing]="column.allowEditing" [dataType]="column.dataType"
-        [format]="column.format" [editorOptions]="column.editorOptions">
-      </dxi-column>
-  
-       <!-- --- TEMPLATES PARA COLUMNAS QUE NECESITAN DE ALGUN CONTROL O FUNCIONALIDAD EN ESPECIAL --- -->
-       <div class='text-center' *dxTemplate="let data of 'templateBotones'">
-        <button class="btn-circle" title="Editar" style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;' (click)="Modificar(data)">
-          <i class="material-icons" style="color: white; font-size: 18px;">create</i>
-        </button>
-        &nbsp;
-        <button class="btn-circle" title="Eliminar" style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;' (click)="Eliminar(data)">
-          <i class="material-icons" style="color: white; font-size: 18px;">clear</i>
-        </button>
-      </div>
-      <div class='text-center' *dxTemplate="let data of 'templateEditar'">
-        <button class="btn-circle" title="Editar" style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;' (click)="Modificar(data)">
-          <i class="material-icons" style="color: white; font-size: 18px;">create</i>
-        </button>
-        <button *ngIf="data.data.idEstatusFactura !== 2" class="btn-circle" title="Archivar" style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;' (click)="archivarCfdiFn(data)">
-          <i class="material-icons"><mat-icon style="color: white; font-size: 18px;">cloud_upload</mat-icon></i> 
-        </button>
-      </div>
-      <!-- -------------------- TEMPLATE FOTO ------------------------------------------>
-  
-      <div *dxTemplate="let data of 'foto'" class="foto">
-        <a [href]="data.value" data-lightbox="avatar">
-          <img id="myImg" class="foto-ad" [src]="data.value" />
-        </a>
-      </div>
-  
-      <!-- -------------------- TEMPLATE COLOR ------------------------------------------>
-  
-      <div *dxTemplate="let data of 'color'">
-        <div [style.background-color]="data.value" class="cuadrado"></div>
-      </div>
-  
-      <!-- -------------------- TEMPLATE PDF ------------------------------------------>
-  
-      <div *dxTemplate="let data of 'pdf'" class="foto">
-        <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docpdf.png"
-          (click)="dialog.open(Gridlightbox)" />
-        <ng-template #Gridlightbox>
-          <div>
-            <button type="button" class="close linea" aria-label="Close" [mat-dialog-close]>
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <pdf-viewer class="pdf" [src]="data.value" [original-size]="false" [autoresize]="true">
-            </pdf-viewer>
-          </div>
-        </ng-template>
-      </div>
-  
-      <!-- -------------------- TEMPLATE EXCEL ------------------------------------------>
-      <div *dxTemplate="let data of 'excel'" class="foto">
-        <a [href]="data.value">
-          <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docEXCEL.png" />
-        </a>
-      </div>
-  
-      <!-- -------------------- TEMPLATE WORD ------------------------------------------>
-      <div *dxTemplate="let data of 'word'" class="foto">
-        <a [href]="data.value">
-          <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docword.png" />
-        </a>
-      </div>
-  
-      <!-- -------------------- TEMPLATE POWER POINT ------------------------------------------>
-      <div *dxTemplate="let data of 'powerpoint'" class="foto">
-        <a [href]="data.value">
-          <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docPP.png" />
-        </a>
-      </div>
-  
-      <!-- -------------------- TEMPLATE TXT ------------------------------------------>
-      <div *dxTemplate="let data of 'txt'" class="foto">
-        <a [href]="data.value">
-          <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/doctxt.png" />
-        </a>
-      </div>
-  
-      <!-- -------------------- TEMPLATE XML ------------------------------------------>
-      <div *dxTemplate="let data of 'xml'" class="foto">
-        <a [href]="data.value" target="_blank">
-          <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docXML.png" />
-        </a>
-      </div>
-  
-      <!-- -------------------- TEMPLATE TOTAL DE REGISTROS ------------------------------------------>
-      <div class="totalcolor" [ngClass]="{'totalcolorgris': Color.color === 'gris'}"
-        *dxTemplate="let data of 'Totalderegistros'">
-        <div class="informer">
-          <h2 class="totalcount">{{datos ? datos.length : 0}}</h2>
-          <span class="name">Registros</span>
-        </div>
-      </div>
-  
-      <!-- -------------------- TEMPLATE REGISTROS SELECCIONADOS ------------------------------------------>
-      <div class="countcolor" *dxTemplate="let data of 'Contarseleccionados'">
-        <div class="informer">
-          <h2 class="countcount">{{contador}}</h2>
-          <span class="countname">Seleccionados</span>
-        </div>
-      </div>
-      
-      <div *dxTemplate="let data of 'detail'">
-        <dx-data-grid #griddetail id="gridContainerDetail" [dataSource]="data.data.detalle" [showBorders]="true"
-          [keyExpr]="KeyExprDetail" [columnAutoWidth]="true" [showRowLines]="Color.filas"
-          [showColumnLines]="Color.columnas" [selectedRowKeys]="selectedRowKeysDetail"
-          [remoteOperations]="remoteOperations" [rowAlternationEnabled]="Color.alternar"
-          (onToolbarPreparing)=" onToolbarPreparingDetail($event)"
-          (onSelectionChanged)="onSelectionChangedDetail($event, data.data)"
-          (onContentReady)="onContentReadyDetail($event)" [columnHidingEnabled]="columnHiding.hide"
-          (onRowUpdating)=" onRowUpdatingDetail($event)" (onCellPrepared)="onCellPreparedDetail($event)"
-          (onRowPrepared)="onRowPreparedDetail($event)">
-          <!-- -------------------- EDITAR ------------------------------------------>
-          <dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate"></dxo-editing>
-          <!-- <dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate" [allowDeleting]="Editing.allowDeleting" [allowAdding]="Editing.allowAdding"></dxo-editing> -->
-          <!-- -------------------- CHECKBOX ------------------------------------------>
-          <dxo-selection *ngIf="CheckboxDetail" [mode]="CheckboxDetail.checkboxmode"></dxo-selection>
-  
-          <!-- -------------------- SELECCIONADOR DE COLUMNAS ------------------------------------------>
-          <dxo-column-chooser [enabled]="Columnchooser.columnchooser" mode="select"></dxo-column-chooser>
-  
-  
-          <!-- -------------------- PAGINACION ------------------------------------------>
-          <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true">
-          </dxo-pager>
-          <dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
-  
-          <!-- -------------------- FILTROS ------------------------------------------>
-  
-          <dxo-search-panel [visible]="searchPanel.visible" [width]="searchPanel.width"
-            [placeholder]="searchPanel.placeholder"></dxo-search-panel>
-          <dxo-header-filter [visible]="searchPanel.filterHeader" [allowSearch]="true"></dxo-header-filter>
-          <dxo-filter-row [visible]="searchPanel.filterRow"></dxo-filter-row>
-          <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-  
-          <!-- -------------------- SCROLL ------------------------------------------>
-  
-          <dxo-scrolling [mode]="scroll.mode" [rowRenderingMode]="scroll.mode"></dxo-scrolling>
-          <dxo-scrolling [columnRenderingMode]="scroll.mode" [scrollByContent]="true"></dxo-scrolling>
-  
-          <!-- -------------------- EXPORT ------------------------------------------>
-  
-          <dxo-export [fileName]="exportExcel.fileName" [enabled]="exportExcel.enabled"></dxo-export>
-  
-          <!-- -------------------- COLUMNAS ------------------------------------------>
-  
-          <dxi-column *ngFor="let column of columnsdetail" [dataField]="column.dataField" [caption]="column.caption"
-            [width]="column.width" [groupIndex]="column.groupIndex" [cellTemplate]="column.cellTemplate"
-            [hidingPriority]="column.hiddingPriority" [allowEditing]="column.allowEditing" [dataType]="column.dataType"
-            [format]="column.format">
-            <!--dxi-validation-rule *ngIf="column.allowEditing === true"
+		<!-- -------------------- EDITAR ------------------------------------------>
+		<dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate" [allowDeleting]="Editing.allowDeleting"
+			[allowAdding]="Editing.allowAdding"></dxo-editing>
+
+		<!-- -------------------- CHECKBOX ------------------------------------------>
+		<dxo-selection [mode]="Checkbox.checkboxmode"></dxo-selection>
+
+		<!-- -------------------- SELECCIONADOR DE COLUMNAS ------------------------------------------>
+		<dxo-column-chooser [enabled]="Columnchooser.columnchooser" mode="select"></dxo-column-chooser>
+
+
+		<!-- -------------------- PAGINACION ------------------------------------------>
+		<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true"></dxo-pager>
+		<dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
+
+		<!-- -------------------- FILTROS ------------------------------------------>
+
+		<dxo-search-panel [visible]="searchPanel.visible" [width]="searchPanel.width"
+			[placeholder]="searchPanel.placeholder"></dxo-search-panel>
+		<dxo-header-filter [visible]="searchPanel.filterHeader" [allowSearch]="true"></dxo-header-filter>
+		<dxo-header-filter [visible]="true"></dxo-header-filter>
+		<dxo-filter-row [visible]="searchPanel.filterRow"></dxo-filter-row>
+		<dxo-filter-panel [visible]="true"></dxo-filter-panel>
+
+		<!-- -------------------- SCROLL ------------------------------------------>
+
+		<dxo-scrolling [mode]="scroll.mode" [rowRenderingMode]="scroll.mode"></dxo-scrolling>
+		<dxo-scrolling [columnRenderingMode]="scroll.mode" [scrollByContent]="true"></dxo-scrolling>
+
+		<!-- -------------------- EXPORT ------------------------------------------>
+
+		<dxo-export [fileName]="exportExcel.fileName" [enabled]="exportExcel.enabled"></dxo-export>
+
+		<!-- -------------------- COLUMNAS ------------------------------------------>
+
+		<dxi-column *ngFor="let column of columns" [dataField]="column.dataField" [caption]="column.caption"
+		    [width]="column.width" [groupIndex]="column.groupIndex" [cellTemplate]="column.cellTemplate"
+			[hidingPriority]="column.hiddingPriority" [allowEditing]="column.allowEditing" [dataType]="column.dataType"
+			[format]="column.format" [editorOptions]="column.editorOptions" [fixed]="column.fixed"
+			[cssClass]="column.cssClass">
+		</dxi-column>
+
+		<!-- --- TEMPLATES PARA COLUMNAS QUE NECESITAN DE ALGUN CONTROL O FUNCIONALIDAD EN ESPECIAL --- -->
+		<div class='text-center' *dxTemplate="let data of 'templateBotones'">
+			<button class="btn-circle" title="Editar"
+				style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;'
+				(click)="Modificar(data)">
+				<i class="material-icons" style="color: white; font-size: 18px;">create</i>
+			</button>
+			&nbsp;
+			<button class="btn-circle" title="Eliminar"
+				style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;'
+				(click)="Eliminar(data)">
+				<i class="material-icons" style="color: white; font-size: 18px;">clear</i>
+			</button>
+		</div>
+		<div class='text-center' *dxTemplate="let data of 'templateEditar'">
+			<button class="btn-circle" title="Editar"
+				style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;'
+				(click)="Modificar(data)">
+				<i class="material-icons" style="color: white; font-size: 18px;">create</i>
+			</button>
+			<button *ngIf="data.data.idEstatusFactura !== 2" class="btn-circle" title="Archivar"
+				style='background-color: #cccccc; border-color: #cccccc; border-radius: 60px; width: 30px; height: 30px;'
+				(click)="archivarCfdiFn(data)">
+				<i class="material-icons">
+					<mat-icon style="color: white; font-size: 18px;">cloud_upload</mat-icon>
+				</i>
+			</button>
+		</div>
+
+		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
+		<div *dxTemplate="let data of 'crudPersonas'">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="seleccionaPersona(1, data.row.data)">
+				<i class="fa-solid fa-file-pen"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE UPD/DEL PERSONAS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE DEL RELACIONES FAMILIARES ------------------------------------------>
+		<div *dxTemplate="let data of 'eliminarRelacionFam'">
+			<button *ngIf="accionesUsuario.eliminarRelacionFamiliar === 1" class="btn btn-circle btns-grids btn-hover" (click)="eliminarRelacion(data.row.data)">
+				<i class="fa-solid fa-trash-can"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE DEL RELACIONES FAMILIARES ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE VER SUBSCRIPCIONES DE LAS EMPRESAS ------------------------------------------>
+		<div *dxTemplate="let data of 'verSuscripciones'">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verSubscripcionesFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE VER SUBSCRIPCIONES DE LAS EMPRESAS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE VER EL DOCUMENTO DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+		<div *dxTemplate="let data of 'verDocumentoExpDig'">
+			<button *ngIf="data.row.data.IdExpPer !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDocumentoExpedienteDigital(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE VER EL DOCUMENTO DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+		<div *dxTemplate="let data of 'documentoObligatorio'">
+			<label *ngIf="data.row.data.Obligatorio">
+				Si
+			</label>
+			<label *ngIf="!data.row.data.Obligatorio">
+				No
+			</label>
+		</div>
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
+		<div *dxTemplate="let data of 'estatusDocumento'">
+			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4, 
+							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1, 
+							'estatusError' : data.row.data.IdEstatusArchivo === 2,
+							'estatusError' : data.row.data.IdEstatusArchivo === 3}">
+				<label class="center"> {{data.row.data.Estatus}} </label>
+			</div>
+		</div>
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verParticipacionIndirecta'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verParticipacionIndirectaFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS ACCIONISTAS INDIRECTOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verDictamen'" style="text-align: center;">
+			<button *ngIf="data.row.data.RutaLectura !== '' && data.row.data.IdEstatusArchivo !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
+		<div *dxTemplate="let data of 'estatusDictamen'">
+			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4, 
+							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1, 
+							'estatusError' : data.row.data.IdEstatusArchivo === 2,
+							'estatusError' : data.row.data.IdEstatusArchivo === 3}">
+				<label class="center"> {{data.row.data.Estatus}} </label>
+			</div>
+		</div>
+		<!-- -------------------- TEMPLATE PARA COLOCAR SI UN DOCUMENTO ES OBLIGATORIO O NO ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA REGISTRAR LOS PAGOS ------------------------------------------>
+		<div *dxTemplate="let data of 'registrarPago'" style="text-align: center;">
+			<button *ngIf="accionesUsuario.registrarPagos === 1" class="btn btn-circle btns-grids btn-hover" (click)="registrarPagoFn(data.row.data)">
+				<i class="fa-solid fa-money-bill"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA REGISTRAR LOS PAGOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA VER LOS PAGOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verPagos'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verPagosFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA VER LOS PAGOS ------------------------------------------>
+		
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
+		<div *dxTemplate="let data of 'verDictamenSuscripciones'" style="text-align: center;">
+			<button *ngIf="data.row.data.RutaLectura !== '' && data.row.data.RutaLectura !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'contactosPredeterminados'" style="text-align: center;">
+			<label *ngIf="data.row.data.predeterminado">SI</label>
+			<label *ngIf="!data.row.data.predeterminado">NO</label>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS CONTACTOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA EDITAR LOS CONTACTOS ------------------------------------------>
+		<div *dxTemplate="let data of 'actualizaContacto'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="actualizarContactoFn(data.row.data)">
+				<i class="fa-solid fa-file-pen"></i>
+			</button>
+			<button class="btn btn-circle btns-grids btn-hover" (click)="eliminarContactoFn(data.row.data)">
+				<i class="fa-solid fa-trash-can"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA EDITAR LOS CONTACTOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA EDITAR LOS DOMICILIOS ------------------------------------------>
+		<div *dxTemplate="let data of 'actualizaDomicilio'" style="text-align: center;">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="actualizarDomicilioFn(data.row.data)">
+				<i class="fa-solid fa-file-pen"></i>
+			</button>
+			<button class="btn btn-circle btns-grids btn-hover" (click)="eliminarDomicilioFn(data.row.data)">
+				<i class="fa-solid fa-trash-can"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA EDITAR LOS DOMICILIOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS DOMICILIOS ------------------------------------------>
+		<div *dxTemplate="let data of 'domiciliosPredeterminados'" style="text-align: center;">
+			<label *ngIf="data.row.data.predeterminado">SI</label>
+			<label *ngIf="!data.row.data.predeterminado">NO</label>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS DOMICILIOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS DOMICILIOS ------------------------------------------>
+		<div *dxTemplate="let data of 'domicilioFiscal'" style="text-align: center;">
+			<label *ngIf="data.row.data.esFiscal">SI</label>
+			<label *ngIf="!data.row.data.esFiscal">NO</label>
+		</div>
+		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS DOMICILIOS ------------------------------------------>
+
+		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
+
+		<div *dxTemplate="let data of 'foto'" class="foto">
+			<a [href]="data.value" data-lightbox="avatar">
+				<img id="myImg" class="foto-ad" [src]="data.value" />
+			</a>
+		</div>
+
+		<!-- -------------------- TEMPLATE COLOR ------------------------------------------>
+
+		<div *dxTemplate="let data of 'color'">
+			<div [style.background-color]="data.value" class="cuadrado"></div>
+		</div>
+
+		<!-- -------------------- TEMPLATE PDF ------------------------------------------>
+
+		<div *dxTemplate="let data of 'pdf'" class="foto">
+			<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docpdf.png"
+				(click)="dialog.open(Gridlightbox)" />
+			<ng-template #Gridlightbox>
+				<div>
+					<button type="button" class="close linea" aria-label="Close" [mat-dialog-close]>
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<pdf-viewer class="pdf" [src]="data.value" [original-size]="false" [autoresize]="true">
+					</pdf-viewer>
+				</div>
+			</ng-template>
+		</div>
+
+		<!-- -------------------- TEMPLATE EXCEL ------------------------------------------>
+		<div *dxTemplate="let data of 'excel'" class="foto">
+			<a [href]="data.value">
+				<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docEXCEL.png" />
+			</a>
+		</div>
+
+		<!-- -------------------- TEMPLATE WORD ------------------------------------------>
+		<div *dxTemplate="let data of 'word'" class="foto">
+			<a [href]="data.value">
+				<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docword.png" />
+			</a>
+		</div>
+
+		<!-- -------------------- TEMPLATE POWER POINT ------------------------------------------>
+		<div *dxTemplate="let data of 'powerpoint'" class="foto">
+			<a [href]="data.value">
+				<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docPP.png" />
+			</a>
+		</div>
+
+		<!-- -------------------- TEMPLATE TXT ------------------------------------------>
+		<div *dxTemplate="let data of 'txt'" class="foto">
+			<a [href]="data.value">
+				<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/doctxt.png" />
+			</a>
+		</div>
+
+		<!-- -------------------- TEMPLATE XML ------------------------------------------>
+		<div *dxTemplate="let data of 'xml'" class="foto">
+			<a [href]="data.value" target="_blank">
+				<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docXML.png" />
+			</a>
+		</div>
+
+		<!-- -------------------- TEMPLATE TOTAL DE REGISTROS ------------------------------------------>
+		<div class="totalcolor" [ngClass]="{'totalcolorgris': Color.color === 'gris'}"
+			*dxTemplate="let data of 'Totalderegistros'">
+			<div class="informer">
+				<h2 class="totalcount">{{datos ? datos.length : 0}}</h2>
+				<span class="name">Registros</span>
+			</div>
+		</div>
+
+		<!-- -------------------- TEMPLATE REGISTROS SELECCIONADOS ------------------------------------------>
+		<div class="countcolor" *dxTemplate="let data of 'Contarseleccionados'">
+			<div class="informer">
+				<h2 class="countcount">{{contador}}</h2>
+				<span class="countname">Seleccionados</span>
+			</div>
+		</div>
+
+		<div *dxTemplate="let data of 'detail'">
+			<dx-data-grid #griddetail id="gridContainerDetail" [dataSource]="data.data.detalle" [showBorders]="true"
+				[keyExpr]="KeyExprDetail" [columnAutoWidth]="true" [showRowLines]="Color.filas"
+				[showColumnLines]="Color.columnas" [selectedRowKeys]="selectedRowKeysDetail"
+				[remoteOperations]="remoteOperations" [rowAlternationEnabled]="Color.alternar"
+				(onToolbarPreparing)=" onToolbarPreparingDetail($event)"
+				(onSelectionChanged)="onSelectionChangedDetail($event, data.data)"
+				(onContentReady)="onContentReadyDetail($event)" [columnHidingEnabled]="columnHiding.hide"
+				(onRowUpdating)=" onRowUpdatingDetail($event)" (onCellPrepared)="onCellPreparedDetail($event)"
+				(onRowPrepared)="onRowPreparedDetail($event)">
+				<!-- -------------------- EDITAR ------------------------------------------>
+				<dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate"></dxo-editing>
+				<!-- <dxo-editing [mode]="Editing.mode" [allowUpdating]="Editing.allowupdate" [allowDeleting]="Editing.allowDeleting" [allowAdding]="Editing.allowAdding"></dxo-editing> -->
+				<!-- -------------------- CHECKBOX ------------------------------------------>
+				<dxo-selection *ngIf="CheckboxDetail" [mode]="CheckboxDetail.checkboxmode"></dxo-selection>
+
+				<!-- -------------------- SELECCIONADOR DE COLUMNAS ------------------------------------------>
+				<dxo-column-chooser [enabled]="Columnchooser.columnchooser" mode="select"></dxo-column-chooser>
+
+
+				<!-- -------------------- PAGINACION ------------------------------------------>
+				<dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="gridOptions.pageSize" [showInfo]="true"></dxo-pager>
+				<dxo-paging [pageSize]="gridOptions.paginacion"></dxo-paging>
+
+				<!-- -------------------- FILTROS ------------------------------------------>
+
+				<dxo-search-panel [visible]="searchPanel.visible" [width]="searchPanel.width"
+					[placeholder]="searchPanel.placeholder"></dxo-search-panel>
+				<dxo-header-filter [visible]="searchPanel.filterHeader" [allowSearch]="true"></dxo-header-filter>
+				<dxo-filter-row [visible]="searchPanel.filterRow"></dxo-filter-row>
+				<dxo-filter-panel [visible]="true"></dxo-filter-panel>
+
+				<!-- -------------------- SCROLL ------------------------------------------>
+
+				<dxo-scrolling [mode]="scroll.mode" [rowRenderingMode]="scroll.mode"></dxo-scrolling>
+				<dxo-scrolling [columnRenderingMode]="scroll.mode" [scrollByContent]="true"></dxo-scrolling>
+
+				<!-- -------------------- EXPORT ------------------------------------------>
+
+				<dxo-export [fileName]="exportExcel.fileName" [enabled]="exportExcel.enabled"></dxo-export>
+
+				<!-- -------------------- COLUMNAS ------------------------------------------>
+
+				<dxi-column *ngFor="let column of columnsdetail" [dataField]="column.dataField"
+					[caption]="column.caption" [width]="column.width" [groupIndex]="column.groupIndex"
+					[cellTemplate]="column.cellTemplate" [hidingPriority]="column.hiddingPriority"
+					[allowEditing]="column.allowEditing" [dataType]="column.dataType" [format]="column.format"
+					[fixed]="column.fixed" [cssClass]="column.cssClass">
+					<!--dxi-validation-rule *ngIf="column.allowEditing === true"
             type="pattern"
             [pattern]="column.pattern"
             [message]="column.messageError" >
             </dxi-validation-rule-->
-          </dxi-column>
-  
-          <!-- -------------------- TEMPLATE FOTO ------------------------------------------>
-  
-          <div *dxTemplate="let data of 'foto'" class="foto">
-            <a [href]="data.value" data-lightbox="avatar">
-              <img id="myImg" class="foto-ad" [src]="data.value" />
-            </a>
-          </div>
-  
-          <!-- -------------------- TEMPLATE PDF ------------------------------------------>
-  
-          <div *dxTemplate="let data of 'pdf'" class="foto">
-            <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docpdf.png"
-              (click)="dialog.open(Gridlightbox)" />
-            <ng-template #Gridlightbox>
-              <div>
-                <button type="button" class="close linea" aria-label="Close" [mat-dialog-close]>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <pdf-viewer class="pdf" [src]="data.value" [original-size]="false" [autoresize]="true">
-                </pdf-viewer>
-              </div>
-            </ng-template>
-          </div>
-  
-          <!-- -------------------- TEMPLATE EXCEL ------------------------------------------>
-          <div *dxTemplate="let data of 'excel'" class="foto">
-            <a [href]="data.value">
-              <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docEXCEL.png" />
-            </a>
-          </div>
-  
-          <!-- -------------------- TEMPLATE WORD ------------------------------------------>
-          <div *dxTemplate="let data of 'word'" class="foto">
-            <a [href]="data.value">
-              <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docword.png" />
-            </a>
-          </div>
-  
-          <!-- -------------------- TEMPLATE POWER POINT ------------------------------------------>
-          <div *dxTemplate="let data of 'powerpoint'" class="foto">
-            <a [href]="data.value">
-              <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docPP.png" />
-            </a>
-          </div>
-  
-          <!-- -------------------- TEMPLATE TXT ------------------------------------------>
-          <div *dxTemplate="let data of 'txt'" class="foto">
-            <a [href]="data.value">
-              <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/doctxt.png" />
-            </a>
-          </div>
-  
-          <!-- -------------------- TEMPLATE XML ------------------------------------------>
-          <div *dxTemplate="let data of 'xml'" class="foto">
-            <a [href]="data.value">
-              <img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/doctxt.png" />
-            </a>
-          </div>
-  
-          <!-- -------------------- TEMPLATE TOTAL DE REGISTROS ------------------------------------------>
-          <div class="totalcolordetail" [ngClass]="{'totalcolorgris': Color.color === 'gris'}"
-            *dxTemplate="let datadetail of 'Totalderegistrosdetail'">
-            <div class="informer">
-              <h2 class="totalcount">{{data.data.detalle ? data.data.detalle.length : 0}}</h2>
-              <span class="name">Registros</span>
-            </div>
-          </div>
-  
-          <!-- -------------------- TEMPLATE REGISTROS SELECCIONADOS ------------------------------------------>
-          <div class="countcolor" *dxTemplate="let datadetail of 'Contarseleccionadosdetail'">
-            <div class="informer">
-              <h2 class="countcount" id="contador">0</h2>
-              <span class="countname">Seleccionados</span>
-            </div>
-          </div>
-        </dx-data-grid>
-      </div>
-      
-    </dx-data-grid>
-  
-  </div>
+				</dxi-column>
+
+				<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
+
+				<div *dxTemplate="let data of 'foto'" class="foto">
+					<a [href]="data.value" data-lightbox="avatar">
+						<img id="myImg" class="foto-ad" [src]="data.value" />
+					</a>
+				</div>
+
+				<!-- -------------------- TEMPLATE PDF ------------------------------------------>
+
+				<div *dxTemplate="let data of 'pdf'" class="foto">
+					<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docpdf.png"
+						(click)="dialog.open(Gridlightbox)" />
+					<ng-template #Gridlightbox>
+						<div>
+							<button type="button" class="close linea" aria-label="Close" [mat-dialog-close]>
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<pdf-viewer class="pdf" [src]="data.value" [original-size]="false" [autoresize]="true">
+							</pdf-viewer>
+						</div>
+					</ng-template>
+				</div>
+
+				<!-- -------------------- TEMPLATE EXCEL ------------------------------------------>
+				<div *dxTemplate="let data of 'excel'" class="foto">
+					<a [href]="data.value">
+						<img id="myImg" class="preview-docs"
+							src="../../../assets/images/iconos-utilerias/docEXCEL.png" />
+					</a>
+				</div>
+
+				<!-- -------------------- TEMPLATE WORD ------------------------------------------>
+				<div *dxTemplate="let data of 'word'" class="foto">
+					<a [href]="data.value">
+						<img id="myImg" class="preview-docs"
+							src="../../../assets/images/iconos-utilerias/docword.png" />
+					</a>
+				</div>
+
+				<!-- -------------------- TEMPLATE POWER POINT ------------------------------------------>
+				<div *dxTemplate="let data of 'powerpoint'" class="foto">
+					<a [href]="data.value">
+						<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/docPP.png" />
+					</a>
+				</div>
+
+				<!-- -------------------- TEMPLATE TXT ------------------------------------------>
+				<div *dxTemplate="let data of 'txt'" class="foto">
+					<a [href]="data.value">
+						<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/doctxt.png" />
+					</a>
+				</div>
+
+				<!-- -------------------- TEMPLATE XML ------------------------------------------>
+				<div *dxTemplate="let data of 'xml'" class="foto">
+					<a [href]="data.value">
+						<img id="myImg" class="preview-docs" src="../../../assets/images/iconos-utilerias/doctxt.png" />
+					</a>
+				</div>
+
+				<!-- -------------------- TEMPLATE TOTAL DE REGISTROS ------------------------------------------>
+				<div class="totalcolordetail" [ngClass]="{'totalcolorgris': Color.color === 'gris'}"
+					*dxTemplate="let datadetail of 'Totalderegistrosdetail'">
+					<div class="informer">
+						<h2 class="totalcount">{{data.data.detalle ? data.data.detalle.length : 0}}</h2>
+						<span class="name">Registros</span>
+					</div>
+				</div>
+
+				<!-- -------------------- TEMPLATE REGISTROS SELECCIONADOS ------------------------------------------>
+				<div class="countcolor" *dxTemplate="let datadetail of 'Contarseleccionadosdetail'">
+					<div class="informer">
+						<h2 class="countcount" id="contador">0</h2>
+						<span class="countname">Seleccionados</span>
+					</div>
+				</div>
+			</dx-data-grid>
+		</div>
+
+	</dx-data-grid>
+
+</div>

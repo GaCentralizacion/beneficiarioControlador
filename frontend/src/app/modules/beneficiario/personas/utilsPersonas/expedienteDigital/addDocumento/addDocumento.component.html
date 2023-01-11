@@ -1,0 +1,101 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<form [formGroup]="documentosForm" class="example-form">
+					<table>
+						<tr>
+							<td>
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<div class="divFile">
+										<label style="cursor: pointer;" *ngIf="!docCargado">Selecciona un archivo <i
+												class="fa-solid fa-magnifying-glass"></i></label>
+										<label style="cursor: pointer;" *ngIf="docCargado">Documento cargado <i
+												class="fa-solid fa-circle-check"></i><br>"{{namePcDoc}}"</label>
+										<input class="hide_file" #myInputDocument type="file" accept="application/pdf"
+											name="myFile" (change)="fileEvent($event)" />
+									</div>
+								</div>
+							</td>
+							<td style="width: 68%">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="showForm">
+									<mat-form-field appearance="fill">
+										<mat-label>Documentos</mat-label>
+										<mat-select formControlName="idDocumento"
+											(selectionChange)="documentoSelected($event.value)">
+											<mat-option [value]="0">
+												Seleccione una opción
+											</mat-option>
+											<mat-option *ngFor="let documento of allDocumentos"
+												[value]="documento.IdDocumento">
+												{{documento.Documento}}
+											</mat-option>
+										</mat-select>
+										<mat-error>
+											Seleccione el documento
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</td>
+							<td style="width: 100%" *ngIf="showForm && vigenciaDinamica">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<mat-form-field appearance="fill">
+										<mat-label>Vigencia del documento</mat-label>
+										<mat-select formControlName="idVigencias"
+										(selectionChange)="vigenciaSelected($event.value)">
+											<mat-option [value]="0">
+												Seleccione una opción
+											</mat-option>
+											<mat-option *ngFor="let vigencias of allVigenciasDinamicas"
+												[value]="vigencias.IdTipoVigencia">
+												{{vigencias.VigenciasConcatenadas}}
+											</mat-option>
+										</mat-select>
+										<mat-error>
+											Seleccione el tipo de vigencia del documento
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</td>
+							<td style="width: 100%" *ngIf="showForm && showFechaDocumento">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<mat-label>Fecha del documento</mat-label>
+									<mat-form-field appearance="fill">
+										<input readonly [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
+											formControlName="fechaDocumento" placeholder="Fecha documento">
+										<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+										<mat-datepicker #picker></mat-datepicker>
+										<mat-error>
+											Seleccione una fecha
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+	<button *ngIf="!showBtnActualizar && showBtns" class="btn btn-success" style="margin-left: 10px;"
+		(click)="guardarDocumento()" cdkFocusInitial>
+		Guardar documento <i class="fa-solid fa-floppy-disk"></i>
+	</button>
+	<button *ngIf="showBtnActualizar && showBtns" class="btn btn-success" style="margin-left: 10px;"
+		(click)="actualizarDocumento()" cdkFocusInitial>
+		Actualizar documento <i class="fa-solid fa-arrows-rotate"></i>
+	</button>
+</mat-dialog-actions>

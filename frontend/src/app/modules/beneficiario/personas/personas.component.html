@@ -1,0 +1,396 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="square-loader">
+    <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+<div class='containerAll' [hidden]="showAddPersona">
+    <mat-card>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+            <div class="col-sm-4 col-md-4 col-xl-4">
+                <button *ngIf="accionesUsuario?.altaPersona === 1" class="btn btn-success pull-right"
+                (click)="addPersona(false)">
+                Agregar persona <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <br>
+        <div class="row" [hidden]="showAddPersona">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGrid" [datos]="allPersonas" [columns]="columns" [gridOptions]="gridOptions"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                    (crudPersona)="crudPersona($event)" [toolbar]="toolbar">
+                </app-grid-component>
+            </div>
+        </div>
+    </mat-card>
+</div>
+
+<div class="containerAll" [hidden]="!showAddPersona">
+    <mat-card>
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
+        (selectedTabChange)="onTabChanged($event);">
+            <!-- Datos Generales -->
+            <mat-tab label="Datos de persona">
+                <mat-card>
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                        <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
+                            <h5 *ngIf="!actualizarPersona">Agregar persona</h5>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                    </div>
+                    <br>
+                    <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="personaForm">
+                        <div class="row justify-content-start align-items-center">
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Tipo de persona</mat-label>
+                                    <mat-select formControlName="idTipoPersona"
+                                        (selectionChange)="getCamposForm($event.value)" [disabled]="actualizarPersona">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let tipoPersona of catTipoPersona"
+                                            [value]="tipoPersona.IdTipoPer">
+                                            {{tipoPersona.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un tipo de persona
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start align-items-center" [hidden]="hiddenForm">
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoMoralOption?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdTipoMoralOption?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idTipoMor" (selectionChange)="changeTipoMoral($event.value)">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let tipoMoral of catTipoMoral"
+                                            [value]="tipoMoral.IdTipoMoral">
+                                            {{tipoMoral.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un tipo moral
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdRegimenOption?.length === 0 || !showRegimen">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdRegimenOption?.Nombre}}</mat-label>
+                                    <mat-select formControlName="regimenFiscal">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let regimen of catRegimenFiscal"
+                                            [value]="regimen.IdRegimen">
+                                            {{regimen.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un regimen
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoSexo?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdTipoSexo?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idSexo">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let sexo of catSexo" [value]="sexo.IdTipoSexo">
+                                            {{sexo.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un el sexo
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Nombre_RazonSocial?.length === 0">
+                                <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese el nombre o razón
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="APaterno?.length === 0">
+                                <mat-label>{{APaterno?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="{{APaterno?.Nombre}}" formControlName="apellidoPaterno" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese el apellido paterno
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="AMaterno?.length === 0">
+                                <mat-label>{{AMaterno?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="{{AMaterno?.Nombre}}" formControlName="apellidoMaterno" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese el apellido materno
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Alias?.length === 0">
+                                <mat-label>{{Alias?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="{{Alias?.Nombre}}" formControlName="alias" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese el alias
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"[hidden]="Fecha_nacimiento_Constitucion?.length === 0">
+                                <mat-label>{{Fecha_nacimiento_Constitucion?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="{{Fecha_nacimiento_Constitucion?.Nombre}}">
+                                    <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error>
+                                        Seleccione una fecha
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Registro_de_poblacion?.length === 0">
+                                <mat-label>{{Registro_de_poblacion?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="{{Registro_de_poblacion?.Nombre}}" formControlName="curp_registroPob" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese el curp o registro de población
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="RFC?.length === 0">
+                                <mat-label>{{RFC?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput [maxlength]="rfcMaxLenght" placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese el RFC
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPaisNacimiento?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdPaisNacimiento?.Nombre}}</mat-label>
+                                    <mat-select formControlName="IdPaisNacimiento" (selectionChange)="paisSeleccionadoFn($event.value)">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
+                                            {{pais.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un país
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPais?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdPais?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idPais" multiple [disabled]="paisSeleccionado">
+                                        <!-- <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option> -->
+                                        <mat-option *ngFor="let pais of catNacionalidadesAdicionales" [value]="pais.IdPais">
+                                            {{pais.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un país
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdEstadoCivil?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdEstadoCivil?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idEstadoCivil">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let estadoCivil of catEstadoCivil"
+                                            [value]="estadoCivil.IdEstadoCivil">
+                                            {{estadoCivil.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un estado civil
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdTipoIdentificacion?.length === 0">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>{{IdTipoIdentificacion?.Nombre}}</mat-label>
+                                    <mat-select formControlName="idIdentificacion">
+                                        <mat-option [value]="0">
+                                            Seleccione una opción
+                                        </mat-option>
+                                        <mat-option *ngFor="let identificacion of catIdentificacion"
+                                            [value]="identificacion.IdTipoIdentificacion">
+                                            {{identificacion.Descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        Seleccione un tipo de identificación
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Identificiacion?.length === 0">
+                                <mat-label>{{Identificiacion?.Nombre}}</mat-label>
+                                <mat-form-field appearance="fill">
+                                    <input matInput placeholder="{{Identificiacion?.Nombre}}"
+                                        formControlName="datoIdentificacion" autocomplete="off">
+                                    <mat-error>
+                                        Ingrese la clave de la identificación
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="EsAccionista?.length === 0">
+                                <mat-slide-toggle color="primary" formControlName="esAccionista">
+                                    <mat-label>
+                                        {{EsAccionista?.Nombre}}
+                                    </mat-label>
+                                </mat-slide-toggle>
+                                <label style="font-size: 13px; color: gray;" *ngIf="!personaForm.controls.esAccionista.value">(No puede comprar acciones)</label> 
+                                <label style="font-size: 13px; color: green;" *ngIf="personaForm.controls.esAccionista.value">(Puede comprar acciones)</label> 
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </mat-tab>
+            <!-- Datos Generales -->
+
+            <!-- COMPONENETE CONTACTOS -->
+            <mat-tab *ngIf="!hiddenForm && showContactos" label="Medios de contacto">
+                <mat-card>
+                    <div class="row justify-content-start align-items-center">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" style="text-align: center;">
+                            <h5 *ngIf="actualizarPersona">{{nombrePersona}}</h5>
+                            <h5 *ngIf="!actualizarPersona">Medios de contacto</h5>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <!-- <button *ngIf="!moralInterna && !actualizarPersona" class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addContacto()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button *ngIf="!moralInterna && !actualizarPersona" class="btn btn-danger pull-right" (click)="removeContacto()">
+                                <i class="fas fa-minus"></i>
+                            </button> -->
+                            <button *ngIf="!moralInterna && actualizarPersona && accionesUsuario.altaContactosPersona === 1" class="btn btn-success pull-right" (click)="showModalContacto()">
+                                Agregar <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="!moralInterna && !actualizarPersona" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-contactos *ngFor="let contacto of arrayAllContactos"
+                                [catTipoContacto]="catTipoContacto" [arrayAllContactos]="arrayAllContactos"
+                                [currentIdContacto]="this.arrayAllContactos.length"
+                                [actualizarPersona]="actualizarPersona"></app-contactos>
+                        </div>
+                        <div *ngIf="!moralInterna && actualizarPersona" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-contactosPersonaUpd [gralDataPersona]="gralDataPersona" [catTipoContacto]="catTipoContacto"></app-contactosPersonaUpd>
+                        </div>
+                        <div *ngIf="moralInterna" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <app-grid-component *ngIf="muestraGridMoralInterna" [datos]="dataPersonaMoralInterna" [columns]="columnsMoralInterna" [gridOptions]="gridOptionsMoralInterna"
+                            [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                            [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                            (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbarMoralInterna">
+                        </app-grid-component>
+                        </div>
+                    </div>
+                </mat-card>
+            </mat-tab>
+            <!-- COMPONENETE CONTACTOS -->
+
+            <!-- COMPONENETE DIRECCIONES -->
+            <mat-tab *ngIf="!hiddenForm" label="Domicilios">
+                <mat-card>
+                    <div class="row justify-content-start align-items-center">
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4"></div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4" style="text-align: center;">
+                            <h5 *ngIf="actualizarPersona">{{nombrePersona}}</h5>
+                            <h5 *ngIf="!actualizarPersona">Domicilios</h5>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                            <!-- <button class="btn btn-success pull-right" style="margin-left: 5px;" (click)="addDomicilio()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="btn btn-danger pull-right" (click)="removeDomicilio()">
+                                <i class="fas fa-minus"></i>
+                            </button> -->
+                            <button *ngIf="actualizarPersona && accionesUsuario.altaDomicilioPersona === 1" class="btn btn-success pull-right" (click)="showModalDomicilios()">
+                                Agregar <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="!actualizarPersona">
+                            <app-domicilios *ngFor="let domicilio of arrayAllDomicilios"
+                                [catTipoDomicilio]="catTipoDomicilio" [arrayAllDomicilios]="arrayAllDomicilios"
+                                [currentIdDomicilio]="arrayAllDomicilios.length"
+                                [actualizarPersona]="actualizarPersona"></app-domicilios>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="actualizarPersona">
+                                <app-domiciliosPersonaUpd *ngIf="actualizarPersona" [gralDataPersona]="gralDataPersona" [catTipoDomicilio]="catTipoDomicilio"></app-domiciliosPersonaUpd>
+                        </div>
+                    </div>
+                </mat-card>
+            </mat-tab>
+            <!-- COMPONENETE DIRECCIONES -->
+
+            <!-- COMPONENETE RELACIONES FAMILIARES -->
+            <mat-tab *ngIf="!hiddenForm && actualizarPersona && personaForm.controls.idTipoPersona.value === 1" label="Relación familiar">
+                <mat-card>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <app-relacionFamiliar [gralDataPersona]="gralDataPersona" [catRelacionFamiliar]="catRelacionFamiliar" [catTipoPatrimonial]="catTipoPatrimonial"></app-relacionFamiliar>
+                    </div>
+                </mat-card>
+            </mat-tab>
+            <!-- COMPONENETE RELACIONES FAMILIARES -->
+
+            <!-- COMPONENETE EXPEDINETE DIGITAL -->
+            <mat-tab *ngIf="!hiddenForm && actualizarPersona" label="Expediente digital">
+                <mat-card>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <app-expedienteDigital [gralDataPersona]="gralDataPersona"></app-expedienteDigital>
+                    </div>
+                </mat-card>
+            </mat-tab>
+
+            <!-- COMPONENETE EXPEDINETE DIGITAL -->
+        </mat-tab-group>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <button class="btn btn-info pull-left" (click)="addPersona(false)">
+                    Regresar <i class="fas fa-arrow-alt-circle-left"></i>
+                </button>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <Label style="font-size: 14px;" [hidden]="!actualizarPersona || focusTabs === 3 || focusTabs === 4"> {{textModificacion}} </Label>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <button *ngIf="accionesUsuario?.altaPersona === 1 && (focusTabs === 0 || focusTabs === 1 || focusTabs === 2)" class="btn btn-success pull-right"
+                    (click)="savePersona()" [hidden]="actualizarPersona">
+                    Guardar <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button *ngIf="accionesUsuario?.editarPersona === 1 && focusTabs === 0" class="btn btn-success pull-right"
+                    (click)="updatePersona()" [hidden]="!actualizarPersona">
+                    Actualizar <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+        </div>
+    </mat-card>
+
+</div>

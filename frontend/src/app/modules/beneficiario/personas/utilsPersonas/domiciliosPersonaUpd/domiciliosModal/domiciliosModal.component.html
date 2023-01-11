@@ -1,0 +1,140 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<form [formGroup]="domiciliosForm" class="example-form">
+					<div class="row">
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-form-field appearance="fill">
+								<mat-label>Tipo de domicilio</mat-label>
+								<mat-select formControlName="idTipDom">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let tipoDomicilio of catTipoDomicilio" [value]="tipoDomicilio.IdTipoDomicilio">
+										{{tipoDomicilio.Descripcion}}
+									</mat-option>
+								</mat-select>
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Calle</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Calle" formControlName="calle" autocomplete="off">
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Número exteriror</mat-label>
+							<mat-form-field  appearance="fill">
+								<input matInput placeholder="Número exteriror" formControlName="numExt" autocomplete="off">
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Número interiror</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Número interiror" formControlName="numInt" autocomplete="off">
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Código postal</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Código postal" formControlName="cp" (ngModelChange)="changeCodigoPostal($event)" autocomplete="off">
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Colonia / Asentamiento</mat-label>
+							<mat-form-field appearance="fill">
+								<input [readonly]="searchCodigoPostal" matInput placeholder="Colonia / Asentamiento" formControlName="colonia_asentamiento" [matAutocomplete]="autoColonia" autocomplete="off">
+								<mat-autocomplete #autoColonia="matAutocomplete">
+									<mat-option *ngFor="let option of optionsColonia" [value]="option">
+									  {{option}}
+									</mat-option>
+								  </mat-autocomplete>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Delegación / Municipio</mat-label>
+							<mat-form-field appearance="fill">
+								<input [readonly]="searchCodigoPostal" matInput placeholder="Delegación / Municipio" formControlName="delegacion_municipio" [matAutocomplete]="autoDelegacion" autocomplete="off">
+								<mat-autocomplete #autoDelegacion="matAutocomplete">
+									<mat-option *ngFor="let option of optionsDelegacion" [value]="option">
+									  {{option}}
+									</mat-option>
+								  </mat-autocomplete>
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Ciudad / Estado</mat-label>
+							<mat-form-field appearance="fill">
+								<input [readonly]="searchCodigoPostal" matInput placeholder="Ciudad / Estado" formControlName="ciudad_estado" [matAutocomplete]="autoCiudad" autocomplete="off">
+								<mat-autocomplete #autoCiudad="matAutocomplete">
+									<mat-option *ngFor="let option of optionsCiudad" [value]="option">
+									  {{option}}
+									</mat-option>
+								  </mat-autocomplete>
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>País</mat-label>
+							<mat-form-field appearance="fill">
+								<input [readonly]="searchCodigoPostal" matInput placeholder="País" formControlName="pais" [matAutocomplete]="autoPais" autocomplete="off">
+								<mat-autocomplete #autoPais="matAutocomplete">
+									<mat-option *ngFor="let option of optionsPais" [value]="option">
+									  {{option}}
+									</mat-option>
+								  </mat-autocomplete>
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Entre calle 1</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Entre calle 1" formControlName="calle1" autocomplete="off">
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Entre calle 2</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Entre calle 2" formControlName="calle2" autocomplete="off">
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-slide-toggle color="primary" formControlName="esFiscal">
+								Domicilio fiscal
+							</mat-slide-toggle>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-slide-toggle color="primary" formControlName="predeterminado">
+								Predeterminado
+							</mat-slide-toggle>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+	<button *ngIf="agregar" class="btn btn-success" style="margin-left: 10px;" (click)="guardarDomicilio()" cdkFocusInitial>
+		Guardar domicilio <i class="fa-solid fa-floppy-disk"></i>
+	</button>
+	<button *ngIf="!agregar" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDomicilio()" cdkFocusInitial>
+		Actualizar domicilio <i class="fa-solid fa-arrows-rotate"></i>
+	</button>
+</mat-dialog-actions>

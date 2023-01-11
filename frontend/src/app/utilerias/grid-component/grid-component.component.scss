@@ -135,6 +135,7 @@
     width: 35px;
     height: 35px;
 }
+
 ::ng-deep #gridContainer .dx-datagrid-export-button .dx-icon-export-excel-button:before {
     background-image: url("../../../assets/images/iconos-utilerias/xcel.png");
     background-repeat: no-repeat;
@@ -199,38 +200,29 @@
     color: black;
 }
 
-::ng-deep
-    #gridContainer
-    .dx-rtl
-    .dx-datagrid-rowsview
-    .dx-selection.dx-row
-    > td:not(.dx-focused).dx-datagrid-group-space,
-.dx-rtl .dx-datagrid-rowsview .dx-selection.dx-row:hover > td:not(.dx-focused).dx-datagrid-group-space {
+::ng-deep #gridContainer .dx-rtl .dx-datagrid-rowsview .dx-selection.dx-row>td:not(.dx-focused).dx-datagrid-group-space,
+.dx-rtl .dx-datagrid-rowsview .dx-selection.dx-row:hover>td:not(.dx-focused).dx-datagrid-group-space {
     border-left-color: #e1e1e1;
 }
 
-::ng-deep #gridContainer .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-lines) > td,
-.dx-datagrid-rowsview .dx-selection.dx-row:hover:not(.dx-row-lines) > td {
+::ng-deep #gridContainer .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-lines)>td,
+.dx-datagrid-rowsview .dx-selection.dx-row:hover:not(.dx-row-lines)>td {
     border-bottom: 1px solid #e1e1e1;
     border-top: 1px solid #e1e1e1;
 }
 
-::ng-deep #gridContainer .dx-datagrid-rowsview .dx-selection.dx-row > td.dx-datagrid-group-space,
-.dx-datagrid-rowsview .dx-selection.dx-row:hover > td.dx-datagrid-group-space {
+::ng-deep #gridContainer .dx-datagrid-rowsview .dx-selection.dx-row>td.dx-datagrid-group-space,
+.dx-datagrid-rowsview .dx-selection.dx-row:hover>td.dx-datagrid-group-space {
     border-right-color: #e1e1e1;
 }
 
-::ng-deep #gridContainer .dx-datagrid-rowsview .dx-selection.dx-row > td,
-.dx-datagrid-rowsview .dx-selection.dx-row:hover > td {
+::ng-deep #gridContainer .dx-datagrid-rowsview .dx-selection.dx-row>td,
+.dx-datagrid-rowsview .dx-selection.dx-row:hover>td {
     background-color: #e1e1e1;
     color: #232323;
 }
 
-::ng-deep
-    #gridContainer
-    .dx-datagrid-table
-    .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row)
-    > td:not(.dx-focused) {
+::ng-deep #gridContainer .dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row)>td:not(.dx-focused) {
     background-color: #e1e1e1;
     color: #333;
 }
@@ -239,7 +231,7 @@
     border: 1px solid black;
 }
 
-::ng-deep #gridContainer .dx-datagrid-rowsview .dx-select-checkboxes-hidden > tbody > tr > td > .dx-select-checkbox {
+::ng-deep #gridContainer .dx-datagrid-rowsview .dx-select-checkboxes-hidden>tbody>tr>td>.dx-select-checkbox {
     display: inline-block;
 }
 
@@ -247,14 +239,7 @@
     border: 1px solid black;
 }
 
-::ng-deep
-    #gridContainerDetail
-    .dx-datagrid-rowsview
-    .dx-select-checkboxes-hidden
-    > tbody
-    > tr
-    > td
-    > .dx-select-checkbox {
+::ng-deep #gridContainerDetail .dx-datagrid-rowsview .dx-select-checkboxes-hidden>tbody>tr>td>.dx-select-checkbox {
     display: inline-block;
 }
 
@@ -283,4 +268,69 @@
         width: 800px;
         overflow: hidden;
     }
+}
+
+::ng-deep .btn-hover:hover {
+    background-color: #999;
+    border-color: #999;
+}
+
+::ng-deep .dx-datagrid .dx-column-lines>td {
+    border-left: 0px solid #ddd;
+    border-right: 0px solid #ddd;
+}
+
+.estatusRegistrado {
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #17a2b8;
+    color: white;
+}
+
+;
+
+.estatusAprobado {
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #28a745;
+    color: white;
+}
+
+;
+
+.estatusError {
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #dc3545;
+    color: white;
+}
+
+;
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+}
+
+;
+
+.adaptiveRowStyle {
+    background-color: #cce6ff;
+    font-size: 12pt
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
 }

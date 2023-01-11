@@ -30,7 +30,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MaterialModule } from 'app/material.module';
 import { NgxSpinnerModule } from "ngx-spinner";
-
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 @NgModule({
     declarations: [
@@ -85,6 +85,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
         NgApexchartsModule,
         TranslocoModule,
         NgxSpinnerModule,
+        CurrencyMaskModule,
         //UTILERIAS
         GridComponentComponent
     ]

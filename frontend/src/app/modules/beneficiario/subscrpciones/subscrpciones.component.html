@@ -1,0 +1,167 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="square-loader">
+    <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+
+<div style="width: 100%;">
+    <mat-card *ngIf="showInitialSubscripciones">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xl-12">
+                <app-grid-component *ngIf="muestraGrid" [datos]="allEmpresas" [columns]="columns"
+                    [gridOptions]="gridOptions" [exportExcel]="exportExcel" [columnHiding]="columnHiding"
+                    [Checkbox]="Checkbox" [Editing]="Editing" [Columnchooser]="Columnchooser"
+                    [searchPanel]="searchPanel" [scroll]="scroll" (messageEvent)="receiveMessage($event)"
+                    (datosevent)='datosMessage($event)' (verSubscripciones)="verSubscripciones($event)"
+                    [toolbar]="toolbar">
+                </app-grid-component>
+            </div>
+        </div>
+    </mat-card>
+
+    <div class="containerAll" *ngIf="!showInitialSubscripciones">
+        <mat-card>
+            <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
+                (selectedTabChange)="onTabChanged($event.index);">
+                <mat-tab label="Dashboard">
+                    <mat-card>
+                        <div class="row">
+                            <form class="col-sm-12 col-md-12 col-xl-12" [formGroup]="dashForm">
+                                <div class="row justify-content-start align-items-center">
+                                    <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Tipo de cálculo</mat-label>
+                                            <mat-select formControlName="tipoBusqueda"
+                                                (selectionChange)="getAllTransaccionesDash($event.value)">
+                                                <mat-option [value]="1">
+                                                    Suscrito
+                                                </mat-option>
+                                                <mat-option [value]="2">
+                                                    Pagado
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                Seleccione un tipo de persona
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-7 col-xl-7">
+                                        <table>
+                                            <tr>
+                                                <th>
+                                                    Razón social
+                                                </th>
+                                                <th>
+                                                    {{tituloAcciones}}
+                                                </th>
+                                                <th>
+                                                    {{tituloImporte}}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{dataCurrenteEmpresa.RazonSocial}}
+                                                </td>
+                                                <td>
+                                                    {{headerDash?.Acciones | number}}
+                                                </td>
+                                                <td>
+                                                    {{headerDash?.Importe | currency}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                                        <mat-slide-toggle color="primary" formControlName="directo" (change)="tipoDashFn($event.checked)">
+                                            <mat-label *ngIf="dashForm.controls.directo.value">
+                                                Accionistas directos
+                                            </mat-label>
+                                            <mat-label *ngIf="!dashForm.controls.directo.value">
+                                                Accionistas indirectos
+                                            </mat-label>
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <app-grid-component *ngIf="muestraGridDashDirecto" [datos]="bodyDash"
+                                    [columns]="columnsDashboardDirecto" [gridOptions]="gridOptions" [exportExcel]="exportExcel"
+                                    [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                                    [toolbar]="toolbarDashboardDirecto">
+                                </app-grid-component>
+
+                                <app-grid-component *ngIf="muestraGridDashIndirecto" [datos]="bodyDash"
+                                    [columns]="columnsDashboardIndirecto" [gridOptions]="gridOptions" [exportExcel]="exportExcel"
+                                    [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                                    [toolbar]="toolbarDashboardIndirecto" (verParticipacionIdrecta)="verParticipacionIdrecta($event)">
+                                </app-grid-component>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab label="Acciones">
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <app-grid-component *ngIf="muestraGridAcciones" [datos]="allAcciones"
+                                    [columns]="columnsAcciones" [gridOptions]="gridOptions" [exportExcel]="exportExcel"
+                                    [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)'
+                                    [toolbar]="toolbarAcciones">
+                                </app-grid-component>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab label="Suscripciones">
+                    <mat-card>
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                            <div class="col-sm-4 col-md-4 col-xl-4" style="text-align: center;">
+                                <h5>{{dataCurrenteEmpresa.RazonSocial}}</h5>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xl-12">
+                                <app-grid-component *ngIf="muestraGridSubscripciones" [datos]="allSubscripciones"
+                                    [columns]="columnsSubscripciones" [gridOptions]="gridOptions"
+                                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox"
+                                    [Editing]="Editing" [Columnchooser]="Columnchooser" [searchPanel]="searchPanel"
+                                    [scroll]="scroll" (messageEvent)="receiveMessage($event)"
+                                    (datosevent)='datosMessage($event)' [toolbar]="toolbarSubscripciones" (verDictamen)="verDictamenFn($event)" (verPagos)="verPagosFn($event)">
+                                </app-grid-component>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab label="Pagos">
+                    <app-pagosSuscripciones [dataCurrenteEmpresa]="dataCurrenteEmpresa"></app-pagosSuscripciones>
+                </mat-tab>
+            </mat-tab-group>
+
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-xl-4">
+                    <button class="btn btn-info pull-left" (click)="backAllEmpresas(false)">
+                        Regresar <i class="fas fa-arrow-alt-circle-left"></i>
+                    </button>
+                </div>
+                <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                <div class="col-sm-4 col-md-4 col-xl-4">
+                    <button *ngIf="accionesUsuario.agregarSubscripciones === 1 && focusTabs === 2"
+                        class="btn btn-success pull-right" (click)="registrarSubscripcion()">
+                        Registrar <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+
+</div>

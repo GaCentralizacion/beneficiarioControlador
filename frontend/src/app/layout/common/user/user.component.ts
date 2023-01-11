@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'user',
@@ -50,10 +51,10 @@ export class UserComponent implements OnInit, OnDestroy {
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-        const dataUser = JSON.parse(localStorage.getItem('user'));
+        const dataUser = JSON.parse(localStorage.getItem(environment._varsLocalStorage.dataUsuario));
 
         if (dataUser) {
-            this.user.email = dataUser.userName;
+            this.user.email = dataUser.Nombre;
         } else {
             this.signOut();
         };
@@ -99,7 +100,6 @@ export class UserComponent implements OnInit, OnDestroy {
      * Sign out
      */
     signOut(): void {
-        localStorage.removeItem('user');
         this._router.navigate(['/sign-in']);
     }
 }

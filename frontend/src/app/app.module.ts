@@ -25,6 +25,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GaService } from './services/ga.service';
 
 import { NgxSpinnerModule } from "ngx-spinner";
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -60,7 +61,8 @@ const routerConfig: ExtraOptions = {
         MatDialogModule,
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        CurrencyMaskModule
     ],
     providers: [
         GaService

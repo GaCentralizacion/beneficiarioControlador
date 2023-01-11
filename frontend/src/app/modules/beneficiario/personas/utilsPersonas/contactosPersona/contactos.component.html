@@ -1,0 +1,63 @@
+<form id="{{idContacto}}" [formGroup]="contactosPersonaForm" class="flex-col p-3">
+    <div class="row justify-content-start align-items-center">
+        <div id="{{validaFormTipo}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-form-field id="{{validaFormTipo}}_component" appearance="fill">
+                <mat-label>Tipo de contacto</mat-label>
+                <mat-select formControlName="idTipCont" (selectionChange)="selectContacto($event.value)">
+                    <mat-option [value]="0">
+                        Seleccione una opción
+                    </mat-option>
+                    <mat-option *ngFor="let tipoContacto of catTipoContacto" [value]="tipoContacto.IdTipoContacto">
+                        {{tipoContacto.Descripcion}}
+                    </mat-option>
+                </mat-select>
+                <mat-error>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div id="{{validaFormDato}}" class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>
+                <span *ngIf="contactosPersonaForm.controls.idTipCont.value === 0">&nbsp;</span>
+                <span *ngIf="contactosPersonaForm.controls.idTipCont.value === 1">Celular</span>
+                <span *ngIf="contactosPersonaForm.controls.idTipCont.value === 2">Email</span>
+                <span *ngIf="contactosPersonaForm.controls.idTipCont.value === 3">Teléfono</span>
+            </mat-label>
+            <mat-form-field id="{{validaFormDato}}_component" appearance="fill">
+                <input *ngIf="contactosPersonaForm.controls.idTipCont.value === 2" 
+                [type]="datoType" 
+                matInput 
+                [placeholder]="datoPlaceHolder" 
+                formControlName="dato" 
+                autocomplete="off">
+                <input *ngIf="contactosPersonaForm.controls.idTipCont.value !== 2" 
+                [type]="datoType" 
+                matInput 
+                [placeholder]="datoPlaceHolder" 
+                formControlName="dato" 
+                autocomplete="off" 
+                onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57">
+                <mat-error>
+                </mat-error>
+            </mat-form-field>            
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>
+                Persona a contactar
+            </mat-label>
+            <mat-form-field appearance="fill">
+                <input type="text" matInput placeholder="Persona a contactar" formControlName="personaContactar" autocomplete="off">
+            </mat-form-field>            
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-label>Extensión</mat-label>
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Extensión" formControlName="ext" autocomplete="off">
+            </mat-form-field>
+        </div>
+        <!-- <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            <mat-slide-toggle color="primary" formControlName="predeterminado">
+                Predeterminado
+            </mat-slide-toggle>
+        </div> -->
+    </div>
+</form>

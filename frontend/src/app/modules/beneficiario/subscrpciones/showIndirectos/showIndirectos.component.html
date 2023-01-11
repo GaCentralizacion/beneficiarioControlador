@@ -1,0 +1,25 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<app-grid-component *ngIf="muestraGrid" [datos]="dataIndirecto" [columns]="columns"
+                    [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+                    [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+                    (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar">
+                </app-grid-component>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger"  [mat-dialog-close]="0">Cerrar</button>
+</mat-dialog-actions>

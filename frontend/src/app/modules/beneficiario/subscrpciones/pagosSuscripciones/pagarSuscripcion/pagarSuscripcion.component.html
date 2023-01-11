@@ -1,0 +1,156 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-card style="background-color: gainsboro;">
+	<mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
+	(selectedTabChange)="onTabChanged($event.index);">
+		<mat-tab label="Pago">
+			<mat-dialog-content class="mat-typography">
+				<div class="row">
+					<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+						<table>
+							<tr>
+								<th>
+									Acreedor
+								</th>
+								<th>
+									Deudor
+								</th>
+								<th>
+									Concepto
+								</th>
+								<th>
+									Serie
+								</th>
+								<th>
+									Cantidad
+								</th>
+								<th>
+									Valor unitario
+								</th>
+								<th>
+									Devueltas
+								</th>
+								<th>
+									Importe total
+								</th>
+								<th>
+									Pagado
+								</th>
+								<th>
+									Restante
+								</th>
+							</tr>
+							<tr>
+								<td>
+									{{dataPago?.Acreedor}}
+								</td>
+								<td>
+									{{dataPago?.Deudor}}
+								</td>
+								<td>
+									{{dataPago?.Concepto}}
+								</td>
+								<td>
+									{{dataPago?.Serie}}
+								</td>
+								<td>
+									{{dataPago?.Cantidad | number}}
+								</td>
+								<td>
+									{{dataPago?.ValorUnitario | currency}}
+								</td>
+								<td>
+									{{dataPago?.Devueltas | number}}
+								</td>
+								<td>
+									{{dataPago?.ImporteTotal | currency}}
+								</td>
+								<td>
+									{{dataPago?.Pagado | currency}}
+								</td>
+								<td>
+									{{limitPago | currency}}
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-12">
+						<form [formGroup]="pagarSuscripcionForm" class="example-form">
+							<div class="row">
+								<div class="col-md-3">
+									<mat-form-field appearance="fill" floatLabel="always">
+										<mat-label>Importe a pagar</mat-label>
+										<i matPrefix class="fa-solid fa-dollar-sign"></i>
+										<input matInput currencyMask [options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text" formControlName="importePago"
+											class="example-right-align">
+											<mat-error *ngIf="pagarSuscripcionForm.controls.importePago.value === 0">
+												Ingrese al valor a pagar
+											</mat-error>
+											<mat-error *ngIf="pagarSuscripcionForm.controls.importePago.value > limitPago">
+												Puedes pagar máximo {{limitPago | currency}}
+											</mat-error>
+									</mat-form-field>
+								</div>
+								<div class="col-md-3">
+									<mat-form-field appearance="fill" floatLabel="always">
+										<mat-label>Fecha pago</mat-label>
+										<input readonly [min]="limitDay" [max]="today" matInput [matDatepicker]="picker"
+											formControlName="fechaPago" placeholder="Fecha pago">
+										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+										<mat-datepicker #picker></mat-datepicker>
+										<mat-error>
+											Seleccione una fecha de pago
+										</mat-error>
+									</mat-form-field>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</mat-dialog-content>
+			<mat-dialog-actions align="end">
+				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+				<button *ngIf="accionesUsuario.pagarSuscripcion === 1" class="btn btn-success" style="margin-left: 10px;" (click)="pagarSuscripcion()" cdkFocusInitial>
+					Pagar suscripción <i class="fa-solid fa-money-bill"></i>
+				</button>
+			</mat-dialog-actions>
+		</mat-tab>
+		<mat-tab label="Archivo" *ngIf=showTabDictamen>
+			<mat-dialog-content class="mat-typography">
+				<mat-card style="background-color: gainsboro;">
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="padding-left: 40%">
+							<div class="divFile">
+								<label style="cursor: pointer;" *ngIf="!docCargado">Selecciona un archivo <i
+										class="fa-solid fa-magnifying-glass"></i></label>
+								<label style="cursor: pointer;" *ngIf="docCargado">Documento cargado <i
+										class="fa-solid fa-circle-check"></i><br>"{{namePcDoc}}"</label>
+								<input class="hide_file" #myInputDocument type="file" accept="application/pdf"
+									name="myFile" (change)="fileEvent($event)" />
+							</div>
+						</div>
+					</div>
+				</mat-card>
+			</mat-dialog-content>
+			<mat-dialog-actions align="end">
+				<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+				<button *ngIf="accionesUsuario.agregarDictamen === 1 && guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="guardarDictamen()" cdkFocusInitial>
+					Guardar archivo <i class="fa-solid fa-floppy-disk"></i>
+				</button>
+				<button *ngIf="accionesUsuario.actualizarDictamen === 1 && !guardaDictamen" class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDictamen()" cdkFocusInitial>
+					Actualizar archivo <i class="fa-solid fa-floppy-disk"></i>
+				</button>
+			</mat-dialog-actions>
+		</mat-tab>
+	</mat-tab-group>
+</mat-card>

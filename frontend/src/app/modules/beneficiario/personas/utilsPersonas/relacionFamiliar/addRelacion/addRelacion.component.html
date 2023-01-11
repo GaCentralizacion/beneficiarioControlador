@@ -1,0 +1,84 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<form [formGroup]="relacionForm" class="example-form">
+					<div class="row">
+						<div class="col-md-3">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Nombre</mat-label>
+								<input readonly matInput type="text" formControlName="nombrePersona" class="example-right-align">
+							</mat-form-field>
+						</div>
+						<div class="col-md-3">
+							<mat-form-field appearance="fill">
+								<mat-label>Familiar</mat-label>
+								<mat-select formControlName="familiar">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let relacion of allPersonasRelacionar"
+										[value]="relacion.IdPersona">
+										{{relacion.Nombre}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione el familiar a relacionar
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-3">
+							<mat-form-field appearance="fill">
+								<mat-label>Tipo de relación</mat-label>
+								<mat-select formControlName="tipoRelacion" (selectionChange)="changeTipoRelacion($event.value)">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let relacionFamiliar of catRelacionFamiliar"
+										[value]="relacionFamiliar.IdRelFamiliar">
+										{{relacionFamiliar.Descripcion}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione un tipo de relación familiar
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-md-3">
+							<mat-form-field appearance="fill" *ngIf="showPatrimonial">
+								<mat-label>Patrimonial</mat-label>
+								<mat-select formControlName="patrimonial">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let patrimonial of catTipoPatrimonial"
+										[value]="patrimonial.IdTipoPatrimonial">
+										{{patrimonial.Descripcion}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione el tipo patrimonial
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+	<button class="btn btn-success" style="margin-left: 10px;" (click)="guardarRelacion()" cdkFocusInitial>
+		Guardar relación <i class="fa-solid fa-floppy-disk"></i>
+	</button>
+</mat-dialog-actions>

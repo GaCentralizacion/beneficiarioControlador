@@ -4,7 +4,7 @@
     [appearance]="navigationAppearance"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
-    [navigation]="navigation.default"
+    [navigation]="navigation?.default"
     [opened]="!isScreenSmall">
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
@@ -52,7 +52,7 @@
                 (click)="quickChat.toggle()">
                 <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
             </button> -->
-            <label>{{dataUser?.nombre}}</label>
+            <label>{{dataUser?.Nombre}}</label>
             <user></user>
         </div>
     </div>

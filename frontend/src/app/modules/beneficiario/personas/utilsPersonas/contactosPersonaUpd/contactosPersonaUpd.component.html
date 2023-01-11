@@ -1,0 +1,10 @@
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <app-grid-component *ngIf="muestraGridContactos" [datos]="allContactos" [columns]="columns" [gridOptions]="gridOptions"
+        [exportExcel]="exportExcel" [columnHiding]="columnHiding" [Checkbox]="Checkbox" [Editing]="Editing"
+        [Columnchooser]="Columnchooser" [searchPanel]="searchPanel" [scroll]="scroll"
+        (messageEvent)="receiveMessage($event)" (datosevent)='datosMessage($event)' [toolbar]="toolbar" (actualizarContacto)="actualizarContacto($event)" 
+        (eliminarContacto)="eliminarContacto($event)">
+    </app-grid-component>
+    </div>
+</div>
