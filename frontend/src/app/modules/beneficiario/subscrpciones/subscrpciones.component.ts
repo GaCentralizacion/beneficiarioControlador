@@ -7,6 +7,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { AddSubscripcionesComponent } from './addSubscripciones/addSubscripciones.component';
+import { AddAccionesComponent } from './addAcciones/addAcciones.component';
 
 /**IMPORTS GRID */
 import {
@@ -42,7 +43,7 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
     accionesUsuario: any
     /**GRID */
     gridOptions: IGridOptions;
-    columns: IColumns[];
+    columns: any = [];
     exportExcel: IExportExcel;
     searchPanel: ISearchPanel;
     scroll: IScroll;
@@ -276,7 +277,41 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar la suscripción',
+                        text: 'Ocurrio un error al guardar la suscripción',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
+        });
+    };
+
+    emitirAcciones = () => {
+        const dialogRef = this.dialog.open(AddAccionesComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Emitir acciones',
+                dataEmpresa: this.dataCurrenteEmpresa
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                this.getAllTransaccionesDash();
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se emitieron las acciónes',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    this.getAllTransaccionesDash();
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un error al emitir las acciones',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
