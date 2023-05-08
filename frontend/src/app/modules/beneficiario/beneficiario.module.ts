@@ -4,6 +4,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { BeneficiarioRoutingModule } from './beneficiario-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
+import { NgxMaskModule } from 'ngx-mask';
 
 /** IMPORT COMPONENTS */
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -29,6 +30,7 @@ import { ContactosPersonaUpdComponent } from './personas/utilsPersonas/contactos
 import { ContactosModalComponent } from './personas/utilsPersonas/contactosPersonaUpd/contactosModal/contactosModal.component';
 import { DomiciliosPersonaUpdComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
 import { DomiciliosModalComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosModal/domiciliosModal.component';
+import { AddAccionesComponent } from './subscrpciones/addAcciones/addAcciones.component';
 
 @NgModule({
     declarations: [
@@ -54,12 +56,14 @@ import { DomiciliosModalComponent } from './personas/utilsPersonas/domiciliosPer
         ContactosPersonaUpdComponent,
         ContactosModalComponent,
         DomiciliosPersonaUpdComponent,
-        DomiciliosModalComponent
+        DomiciliosModalComponent,
+        AddAccionesComponent
     ],
     imports: [
         CommonModule,
         BeneficiarioRoutingModule,
-        SharedModule
+        SharedModule,
+        NgxMaskModule.forRoot()
     ],
     providers: [
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER

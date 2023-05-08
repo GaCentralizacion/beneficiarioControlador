@@ -357,4 +357,56 @@ suscripciones.prototype.post_selSeriesTransformacion = function (req, res, next)
     });
 };
 
+suscripciones.prototype.post_selEmisiones = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdPersona
+    } = req.body;
+
+    var params = [
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_Cat_Emision]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+suscripciones.prototype.post_insEmisiones = function (req, res, next) {
+    var self = this;
+
+    const {
+        Usuario,
+        IdPersona,
+        IdTipoMoneda,
+        IdConEmision,
+        Serie,
+        ValorUnitario,
+        Cantidad,
+        FechaEmision
+    } = req.body;
+
+    var params = [
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'IdTipoMoneda', value: IdTipoMoneda, type: self.model.types.INT },
+        { name: 'IdConEmision', value: IdConEmision, type: self.model.types.INT },
+        { name: 'Serie', value: Serie, type: self.model.types.STRING },
+        { name: 'ValorUnitario', value: ValorUnitario, type: self.model.types.DECIMAL },
+        { name: 'Cantidad', value: Cantidad, type: self.model.types.INT },
+        { name: 'FechaEmision', value: FechaEmision, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_Emision]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = suscripciones;
