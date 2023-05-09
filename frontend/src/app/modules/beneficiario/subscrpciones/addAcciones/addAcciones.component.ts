@@ -88,13 +88,6 @@ export class AddAccionesComponent implements OnInit {
 
 			if( res[2].length > 0 ){
 				this.allSeries = res[2];
-			}else{
-				Swal.fire({
-					title: '¡Alto!',
-					text: 'No se obtuvieron las series',
-					icon: 'warning',
-					confirmButtonText: 'Cerrar'
-				});
 			};
 		}, (error: any) => {
 			this.spinner.hide();
@@ -105,6 +98,15 @@ export class AddAccionesComponent implements OnInit {
 				confirmButtonText: 'Cerrar'
 			});
 		});
+	};
+
+	changeSerie = e =>{
+		const valorUnitario = this.allSeries.filter(s => s.Serie === e);
+		if( valorUnitario.length ){
+			this.emisionesForm.controls.valorUnitario.setValue(valorUnitario[0].ValorUnitario);
+		}else{
+			this.emisionesForm.controls.valorUnitario.setValue(null);
+		};
 	};
 
 	insertEmisiones = () =>{
