@@ -60,7 +60,7 @@
 						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
 							<mat-label>Serie</mat-label>
 							<mat-form-field appearance="fill">
-								<input matInput placeholder="Serie" formControlName="serie" [matAutocomplete]="autoSerie" autocomplete="off">
+								<input matInput placeholder="Serie" formControlName="serie" [matAutocomplete]="autoSerie" autocomplete="off" (ngModelChange)="changeSerie($event)">
 								<mat-autocomplete #autoSerie = "matAutocomplete">
 									<mat-option *ngFor="let serie of allSeries" [value]="serie.Serie">
 									  {{serie.Serie}}
@@ -72,8 +72,9 @@
 						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
 							<mat-label>Valor unitario</mat-label>
 							<mat-form-field appearance="fill">
+								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input matInput placeholder="Valor unitario" formControlName="valorUnitario" 
-								type = "text" currencyMask [options]="{ prefix: '$', thousands: ',', decimal: '.' }" autocomplete="off" >
+								type = "text" currencyMask [options]="{prefix: '', thousands: ',', decimal: '.' }" autocomplete="off" >
 								<!-- <mat-autocomplete #autovalorUnitario = "matAutocomplete">
 									<mat-option *ngFor="let serie of allSeries" [value]="serie.ValorUnitario">
 									  {{serie.ValorUnitario}}
