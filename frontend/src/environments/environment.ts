@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    serviceUrl: 'http://localhost:2020/api/',
+    serviceUrl: 'http://192.168.20.89:2020/api/',
     envName: 'develop',
     _varsLocalStorage: {
         dataUsuario: "user",
