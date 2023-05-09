@@ -66,7 +66,7 @@ export class ShowDictamenComponent implements OnInit {
 
     aprobarDocumento = () => {
         Swal.fire({
-            title: `¿Quieres aprobar el dictamen?`,
+            title: `¿Quieres aprobar el documento?`,
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Aprobar',
@@ -136,7 +136,7 @@ export class ShowDictamenComponent implements OnInit {
         };
 
         Swal.fire({
-            title: `¿Quieres rechazar el dictamen?`,
+            title: `¿Quieres rechazar el documento?`,
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Rechazar',
