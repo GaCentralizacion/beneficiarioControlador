@@ -49,15 +49,20 @@ export class PagarSuscripcionComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataPago = data.dataPago;
-		if (this.dataPago.RutaGuardado !== '' && (this.dataPago.IdEstatusArchivo === null || this.dataPago.IdEstatusArchivo === 3)) {
-			if (this.dataPago.IdEstatusArchivo === 3) {
-				this.guardaDictamen = false;
-			} else {
-				this.guardaDictamen = true;
-			};
-			this.showTabDictamen = true;
-		} else {
+
+		if( this.dataPago.RutaGuardado === null ){
 			this.showTabDictamen = false;
+		}else{
+			if (this.dataPago.RutaGuardado !== '' && (this.dataPago.IdEstatusArchivo === null || this.dataPago.IdEstatusArchivo === 3)) {
+				if (this.dataPago.IdEstatusArchivo === 3) {
+					this.guardaDictamen = false;
+				} else {
+					this.guardaDictamen = true;
+				};
+				this.showTabDictamen = true;
+			} else {
+				this.showTabDictamen = false;
+			};
 		};
 	};
 

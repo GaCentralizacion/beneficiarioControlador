@@ -107,6 +107,15 @@
                 <mat-tab label="Acciones">
                     <mat-card>
                         <div class="row">
+                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                            <div class="col-sm-4 col-md-4 col-xl-4"></div>
+                            <div class="col-sm-4 col-md-4 col-xl-4">
+                                <button *ngIf="accionesUsuario?.agregarAcciones === 1" class="btn btn-success pull-right" (click)="emitirAcciones()">
+                                Emitir acciones <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-12 col-md-12 col-xl-12">
                                 <app-grid-component *ngIf="muestraGridAcciones" [datos]="allAcciones"
                                     [columns]="columnsAcciones" [gridOptions]="gridOptions" [exportExcel]="exportExcel"

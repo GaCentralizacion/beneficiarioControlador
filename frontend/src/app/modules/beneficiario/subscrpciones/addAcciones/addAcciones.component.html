@@ -1,0 +1,116 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<form [formGroup]="emisionesForm" class="example-form">
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+							<mat-label>Razón social</mat-label>
+							<mat-form-field appearance="fill" floatLabel="always">
+								<input readonly matInput placeholder="Razón social" formControlName="razonSocial"
+									autocomplete="off">
+								<mat-error>
+									Ingrese la razón social
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Moneda</mat-label>
+								<mat-select formControlName="moneda">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let moneda of allMonedas" [value]="moneda.IdTipoMoneda">
+										{{moneda.Descripcion}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione un tipo de moneda
+								</mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Concepto</mat-label>
+								<mat-select formControlName="concepto">
+									<mat-option [value]="0">
+										Seleccione una opción
+									</mat-option>
+									<mat-option *ngFor="let concepto of allConceptos" [value]="concepto.IdConEmision">
+										{{concepto.Descripcion}}
+									</mat-option>
+								</mat-select>
+								<mat-error>
+									Seleccione un concepto
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Serie</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Serie" formControlName="serie" [matAutocomplete]="autoSerie" autocomplete="off" (ngModelChange)="changeSerie($event)">
+								<mat-autocomplete #autoSerie = "matAutocomplete">
+									<mat-option *ngFor="let serie of allSeries" [value]="serie.Serie">
+									  {{serie.Serie}}
+									</mat-option>
+								  </mat-autocomplete>
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Valor unitario</mat-label>
+							<mat-form-field appearance="fill">
+								<i matPrefix class="fa-solid fa-dollar-sign"></i>
+								<input matInput placeholder="Valor unitario" formControlName="valorUnitario" 
+								type = "text" currencyMask [options]="{prefix: '', thousands: ',', decimal: '.' }" autocomplete="off" >
+								<!-- <mat-autocomplete #autovalorUnitario = "matAutocomplete">
+									<mat-option *ngFor="let serie of allSeries" [value]="serie.ValorUnitario">
+									  {{serie.ValorUnitario}}
+									</mat-option>
+								  </mat-autocomplete> -->
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-label>Cantidad</mat-label>
+							<mat-form-field appearance="fill">
+								<input matInput placeholder="Cantidad" formControlName="cantidad" 
+								type = "text" mask="separator,3" autocomplete="off" >
+								<mat-error></mat-error>
+							</mat-form-field>
+						</div>
+						<div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+							<mat-form-field appearance="fill" floatLabel="always">
+								<mat-label>Fecha de emisón</mat-label>
+								<input matInput [matDatepicker]="picker" [max]="today" formControlName="fechaEmision" placeholder="Fecha emisión">
+								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+								<mat-datepicker #picker></mat-datepicker>
+								<mat-error>
+									Seleccione una fecha de emisión
+								</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger"  [mat-dialog-close]="0">Cancelar</button>
+	<button class="btn btn-success" style="margin-left: 10px;" [disabled]="emisionesForm.invalid" (click)="insertEmisiones()">
+		Emitir acciones <i class="fa-solid fa-floppy-disk"></i>
+	</button>
+</mat-dialog-actions>
