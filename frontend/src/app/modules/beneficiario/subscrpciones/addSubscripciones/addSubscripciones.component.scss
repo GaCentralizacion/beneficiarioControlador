@@ -16,3 +16,15 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+::ng-deep .search-container {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    // padding: 8px 5px;  /* Añadir más padding horizontal */
+    // border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+}
