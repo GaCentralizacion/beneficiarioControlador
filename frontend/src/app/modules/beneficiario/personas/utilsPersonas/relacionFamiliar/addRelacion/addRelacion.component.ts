@@ -1,10 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Observable, BehaviorSubject } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { MatSelect } from '@angular/material/select';
 
 /**
  * Obtenemos el Mensaje a mostrar
@@ -32,6 +35,11 @@ export class AddRelacionComponent implements OnInit {
 	showPatrimonial: boolean = false;
 	dataUsuario: any;
 
+    // VARIABLES DE FILTRO
+    familiarFilterCtrl = new FormControl();
+    filteredFamiliares: Observable<any[]>;
+    @ViewChild('familiarSelect') familiarSelect: MatSelect;
+
 	constructor(
 		public dialog: MatDialog,
 		private _formBuilder: FormBuilder,
@@ -44,6 +52,7 @@ export class AddRelacionComponent implements OnInit {
 		this.dataPersona = data.dataPersona;
 		this.catRelacionFamiliar = data.catRelacionFamiliar
 		this.catTipoPatrimonial = data.catTipoPatrimonial
+        this.filteredFamiliares = this.familiarFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterFamiliares(value)));
 	};
 
 	ngOnInit() {
@@ -65,6 +74,10 @@ export class AddRelacionComponent implements OnInit {
 		};
 		this.gaService.postService('personas/selAllRelacionesFamiliares', data).subscribe((res: any) => {
 			this.allPersonasRelacionar = res[0];
+            this.filteredFamiliares = this.familiarFilterCtrl.valueChanges.pipe(
+                startWith(''),
+                map(destinatario => (destinatario ? this.filterFamiliares(destinatario) : this.allPersonasRelacionar?.slice()))
+            );
 		}, (error: any) => {
 			Swal.fire({
 				title: '¡Error!',
@@ -158,5 +171,24 @@ export class AddRelacionComponent implements OnInit {
 	closeDialog = data => {
 		this.dialogRef.close(data);
 	};
+
+    filterFamiliares(value: string): any[] {
+        const filterValue = value.toLowerCase();
+        return this.allPersonasRelacionar?.filter(familiar => familiar.Nombre.toLowerCase().includes(filterValue));
+    };
+
+    eraseFamiliar(){
+        this.relacionForm.controls.familiar.setValue(0);
+        this.relacionForm.controls.familiar.markAllAsTouched();
+        if (this.familiarSelect) {
+            this.familiarSelect.close();
+        };
+    };
+
+    onMatSelectBlur = e => {
+        setTimeout(() => {
+            this.familiarFilterCtrl.setValue('');
+        }, 200);
+    };
 
 }

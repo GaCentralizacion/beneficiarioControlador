@@ -1,10 +1,13 @@
 import { Component, OnInit, Inject, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Observable, BehaviorSubject } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { MatSelect } from '@angular/material/select';
 
 /**
  * Obtenemos el Mensaje a mostrar
@@ -42,6 +45,11 @@ export class AddDocumentoComponent implements OnInit {
 	allVigenciasDinamicas: any;
 	vigenciaActual: any;
 
+    // VARIABLES DE FILTRO
+    documentosFilterCtrl = new FormControl();
+    filteredDocumentos: Observable<any[]>;
+    @ViewChild('documentoSelect') documentoSelect: MatSelect;
+
 	constructor(
 		public dialog: MatDialog,
 		private _formBuilder: FormBuilder,
@@ -55,6 +63,7 @@ export class AddDocumentoComponent implements OnInit {
 		this.allDocumentos = data.allDocumentos.filter(x => {
 			return x.IdEstatusArchivo === 2 || x.IdEstatusArchivo === 3 || x.IdEstatusArchivo === null
 		});
+        this.filteredDocumentos = this.documentosFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterDocumentos(value)));
 	};
 
 	ngOnInit() {
@@ -64,6 +73,10 @@ export class AddDocumentoComponent implements OnInit {
 			idVigencias: [0],
 			fechaDocumento: [null, Validators.required]
 		});
+        this.filteredDocumentos = this.documentosFilterCtrl.valueChanges.pipe(
+            startWith(''),
+            map(documentos => (documentos ? this.filterDocumentos(documentos) : this.allDocumentos?.slice()))
+        );
 	};
 
 	async fileEvent(e) {
@@ -154,7 +167,7 @@ export class AddDocumentoComponent implements OnInit {
 					});
 				});
 			};
-			//SI--- TRAEMOS LOS TIPO DE VIGENCIA con el IdDocTipPer Y MOSTRAMOS EL DROPDOWN 
+			//SI--- TRAEMOS LOS TIPO DE VIGENCIA con el IdDocTipPer Y MOSTRAMOS EL DROPDOWN
 			//SELECCIONA EL TIPO DE VIGENCIA Y TRAEMOS LA VIGENCIA YA CON FECHAS CALCULADAS PARA EL PICKET DE FECHA
 			//SELECCIONA LA VIGENCIA Y SE CALCULA LA FECHA EN EL PICKER Y SE MUESTRA
 		};
@@ -366,4 +379,26 @@ export class AddDocumentoComponent implements OnInit {
 		reader.onerror = error => reject(error);
 	});
 	/**CONVER FILE TO BASE64 */
+
+    filterDocumentos(value: string): any[] {
+        const filterValue = value.toLowerCase();
+        return this.allDocumentos?.filter(documentos => documentos.Documento.toLowerCase().includes(filterValue));
+    };
+
+    eraseDocumentos(){
+        this.documentosForm.controls.idDocumento.setValue(0);
+        this.documentosForm.controls.idVigencias.setValue(null);
+        this.documentosForm.controls.fechaDocumento.setValue(null);
+        this.showFechaDocumento = false;
+        this.vigenciaDinamica = false;
+        if (this.documentoSelect) {
+            this.documentoSelect.close();
+        };
+    };
+
+    onMatSelectBlur = e => {
+        setTimeout(() => {
+            this.documentosFilterCtrl.setValue('');
+        }, 200);
+    };
 };

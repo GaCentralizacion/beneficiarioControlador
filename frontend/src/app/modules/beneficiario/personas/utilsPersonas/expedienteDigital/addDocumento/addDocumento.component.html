@@ -30,13 +30,21 @@
 								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="showForm">
 									<mat-form-field appearance="fill">
 										<mat-label>Documentos</mat-label>
-										<mat-select formControlName="idDocumento"
-											(selectionChange)="documentoSelected($event.value)">
-											<mat-option [value]="0">
+										<mat-select #documentoSelect formControlName="idDocumento" (selectionChange)="documentoSelected($event.value)">
+                                            <div class="search-container">
+                                                <mat-form-field appearance="standard" style="flex: 1; margin-right: 8px;">
+                                                    <mat-label>Buscar documento</mat-label>
+                                                    <input matInput [formControl]="documentosFilterCtrl" (focusout)="onMatSelectBlur($event)">
+                                                    <mat-icon matPrefix>search</mat-icon>
+                                                </mat-form-field>
+                                                <button mat-button (click)="eraseDocumentos()">
+                                                    <i class="fas fa-eraser"></i>
+                                                </button>
+                                            </div>
+											<mat-option *ngIf="this.documentosForm.controls.idDocumento.value === 0" [value]="0">
 												Seleccione una opción
 											</mat-option>
-											<mat-option *ngFor="let documento of allDocumentos"
-												[value]="documento.IdDocumento">
+											<mat-option *ngFor="let documento of filteredDocumentos | async" [value]="documento.IdDocumento">
 												{{documento.Documento}}
 											</mat-option>
 										</mat-select>

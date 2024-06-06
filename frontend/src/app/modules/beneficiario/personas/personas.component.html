@@ -29,8 +29,7 @@
 
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
-        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
-        (selectedTabChange)="onTabChanged($event);">
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs" (selectedTabChange)="onTabChanged($event);">
             <!-- Datos Generales -->
             <mat-tab label="Datos de persona">
                 <mat-card>
@@ -183,11 +182,21 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPaisNacimiento?.length === 0">
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdPaisNacimiento?.Nombre}}</mat-label>
-                                    <mat-select formControlName="IdPaisNacimiento" (selectionChange)="paisSeleccionadoFn($event.value)">
-                                        <mat-option [value]="0">
+                                    <mat-select #paisNacimientoSelect formControlName="IdPaisNacimiento" (selectionChange)="paisSeleccionadoFn($event.value)">
+                                        <div class="search-container">
+                                            <mat-form-field appearance="standard" style="flex: 1; margin-right: 8px;">
+                                                <mat-label>Buscar País</mat-label>
+                                                <input matInput [formControl]="paisNacimientoFilterCtrl" (focusout)="onMatSelectBlurPaisNacimiento($event)">
+                                                <mat-icon matPrefix>search</mat-icon>
+                                            </mat-form-field>
+                                            <button mat-button (click)="erasePaisNacimiento()">
+                                                <i class="fas fa-eraser"></i>
+                                            </button>
+                                        </div>
+                                        <mat-option *ngIf="this.personaForm.controls.IdPaisNacimiento.value === 0" [value]="0">
                                             Seleccione una opción
                                         </mat-option>
-                                        <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
+                                        <mat-option *ngFor="let pais of filteredPaisNacimiento | async" [value]="pais.IdPais">
                                             {{pais.Descripcion}}
                                         </mat-option>
                                     </mat-select>
@@ -200,9 +209,6 @@
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdPais?.Nombre}}</mat-label>
                                     <mat-select formControlName="idPais" multiple [disabled]="paisSeleccionado">
-                                        <!-- <mat-option [value]="0">
-                                            Seleccione una opción
-                                        </mat-option> -->
                                         <mat-option *ngFor="let pais of catNacionalidadesAdicionales" [value]="pais.IdPais">
                                             {{pais.Descripcion}}
                                         </mat-option>
@@ -262,8 +268,8 @@
                                         {{EsAccionista?.Nombre}}
                                     </mat-label>
                                 </mat-slide-toggle>
-                                <label style="font-size: 13px; color: gray;" *ngIf="!personaForm.controls.esAccionista.value">(No puede comprar acciones)</label> 
-                                <label style="font-size: 13px; color: green;" *ngIf="personaForm.controls.esAccionista.value">(Puede comprar acciones)</label> 
+                                <label style="font-size: 13px; color: gray;" *ngIf="!personaForm.controls.esAccionista.value">(No puede comprar acciones)</label>
+                                <label style="font-size: 13px; color: green;" *ngIf="personaForm.controls.esAccionista.value">(Puede comprar acciones)</label>
                             </div>
                         </div>
                     </form>

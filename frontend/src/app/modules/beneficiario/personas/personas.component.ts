@@ -14,6 +14,10 @@ import { RelacionFamiliarComponent } from './utilsPersonas/relacionFamiliar/rela
 import { ExpedienteDigitalComponent } from './utilsPersonas/expedienteDigital/expedienteDigital.component';
 import { ContactosPersonaUpdComponent } from './utilsPersonas/contactosPersonaUpd/contactosPersonaUpd.component';
 import { DomiciliosPersonaUpdComponent } from './utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { MatSelect } from '@angular/material/select';
+
 
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
@@ -153,6 +157,11 @@ export class PersonasComponent implements OnInit, OnDestroy {
     catNacionalidadesAdicionales: any = [];
     /**VARIABLES PARA EL PAIS DE NACIMIENTO Y LAS NACIONALIDADES ADICIONALES */
 
+    // VARIABLES DE FILTRO
+    paisNacimientoFilterCtrl = new FormControl();
+    filteredPaisNacimiento: Observable<any[]>;
+    @ViewChild('paisNacimientoSelect') paisNacimientoSelect: MatSelect;
+
     constructor(
         private fb: FormBuilder,
         private router: Router,
@@ -163,8 +172,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
         private spinner: NgxSpinnerService,
         private _router: Router
     ) {
-
-    }
+        this.filteredPaisNacimiento = this.paisNacimientoFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterPaises(value)));
+    };
 
     ngOnDestroy(): void {
     }
@@ -267,6 +276,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 this.catTipoPatrimonial = res[9];
                 this.catRegimenFiscal = res[11];
 
+                this.filteredPaisNacimiento = this.paisNacimientoFilterCtrl.valueChanges.pipe(
+                    startWith(''),
+                    map(subscriptor => (subscriptor ? this.filterPaises(subscriptor) : this.catPais?.slice()))
+                );
                 this.initVarFormPersona();
                 if (!this.actualizarPersona) {
                     this.showAddPersona = true;
@@ -544,23 +557,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     savePersona = () => {
 
-        // console.log('idTipoPersona', this.personaForm.controls.idTipoPersona.invalid);
-        // console.log('idTipoMor', this.personaForm.controls.idTipoMor.invalid);
-        // console.log('regimenFiscal', this.personaForm.controls.regimenFiscal.invalid);
-        // console.log('esAccionista', this.personaForm.controls.esAccionista.invalid);
-        // console.log('nombre_razon', this.personaForm.controls.nombre_razon.invalid);
-        // console.log('apellidoPaterno', this.personaForm.controls.apellidoPaterno.invalid);
-        // console.log('apellidoMaterno', this.personaForm.controls.apellidoMaterno.invalid);
-        // console.log('alias', this.personaForm.controls.alias.invalid);
-        // console.log('fechaNacimiento', this.personaForm.controls.fechaNacimiento.invalid);
-        // console.log('idSexo', this.personaForm.controls.idSexo.invalid);
-        // console.log('idPais', this.personaForm.controls.idPais.invalid);
-        // console.log('curp_registroPob', this.personaForm.controls.curp_registroPob.invalid);
-        // console.log('idIdentificacion', this.personaForm.controls.idIdentificacion.invalid);
-        // console.log('datoIdentificacion', this.personaForm.controls.datoIdentificacion.invalid);
-        // console.log('rfc_identificacion', this.personaForm.controls.rfc_identificacion.invalid);
-        // console.log('idEstadoCivil', this.personaForm.controls.idEstadoCivil.invalid);
-
         if (this.personaForm.invalid) {
             Swal.fire({
                 title: '¡Alto!',
@@ -625,7 +621,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
             denyButtonText: `Cancelar`,
         }).then((result) => {
             if (result.isConfirmed) {
-                this.spinner.show();
+                // this.spinner.show();
                 let regimen = null;
                 if (this.personaForm.controls.idTipoPersona.value === 2 && this.personaForm.controls.idTipoMor.value === 2) {
                     regimen = this.personaForm.controls.regimenFiscal.value;
@@ -656,7 +652,7 @@ export class PersonasComponent implements OnInit, OnDestroy {
                     xmlContacto: xmlCotactos,
                     xmlDomicilio: xmlDomicilio
                 };
-                
+
                 this.gaService.postService('personas/insPersona', jsonPersona).subscribe((res: any) => {
                     this.spinner.hide();
                     if (res.err) {
@@ -1409,4 +1405,26 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     //#endregion CREA GRIDS
+
+    //#region FUNCIONES PARA EL FILTRO DE LOS PAISES
+    filterPaises(value: string): any[] {
+        const normalize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const filterValue = normalize(value.toLowerCase());
+        return this.catPais?.filter(pais => normalize(pais.Descripcion.toLowerCase()).includes(filterValue));
+    };
+
+
+    onMatSelectBlurPaisNacimiento = e => {
+        setTimeout(() => {
+            this.paisNacimientoFilterCtrl.setValue('');
+        }, 200);
+    };
+
+    erasePaisNacimiento = () => {
+        this.personaForm.controls.IdPaisNacimiento.setValue(0);
+        this.personaForm.controls.IdPaisNacimiento.markAsTouched();
+        if(this.paisNacimientoSelect){
+            this.paisNacimientoSelect.close();
+        };
+    };
 };
