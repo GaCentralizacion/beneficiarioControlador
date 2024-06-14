@@ -162,14 +162,14 @@ export class AddAccionesComponent implements OnInit {
 
 	getValFloat(valor) {
 		let val = valor.toString().replace("$", "");
-		val = val.replace(",", "");
+		val = val.toString().replace(/\$/g, "").replace(/,/g, "");
 		return parseFloat(val);
 	};
 
 	getValInt(valor) {
 		let val = valor.toString().replace("$", "");
-		val = val.replace(",", "");
+		val = val.toString().replace(/\$/g, "").replace(/,/g, "");
 		return parseInt(val);
 	};
-	
+
 };

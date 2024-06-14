@@ -40,10 +40,10 @@
 							</mat-label>
 							<mat-form-field appearance="fill">
 								<input *ngIf="contactoForm.controls.idTipCont.value === 2" [type]="datoType" matInput
-									[placeholder]="datoPlaceHolder" formControlName="dato" autocomplete="off">
+									[placeholder]="datoPlaceHolder" formControlName="dato" autocomplete="off" maxlength="150">
 								<input *ngIf="contactoForm.controls.idTipCont.value !== 2" [type]="datoType" matInput
 									[placeholder]="datoPlaceHolder" formControlName="dato" autocomplete="off"
-									onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57">
+									onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57" maxlength="150">
 									<mat-error *ngIf="contactoForm.controls.idTipCont.value === 1">Ingresa el celular</mat-error>
 									<mat-error *ngIf="contactoForm.controls.idTipCont.value === 2">Ingresa un email valido</mat-error>
 									<mat-error *ngIf="contactoForm.controls.idTipCont.value === 3">Ingresa el teléfono</mat-error>
@@ -52,7 +52,7 @@
 						<div class="col-md-3">
 							<mat-label>Extensión</mat-label>
 							<mat-form-field appearance="fill">
-								<input matInput placeholder="Extensión" formControlName="ext" autocomplete="off">
+								<input matInput placeholder="Extensión" formControlName="ext" autocomplete="off" maxlength="50">
 							</mat-form-field>
 						</div>
 						<div class="col-md-3">
@@ -60,8 +60,8 @@
 								Persona a contactar
 							</mat-label>
 							<mat-form-field appearance="fill">
-								<input type="text" matInput placeholder="Persona a contactar" formControlName="personaContactar" autocomplete="off">
-							</mat-form-field>            
+								<input type="text" matInput placeholder="Persona a contactar" formControlName="personaContactar" autocomplete="off" maxlength="150">
+							</mat-form-field>
 						</div>
 						<div class="col-md-3">
 							<mat-slide-toggle style="padding-top: 15px;" color="primary" formControlName="predeterminado">

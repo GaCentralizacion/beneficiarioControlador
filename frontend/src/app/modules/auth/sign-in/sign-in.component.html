@@ -34,7 +34,7 @@
             <form class="mt-8" [formGroup]="signInForm" #signInNgForm="ngForm">
                 <mat-form-field class="w-full">
                     <mat-label>Usuario</mat-label>
-                    <input id="email" matInput [formControlName]="'email'">
+                    <input id="email" matInput [formControlName]="'email'" maxlength="100">
                     <mat-error *ngIf="signInForm.get('email').hasError('required')">
                         El usuario es requerido
                     </mat-error>
@@ -45,7 +45,7 @@
 
                 <mat-form-field class="w-full">
                     <mat-label>Contraseña</mat-label>
-                    <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+                    <input id="password" matInput type="password" [formControlName]="'password'" #passwordField maxlength="100">
                     <button mat-icon-button type="button"
                         (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
                         matSuffix>
@@ -63,7 +63,7 @@
                         [routerLink]="['/forgot-password']">¿Olvidaste tu contraseña?
                     </a>
                 </div> -->
-                
+
                 <button class="fuse-mat-button-large w-full mt-6"  mat-flat-button [color]="'primary'" [disabled]="signInForm.disabled" (click)="signIn()">
                     <span *ngIf="!signInForm.disabled">
                         Iniciar sesión

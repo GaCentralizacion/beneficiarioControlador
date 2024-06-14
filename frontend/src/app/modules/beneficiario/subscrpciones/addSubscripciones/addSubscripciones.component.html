@@ -112,7 +112,7 @@
 							<mat-label>Serie destino</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
 								<input matInput type="text" placeholder="Serie destino" formControlName="serieDestino" [matAutocomplete]="autoSerie"
-								autocomplete="off" (ngModelChange)="changeSerieTransformacion($event)">
+								autocomplete="off" (ngModelChange)="changeSerieTransformacion($event)" maxlength="30">
 								<mat-autocomplete #autoSerie="matAutocomplete">
 									<mat-option *ngFor="let option of allSeriesTransformacion" [value]="option.Serie">
 									  {{option.Serie}}
@@ -130,7 +130,7 @@
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input [readonly]="readOnlyValorUnitario" matInput currencyMask
 									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
-									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off">
+									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off" (keyup)="valorUnitarioOnChangeEvent($event.target.value)">
 								<mat-error>
 									Seleccione una serie para obtener un valor unitario
 								</mat-error>
@@ -191,8 +191,8 @@
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
 							<mat-label>Fecha adquisición</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
-								<input readonly [max]="today" matInput
-								[matDatepicker]="picker" formControlName="fechaAdqusicion" placeholder="Fecha adquisición">
+								<input [max]="today" matInput
+								[matDatepicker]="picker" formControlName="fechaAdqusicion" placeholder="Fecha adquisición" maxlength="10">
 								<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
 								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 								<mat-datepicker #picker></mat-datepicker>

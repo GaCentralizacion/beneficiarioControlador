@@ -116,7 +116,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Nombre_RazonSocial?.length === 0">
                                 <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off">
+                                    <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off" maxlength="150">
                                     <mat-error>
                                         Ingrese el nombre o razón
                                     </mat-error>
@@ -125,7 +125,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="APaterno?.length === 0">
                                 <mat-label>{{APaterno?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{APaterno?.Nombre}}" formControlName="apellidoPaterno" autocomplete="off">
+                                    <input matInput placeholder="{{APaterno?.Nombre}}" formControlName="apellidoPaterno" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el apellido paterno
                                     </mat-error>
@@ -134,7 +134,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="AMaterno?.length === 0">
                                 <mat-label>{{AMaterno?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{AMaterno?.Nombre}}" formControlName="apellidoMaterno" autocomplete="off">
+                                    <input matInput placeholder="{{AMaterno?.Nombre}}" formControlName="apellidoMaterno" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el apellido materno
                                     </mat-error>
@@ -143,7 +143,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Alias?.length === 0">
                                 <mat-label>{{Alias?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Alias?.Nombre}}" formControlName="alias" autocomplete="off">
+                                    <input matInput placeholder="{{Alias?.Nombre}}" formControlName="alias" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el alias
                                     </mat-error>
@@ -152,7 +152,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"[hidden]="Fecha_nacimiento_Constitucion?.length === 0">
                                 <mat-label>{{Fecha_nacimiento_Constitucion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="{{Fecha_nacimiento_Constitucion?.Nombre}}">
+                                    <input [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="{{Fecha_nacimiento_Constitucion?.Nombre}}" maxlength="10">
                                     <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
@@ -164,7 +164,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Registro_de_poblacion?.length === 0">
                                 <mat-label>{{Registro_de_poblacion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Registro_de_poblacion?.Nombre}}" formControlName="curp_registroPob" autocomplete="off">
+                                    <input matInput placeholder="{{Registro_de_poblacion?.Nombre}}" formControlName="curp_registroPob" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el curp o registro de población
                                     </mat-error>
@@ -173,7 +173,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="RFC?.length === 0">
                                 <mat-label>{{RFC?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput [maxlength]="rfcMaxLenght" placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off">
+                                    <input matInput [maxlength]="rfcMaxLenght" placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off" maxlength="13">
                                     <mat-error>
                                         Ingrese el RFC
                                     </mat-error>
@@ -255,8 +255,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Identificiacion?.length === 0">
                                 <mat-label>{{Identificiacion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Identificiacion?.Nombre}}"
-                                        formControlName="datoIdentificacion" autocomplete="off">
+                                    <input matInput placeholder="{{Identificiacion?.Nombre}}" formControlName="datoIdentificacion" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese la clave de la identificación
                                     </mat-error>

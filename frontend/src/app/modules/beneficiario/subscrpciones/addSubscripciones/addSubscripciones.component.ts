@@ -329,6 +329,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.subscripcionesForm.controls.valorUnitario.setValue(this.serieSeleccionada[0].ValorUnitario);
 			this.subscripcionesForm.controls.cantidad.setValue(null);
 			this.subscripcionesForm.controls.importe.setValue(null);
+            this.subscripcionesForm.controls.precioVenta.setValue(null);
 			this.subscripcionesForm.controls.cantidad.clearValidators()
 			this.subscripcionesForm.controls.cantidad.updateValueAndValidity();
 			setTimeout(() => {
@@ -344,6 +345,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.placeHolderCantidad = 'Máximo';
 			this.readOnlyeCantidad = true;
 			this.subscripcionesForm.controls.cantidad.setValue(null);
+            this.subscripcionesForm.controls.precioVenta.setValue(null);
 			this.subscripcionesForm.controls.cantidad.markAsTouched();
 			this.subscripcionesForm.controls.valorUnitario.setValue(null);
 			this.subscripcionesForm.controls.valorUnitario.markAsTouched();
@@ -380,6 +382,17 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.subscripcionesForm.controls.importeVenta.setValue(null);
 		};
 	};
+
+    valorUnitarioOnChangeEvent = e =>{
+        if(this.subscripcionesForm.controls.concepto.value === 8 ){
+            if (e !== 0 || e !== '' || e !== null || e !== undefined) {
+                let importe = (this.subscripcionesForm.controls.cantidad.value * this.getValFloat(e));
+                this.subscripcionesForm.controls.importe.setValue(importe);
+            }else{
+                this.subscripcionesForm.controls.importe.setValue(null);
+            };
+        };
+    };
 
 	getSeriesTransformacion = () => {
 		const data = {
@@ -524,13 +537,13 @@ export class AddSubscripcionesComponent implements OnInit {
 
 	getValFloat(valor) {
 		let val = valor.toString().replace("$", "");
-		val = val.replace(",", "");
+		val = val.toString().replace(/\$/g, "").replace(/,/g, "");
 		return parseFloat(val);
 	};
 
 	getValInt(valor) {
 		let val = valor.toString().replace("$", "");
-		val = val.replace(",", "");
+		val = val.toString().replace(/\$/g, "").replace(/,/g, "");
 		return parseInt(val);
 	};
 

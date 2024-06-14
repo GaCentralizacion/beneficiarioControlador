@@ -78,8 +78,8 @@
 								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
 									<mat-label>Fecha del documento</mat-label>
 									<mat-form-field appearance="fill">
-										<input readonly [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
-											formControlName="fechaDocumento" placeholder="Fecha documento">
+										<input [max]="today" [min]="limitDay" matInput [matDatepicker]="picker"
+											formControlName="fechaDocumento" placeholder="Fecha documento" maxlength="10">
 										<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
 										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 										<mat-datepicker #picker></mat-datepicker>
