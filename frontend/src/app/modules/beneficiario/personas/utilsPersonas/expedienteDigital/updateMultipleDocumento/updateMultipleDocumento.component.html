@@ -1,0 +1,63 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{title}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+				<form [formGroup]="documentosForm" class="example-form">
+					<table>
+						<tr>
+							<td>
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<div class="divFile">
+										<label style="cursor: pointer;" *ngIf="!docCargado">Selecciona un archivo <i
+												class="fa-solid fa-magnifying-glass"></i></label>
+										<label style="cursor: pointer;" *ngIf="docCargado">Documento cargado <i
+												class="fa-solid fa-circle-check"></i><br>"{{namePcDoc}}"</label>
+										<input class="hide_file" #myInputDocument type="file" accept="application/pdf"
+											name="myFile" (change)="fileEvent($event)" />
+									</div>
+								</div>
+							</td>
+							<td style="width: 68%">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" *ngIf="showForm">
+									<mat-label>Documento</mat-label>
+                                    <mat-form-field appearance="fill">
+                                        <input readonly matInput placeholder="Documento" formControlName="nombreDocumento" autocomplete="off" maxlength="100">
+                                        <mat-error>
+                                            Ingrese el documento
+                                        </mat-error>
+                                    </mat-form-field>
+								</div>
+							</td>
+                            <td style="width: 100%" *ngIf="showForm">
+								<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+									<mat-label>Empresa</mat-label>
+                                    <mat-form-field appearance="fill">
+                                        <input readonly matInput placeholder="Empresa" formControlName="nombreEmpresa" autocomplete="off" maxlength="100">
+                                        <mat-error>
+                                            Ingrese la empresa
+                                        </mat-error>
+                                    </mat-form-field>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cancelar</button>
+	<button class="btn btn-success" style="margin-left: 10px;" (click)="actualizarDocumento()" cdkFocusInitial [disabled]="!docCargado">
+		Actualizar documento <i class="fa-solid fa-arrows-rotate"></i>
+	</button>
+</mat-dialog-actions>

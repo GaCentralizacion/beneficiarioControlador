@@ -68,6 +68,8 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	@Output() eliminarRelacionFamiliar = new EventEmitter<{ data }>();
 	@Output() verSubscripciones = new EventEmitter<{ data }>();
 	@Output() verDocumentoExpDigCargado = new EventEmitter<{ data }>();
+    @Output() verDocumentoMultipleExpDigCargado = new EventEmitter<{ data }>();
+    @Output() editarDocumentoMultipleExpDigCargado = new EventEmitter<{ data }>();
 	@Output() verParticipacionIdrecta = new EventEmitter<{ data }>();
 	@Output() verDictamen = new EventEmitter<{ data }>();
 	@Output() registrarPago = new EventEmitter<{ data }>();
@@ -115,8 +117,6 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
-		// //console.log(this.datos);
-
 		this.datos.forEach((data: any, index) => {
 			for (const key in data) {
 				if (data.hasOwnProperty(key)) {
@@ -434,6 +434,14 @@ export class GridComponentComponent implements OnInit, AfterViewInit {
 
 	verDocumentoExpedienteDigital = data => {
 		this.verDocumentoExpDigCargado.emit({ data: data });
+	};
+
+    verDocumentoMultipleExpedienteDigital = data => {
+		this.verDocumentoMultipleExpDigCargado.emit({ data: data });
+	};
+
+    editarDocumentoMultipleExpedienteDigital = data => {
+		this.editarDocumentoMultipleExpDigCargado.emit({ data: data });
 	};
 
 	verParticipacionIndirectaFn = data => {

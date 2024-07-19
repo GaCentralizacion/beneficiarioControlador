@@ -15,12 +15,12 @@ export interface SendData {
 }
 
 @Component({
-    selector: 'app-showDocumento',
-    templateUrl: 'showDocumento.component.html',
-    styleUrls: ['./showDocumento.component.scss']
+    selector: 'app-showMultipleDocumento',
+    templateUrl: 'showMultipleDocumento.component.html',
+    styleUrls: ['./showMultipleDocumento.component.scss']
 })
 
-export class ShowDocumentoComponent implements OnInit {
+export class ShowMultipleDocumentoComponent implements OnInit {
     title: string;
     urlGet: string;
     public thumbnail: SafeResourceUrl;
@@ -36,7 +36,7 @@ export class ShowDocumentoComponent implements OnInit {
 
     constructor(private fb: FormBuilder,
         private sanitizer: DomSanitizer,
-        public dialogRef: MatDialogRef<ShowDocumentoComponent>,
+        public dialogRef: MatDialogRef<ShowMultipleDocumentoComponent>,
         @Inject(MAT_DIALOG_DATA) public data: SendData,
         public dialog: MatDialog,
         private snackBar: MatSnackBar,
@@ -56,6 +56,7 @@ export class ShowDocumentoComponent implements OnInit {
         setTimeout(() => {
             this.showDocumentoFn();
         }, 10);
+        console.log( 'this.allDataDocumento ', this.allDataDocumento  )
     };
 
     showDocumentoFn = () => {
@@ -66,24 +67,24 @@ export class ShowDocumentoComponent implements OnInit {
 
     aprobarDocumento = () => {
         Swal.fire({
-            title: `¿Quieres aprobar el documento ${this.allDataDocumento.Documento}?`,
+            title: `¿Quieres aprobar el documento ${this.allDataDocumento.Documento} para la empresa ${this.allDataDocumento.Nombre_RazonSocial}?`,
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Aprobar',
             denyButtonText: `Cancelar`,
         }).then((result) => {
             if (result.isConfirmed) {
-                this.spinner.show();
+                // this.spinner.show();
                 const data = {
-                    Opcion: 2,
+                    Opcion: 1,
                     Usuario: this.dataUsuario.IdUsuario,
-                    IdExpPer: this.allDataDocumento.IdExpPer,
+                    IdExpMulPer: this.allDataDocumento.IdExpMulPer,
                     FechaDocumento: null,
                     IdEstatusArchivo: 1,
                     Observacion: null
                 };
 
-                this.gaService.postService('personas/aprobarRechazarDocumento', data).subscribe((res: any) => {
+                this.gaService.postService('personas/aprobarRechazarMultiDocumento', data).subscribe((res: any) => {
                     this.spinner.hide();
                     if (res[0][0].Codigo > 0) {
                         Swal.fire({
@@ -137,7 +138,7 @@ export class ShowDocumentoComponent implements OnInit {
         };
 
         Swal.fire({
-            title: `¿Quieres rechazar el documento ${this.allDataDocumento.Documento}?`,
+            title: `¿Quieres rechazar el documento ${this.allDataDocumento.Documento} para la empresa ${this.allDataDocumento.Nombre_RazonSocial}?`,
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Rechazar',
@@ -146,15 +147,15 @@ export class ShowDocumentoComponent implements OnInit {
             if (result.isConfirmed) {
                 this.spinner.show();
                 const data = {
-                    Opcion: 2,
+                    Opcion: 1,
                     Usuario: this.dataUsuario.IdUsuario,
-                    IdExpPer: this.allDataDocumento.IdExpPer,
+                    IdExpMulPer: this.allDataDocumento.IdExpMulPer,
                     FechaDocumento: null,
                     IdEstatusArchivo: 3,
                     Observacion: this.rechazaDocumentoForm.controls.observaciones.value
                 };
 
-                this.gaService.postService('personas/aprobarRechazarDocumento', data).subscribe((res: any) => {
+                this.gaService.postService('personas/aprobarRechazarMultiDocumento', data).subscribe((res: any) => {
                     this.spinner.hide();
                     if (res[0][0].Codigo > 0) {
                         Swal.fire({

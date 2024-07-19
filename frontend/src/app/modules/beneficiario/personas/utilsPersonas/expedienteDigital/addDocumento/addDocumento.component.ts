@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
 import { Observable, BehaviorSubject } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, filter } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 
 /**
@@ -44,6 +44,8 @@ export class AddDocumentoComponent implements OnInit {
 	vigenciaDinamica: boolean;
 	allVigenciasDinamicas: any;
 	vigenciaActual: any;
+    escrituraPublica: boolean = false;
+    allEmpresas: any;
 
     // VARIABLES DE FILTRO
     documentosFilterCtrl = new FormControl();
@@ -63,6 +65,7 @@ export class AddDocumentoComponent implements OnInit {
 		this.allDocumentos = data.allDocumentos.filter(x => {
 			return x.IdEstatusArchivo === 2 || x.IdEstatusArchivo === 3 || x.IdEstatusArchivo === null
 		});
+
         this.filteredDocumentos = this.documentosFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterDocumentos(value)));
 	};
 
@@ -71,7 +74,8 @@ export class AddDocumentoComponent implements OnInit {
 		this.documentosForm = this._formBuilder.group({
 			idDocumento: [0, Validators.min(1)],
 			idVigencias: [0],
-			fechaDocumento: [null, Validators.required]
+			fechaDocumento: [null, Validators.required],
+            idEmpresaMoral: [0]
 		});
         this.filteredDocumentos = this.documentosFilterCtrl.valueChanges.pipe(
             startWith(''),
@@ -118,58 +122,88 @@ export class AddDocumentoComponent implements OnInit {
 		if (e === 0) {
 			this.showBtns = false;
 		} else {
-			this.vigenciaDinamica = false;
+            this.vigenciaDinamica = false;
 			this.documentosForm.controls.idVigencias.setValue(0);
 			this.documentosForm.controls.idVigencias.clearValidators();
 			this.documentosForm.controls.idVigencias.updateValueAndValidity();
 			this.documentosForm.controls.fechaDocumento.setValue(null);
+            this.documentosForm.controls.idEmpresaMoral.setValue(0);
+            this.documentosForm.controls.idEmpresaMoral.clearValidators();
+            this.documentosForm.controls.idEmpresaMoral.updateValueAndValidity();
 			this.vigenciaActual = [];
 			this.showFechaDocumento = false;
 			this.showBtns = true;
+            this.escrituraPublica = false;
 			this.dataDocumento = this.allDocumentos.filter(x => x.IdDocumento === e);
-			if (this.dataDocumento[0].IdExpPer === null) {
-				this.showBtnActualizar = false;
-			} else {
-				this.showBtnActualizar = true;
-			};
+            if( this.dataDocumento[0].Multiple === 0 ){
+                if (this.dataDocumento[0].IdExpPer === null) {
+                    this.showBtnActualizar = false;
+                } else {
+                    this.showBtnActualizar = true;
+                };
 
-			//TIENE VIGENCIADINAMICA NO
-			if (this.dataDocumento[0].VigenciaDinamica === 0) {
-				if (this.dataDocumento[0].Vigencia === '') {
-					this.documentosForm.controls.fechaDocumento.setValue(null);
-					this.documentosForm.controls.fechaDocumento.clearValidators();
-					this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
-					this.showFechaDocumento = false;
-				} else {
-					this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida + ':14:00:00');
-					this.documentosForm.controls.fechaDocumento.addValidators(Validators.required);
-					this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
-					this.showFechaDocumento = true;
-				};
-			} else {
-				const data = {
-					IdDocTipPer: this.dataDocumento[0].IdDocTipPer
-				};
-				this.spinner.show();
-				this.gaService.postService('personas/selVigenciasDinamicas', data).subscribe((res: any) => {
-					this.spinner.hide();
-					this.allVigenciasDinamicas = res[0];
-					this.documentosForm.controls.idVigencias.addValidators(Validators.min(1));
-					this.documentosForm.controls.idVigencias.updateValueAndValidity();
-					this.vigenciaDinamica = true;
-				}, (error: any) => {
-					this.spinner.hide();
-					Swal.fire({
-						title: '¡Error!',
-						text: 'Error 500 al traer las vigencias dinamicas.',
-						icon: 'error',
-						confirmButtonText: 'Cerrar'
-					});
-				});
-			};
-			//SI--- TRAEMOS LOS TIPO DE VIGENCIA con el IdDocTipPer Y MOSTRAMOS EL DROPDOWN
-			//SELECCIONA EL TIPO DE VIGENCIA Y TRAEMOS LA VIGENCIA YA CON FECHAS CALCULADAS PARA EL PICKET DE FECHA
-			//SELECCIONA LA VIGENCIA Y SE CALCULA LA FECHA EN EL PICKER Y SE MUESTRA
+                //TIENE VIGENCIADINAMICA NO
+                if (this.dataDocumento[0].VigenciaDinamica === 0) {
+                    if (this.dataDocumento[0].Vigencia === '') {
+                        this.documentosForm.controls.fechaDocumento.setValue(null);
+                        this.documentosForm.controls.fechaDocumento.clearValidators();
+                        this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+                        this.showFechaDocumento = false;
+                    } else {
+                        this.limitDay = new Date(this.dataDocumento[0].FechaVigenciaPermitida + ':14:00:00');
+                        this.documentosForm.controls.fechaDocumento.addValidators(Validators.required);
+                        this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+                        this.showFechaDocumento = true;
+                    };
+                } else {
+                    const data = {
+                        IdDocTipPer: this.dataDocumento[0].IdDocTipPer
+                    };
+                    this.spinner.show();
+                    this.gaService.postService('personas/selVigenciasDinamicas', data).subscribe((res: any) => {
+                        this.spinner.hide();
+                        this.allVigenciasDinamicas = res[0];
+                        this.documentosForm.controls.idVigencias.addValidators(Validators.min(1));
+                        this.documentosForm.controls.idVigencias.updateValueAndValidity();
+                        this.vigenciaDinamica = true;
+                    }, (error: any) => {
+                        this.spinner.hide();
+                        Swal.fire({
+                            title: '¡Error!',
+                            text: 'Error 500 al traer las vigencias dinamicas.',
+                            icon: 'error',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    });
+                };
+                //SI--- TRAEMOS LOS TIPO DE VIGENCIA con el IdDocTipPer Y MOSTRAMOS EL DROPDOWN
+                //SELECCIONA EL TIPO DE VIGENCIA Y TRAEMOS LA VIGENCIA YA CON FECHAS CALCULADAS PARA EL PICKET DE FECHA
+                //SELECCIONA LA VIGENCIA Y SE CALCULA LA FECHA EN EL PICKER Y SE MUESTRA
+            }else{
+                if( this.dataDocumento[0].IdDocumento === 16 ){
+                    this.documentosForm.controls.fechaDocumento.setValue(null);
+                    this.documentosForm.controls.fechaDocumento.clearValidators();
+                    this.documentosForm.controls.fechaDocumento.updateValueAndValidity();
+                    const data = {
+                        IdPersona: this.dataDocumento[0].IdPersona
+                    };
+                    this.gaService.postService('personas/selEmpresasAccionista', data).subscribe((res: any) => {
+                        this.spinner.hide();
+                        this.documentosForm.controls.idEmpresaMoral.addValidators(Validators.min(1));
+                        this.documentosForm.controls.idEmpresaMoral.updateValueAndValidity();
+                        this.escrituraPublica = true;
+                        this.allEmpresas = res[0];
+                    }, (error: any) => {
+                        this.spinner.hide();
+                        Swal.fire({
+                            title: '¡Error!',
+                            text: 'Error 500 al traer las empresas para el documento.',
+                            icon: 'error',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    });
+                };
+            };
 		};
 	};
 
@@ -219,7 +253,7 @@ export class AddDocumentoComponent implements OnInit {
 				const data = {
 					b64File: this.filedata,
 					IdDocumento: this.documentosForm.controls.idDocumento.value,
-					nombreArchivo: this.dataDocumento[0].Archivo,
+					nombreArchivo: this.regresaNombreDocumento(this.documentosForm.controls.idDocumento.value,this.dataDocumento[0].Archivo),
 					carpetaPersona: this.dataDocumento[0].Carpeta,
 					idPersona: this.dataDocumento[0].IdPersona,
 					rutaGuardado: this.dataDocumento[0].RutaGuardado,
@@ -227,7 +261,8 @@ export class AddDocumentoComponent implements OnInit {
 					idUsuario: this.dataUsuario.IdUsuario,
 					CarpetaHeredado: this.dataDocumento[0].CarpetaHeredado,
 					vigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].Vigencia : null,
-					tipoVigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].VigenciaTipo : null
+					tipoVigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].VigenciaTipo : null,
+                    IdEmpresaEscrituraPublica: this.documentosForm.controls.idEmpresaMoral.value
 				};
 
 				this.spinner.show();
@@ -400,5 +435,17 @@ export class AddDocumentoComponent implements OnInit {
         setTimeout(() => {
             this.documentosFilterCtrl.setValue('');
         }, 200);
+    };
+
+    regresaNombreDocumento = (idDocumento, nombre) => {
+        console.log( 'nombre', nombre )
+        if(idDocumento === 16){
+            const complemento = this.allEmpresas.filter(x => x.IdPersonaMoral === this.documentosForm.controls.idEmpresaMoral.value);
+            console.log( 'complemento', complemento )
+            const nombreRazonSocialConGuionesBajos = complemento[0].Nombre_RazonSocial.trim().replace(/[^a-zA-Z0-9\s_]/g, '').replace(/\s+/g, '_');
+            nombre = nombre.replace(".pdf", `_${nombreRazonSocialConGuionesBajos}.pdf`)
+        };
+        console.log( 'nombre', nombre )
+        return nombre;
     };
 };

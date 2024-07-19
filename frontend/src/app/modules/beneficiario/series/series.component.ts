@@ -73,7 +73,6 @@ export class SeriesComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		console.log('COMPONENTE SERIES WORKS!')
 		this.createGrid();
 	};
 
@@ -148,7 +147,6 @@ export class SeriesComponent implements OnInit, OnDestroy {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				this.spinner.show();
-				console.log('datosEvent', this.datosEvent)
 				setTimeout(() => {
 					this.spinner.hide();
 					Swal.fire('Se guardo la informacion con éxito', '', 'success')

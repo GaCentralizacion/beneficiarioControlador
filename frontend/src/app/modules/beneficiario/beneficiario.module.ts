@@ -31,6 +31,11 @@ import { ContactosModalComponent } from './personas/utilsPersonas/contactosPerso
 import { DomiciliosPersonaUpdComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
 import { DomiciliosModalComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosModal/domiciliosModal.component';
 import { AddAccionesComponent } from './subscrpciones/addAcciones/addAcciones.component';
+import { RazonesSocialesComponent } from './personas/utilsPersonas/razonesSociales/razonesSociales.component';
+import { RazonesSocialesUpdComponent } from './personas/utilsPersonas/razonesSocialesUpd/razonesSocialesUpd.component';
+import { ModalDocsMultiplesComponent } from './personas/utilsPersonas/expedienteDigital/modalDocsMultiples/modalDocsMultiples.component'
+import { ShowMultipleDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/showMultipleDocumento/showMultipleDocumento.component';
+import { UpdateMultipleDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/updateMultipleDocumento/updateMultipleDocumento.component';
 
 import { CustomDateAdapter } from '../../utilerias/pipes/custom-date-adapter';
 const CUSTOM_DATE_FORMATS = {
@@ -70,7 +75,12 @@ const CUSTOM_DATE_FORMATS = {
         ContactosModalComponent,
         DomiciliosPersonaUpdComponent,
         DomiciliosModalComponent,
-        AddAccionesComponent
+        AddAccionesComponent,
+        RazonesSocialesComponent,
+        RazonesSocialesUpdComponent,
+        ModalDocsMultiplesComponent,
+        ShowMultipleDocumentoComponent,
+        UpdateMultipleDocumentoComponent
     ],
     imports: [
         CommonModule,

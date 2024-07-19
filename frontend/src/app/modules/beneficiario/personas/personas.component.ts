@@ -17,7 +17,8 @@ import { DomiciliosPersonaUpdComponent } from './utilsPersonas/domiciliosPersona
 import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
-
+import { RazonesSocialesComponent } from './utilsPersonas/razonesSociales/razonesSociales.component';
+import { RazonesSocialesUpdComponent } from './utilsPersonas/razonesSocialesUpd/razonesSocialesUpd.component';
 
 const REGEX_RFC_FIS = /^([A-ZÑ&]{4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 const REGEX_RFC_MOR = /^([A-ZÑ&]{3}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
@@ -150,6 +151,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
     dataPersonaMoralInterna: any;
     showContactos: boolean = true;
     showRegimen: boolean = false;
+    cambioRazon: boolean = false;
+    cambiosRazonData : any;
     /**VARIABLES PARA LA PERSONA MORAL INTERNA */
 
     /**VARIABLES PARA EL PAIS DE NACIMIENTO Y LAS NACIONALIDADES ADICIONALES */
@@ -363,6 +366,8 @@ export class PersonasComponent implements OnInit, OnDestroy {
 
     getDataPersonaById = () => {
         this.textModificacion = '';
+        this.cambioRazon = false;
+        this.cambiosRazonData = [];
         const data = {
             Opcion: 2,
             Usuario: this.userData.IdUsuario,
@@ -386,6 +391,10 @@ export class PersonasComponent implements OnInit, OnDestroy {
                 } else {
                     let dateCreacion = `${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[2]}/${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[1]}/${this.gralDataPersona?.FechaAlta.split('T')[0].split('-')[0]}`;
                     this.textModificacion = `Registrado el ${dateCreacion} por ${this.gralDataPersona?.NombUsuarioAlta}`;
+                };
+                if( res[4].length > 0 ){
+                    this.cambioRazon = true;
+                    this.cambiosRazonData = res[4];
                 };
             } else {
                 Swal.fire({
@@ -706,23 +715,6 @@ export class PersonasComponent implements OnInit, OnDestroy {
     };
 
     updatePersona = () => {
-
-        // console.log('idTipoPersona', this.personaForm.controls.idTipoPersona.invalid);
-        // console.log('idTipoMor', this.personaForm.controls.idTipoMor.invalid);
-        // console.log('regimenFiscal', this.personaForm.controls.regimenFiscal.invalid);
-        // console.log('esAccionista', this.personaForm.controls.esAccionista.invalid);
-        // console.log('nombre_razon', this.personaForm.controls.nombre_razon.invalid);
-        // console.log('apellidoPaterno', this.personaForm.controls.apellidoPaterno.invalid);
-        // console.log('apellidoMaterno', this.personaForm.controls.apellidoMaterno.invalid);
-        // console.log('alias', this.personaForm.controls.alias.invalid);
-        // console.log('fechaNacimiento', this.personaForm.controls.fechaNacimiento.invalid);
-        // console.log('idSexo', this.personaForm.controls.idSexo.invalid);
-        // console.log('idPais', this.personaForm.controls.idPais.invalid);
-        // console.log('curp_registroPob', this.personaForm.controls.curp_registroPob.invalid);
-        // console.log('idIdentificacion', this.personaForm.controls.idIdentificacion.invalid);
-        // console.log('datoIdentificacion', this.personaForm.controls.datoIdentificacion.invalid);
-        // console.log('rfc_identificacion', this.personaForm.controls.rfc_identificacion.invalid);
-        // console.log('idEstadoCivil', this.personaForm.controls.idEstadoCivil.invalid);
 
         if (this.personaForm.invalid) {
             Swal.fire({
@@ -1426,5 +1418,50 @@ export class PersonasComponent implements OnInit, OnDestroy {
         if(this.paisNacimientoSelect){
             this.paisNacimientoSelect.close();
         };
+    };
+
+    showAllRazones = () =>{
+        const dialogRef = this.dialog.open(RazonesSocialesComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Razones Sociales',
+                dataPersona: this.gralDataPersona,
+                dataRazones: this.cambiosRazonData
+            }
+        });
+    };
+
+    updateRazpnSocial = () =>{
+        const dialogRef = this.dialog.open(RazonesSocialesUpdComponent, {
+            width: '100%',
+            disableClose: true,
+            data: {
+                title: 'Razones Sociales',
+                dataPersona: this.gralDataPersona,
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                Swal.fire({
+                    title: '¡Información!',
+                    text: 'No se guardo la razon social',
+                    icon: 'info',
+                    confirmButtonText: 'Cerrar'
+                });
+            } else {
+                if (result.success === 1) {
+                    this.getDataPersonaById();
+                } else {
+                    Swal.fire({
+                        title: '¡Alto!',
+                        text: 'Ocurrio un error al la razon social',
+                        icon: 'warning',
+                        confirmButtonText: 'Cerrar'
+                    });
+                };
+            };
+        });
     };
 };

@@ -1,0 +1,48 @@
+<div mat-dialog-title>
+	<mat-card style="background-color: gainsboro;">
+		<div class="row text-center">
+			<div class="col-md-12">
+				<label>{{titulo}}</label>
+			</div>
+		</div>
+	</mat-card>
+</div>
+<mat-dialog-content class="mat-typography">
+	<mat-card style="background-color: gainsboro;">
+		<div class="row">
+			<div class="col-md-12">
+                <form [formGroup]="razonForm" class="example-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-label>Razón Social</mat-label>
+                            <mat-form-field appearance="fill">
+                                <input matInput placeholder="Razón Social" formControlName="razonSocial" autocomplete="off" maxlength="100">
+                                <mat-error>
+                                    Ingrese la razón social
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-label>Fecha Razón Social</mat-label>
+                            <mat-form-field appearance="fill">
+                                <input [max]="today" matInput [matDatepicker]="picker" formControlName="fechaRazon" placeholder="Fecha Razón Social" maxlength="10">
+                                <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-error>
+                                    Seleccione una fecha
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button class="btn btn-danger" [mat-dialog-close]="0">Cerrar</button>
+    <button class="btn btn-success" style="margin-left: 10px;" cdkFocusInitial (click)="guardarRazon()">
+		Actualizar Razón Social <i class="fa-solid fa-arrows-rotate"></i>
+	</button>
+</mat-dialog-actions>

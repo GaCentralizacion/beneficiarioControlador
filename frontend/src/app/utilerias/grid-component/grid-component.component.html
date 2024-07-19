@@ -126,8 +126,8 @@
 
 		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
 		<div *dxTemplate="let data of 'estatusDocumento'">
-			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4, 
-							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1, 
+			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4,
+							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1,
 							'estatusError' : data.row.data.IdEstatusArchivo === 2,
 							'estatusError' : data.row.data.IdEstatusArchivo === 3}">
 				<label class="center"> {{data.row.data.Estatus}} </label>
@@ -153,8 +153,8 @@
 
 		<!-- -------------------- TEMPLATE PARA MOSTRAR EL ESTATUS DEL DOCUMENTO ------------------------------------------>
 		<div *dxTemplate="let data of 'estatusDictamen'">
-			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4, 
-							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1, 
+			<div [ngClass]="{'estatusRegistrado' : data.row.data.IdEstatusArchivo === 4,
+							'estatusAprobado' : data.row.data.IdEstatusArchivo === 1,
 							'estatusError' : data.row.data.IdEstatusArchivo === 2,
 							'estatusError' : data.row.data.IdEstatusArchivo === 3}">
 				<label class="center"> {{data.row.data.Estatus}} </label>
@@ -177,7 +177,7 @@
 			</button>
 		</div>
 		<!-- -------------------- TEMPLATE PARA VER LOS PAGOS ------------------------------------------>
-		
+
 		<!-- -------------------- TEMPLATE PARA LOS VER EL DICTAMEN EN LOS PAGOS ------------------------------------------>
 		<div *dxTemplate="let data of 'verDictamenSuscripciones'" style="text-align: center;">
 			<button *ngIf="data.row.data.RutaLectura !== '' && data.row.data.RutaLectura !== null" class="btn btn-circle btns-grids btn-hover" (click)="verDictamenFn(data.row.data)">
@@ -228,6 +228,22 @@
 			<label *ngIf="!data.row.data.esFiscal">NO</label>
 		</div>
 		<!-- -------------------- TEMPLATE PARA LOS PREDETERMINADOS DE LOS DOMICILIOS ------------------------------------------>
+
+        <!-- -------------------- TEMPLATE VER EL DOCUMENTO MULTIPLE DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+		<div *dxTemplate="let data of 'verDocumentoMultipeExpDig'">
+			<button class="btn btn-circle btns-grids btn-hover" (click)="verDocumentoMultipleExpedienteDigital(data.row.data)">
+				<i class="fa-solid fa-eye"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE VER EL DOCUMENTO MULTIPLE DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+
+        <!-- -------------------- TEMPLATE PARA EDITAR EL DOCUMENTO MULTIPLE DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
+		<div *dxTemplate="let data of 'editarDocumentoMultipeExpDig'">
+			<button [disabled]="data.row.data.IdEstatusArchivo !== 3" class="btn btn-circle btns-grids btn-hover" (click)="editarDocumentoMultipleExpedienteDigital(data.row.data)">
+				<i class="fa-solid fa-file-pen"></i>
+			</button>
+		</div>
+		<!-- -------------------- TEMPLATE PARA EDITAR EL DOCUMENTO MULTIPLE DEL EXPEDINETE DIGITAL DE LA PERONSA ------------------------------------------>
 
 		<!-- -------------------- TEMPLATE FOTO ------------------------------------------>
 

@@ -135,7 +135,7 @@ export class ContactosPersonaUpdComponent implements OnInit, OnDestroy {
                 } else {
                     Swal.fire({
                         title: '¡Alto!',
-                        text: 'Ocurrio un erro al guardar el contacto',
+                        text: 'Ocurrio un error al guardar el contacto',
                         icon: 'warning',
                         confirmButtonText: 'Cerrar'
                     });
