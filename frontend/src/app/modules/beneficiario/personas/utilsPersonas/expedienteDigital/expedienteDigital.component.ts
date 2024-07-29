@@ -93,6 +93,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
         };
         this.gaService.postService('personas/selDocumentosExpediente', data).subscribe((res: any) => {
             this.allDocumentos = res[0];
+            this.dataDocsMultiples = res[1];
             this.allDocumentos.forEach((value, key) => {
                 if ((key % 2) == 0) {
                     value.backgroundcolor = '#F4F6F6';
@@ -130,35 +131,16 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
                 };
             });
         }else{
-            this.spinner.show();
-            let dataMultiple = {
-                IdPersona: data.data.IdPersona,
-                IdDocumento: data.data.IdDocumento
-            };
-            this.gaService.postService('personas/selDocumentosMultiplesExpediente', dataMultiple).subscribe((res: any) => {
-                this.dataDocsMultiples = res[0];
-                if( this.dataDocsMultiples.length === 0 ){
-                    Swal.fire({
-                        title: '¡Alto!',
-                        text: 'No existen documentos para mostrar.',
-                        icon: 'warning',
-                        confirmButtonText: 'Cerrar'
-                    });
-                }else{
-                    setTimeout(() => {
-                        this.spinner.hide();
-                        this.showDocsMultiples()
-                    }, 100);
-                };
-            }, (error: any) => {
-                this.spinner.hide();
+            if( this.dataDocsMultiples.length > 0 ){
+                this.showDocsMultiples()
+            }else{
                 Swal.fire({
-                    title: '¡Error!',
-                    text: 'Error 500 al regresar los documentos multiples del accionista.',
-                    icon: 'error',
+                    title: '¡Alto!',
+                    text: 'No existen documentos para mostrar.',
+                    icon: 'warning',
                     confirmButtonText: 'Cerrar'
                 });
-            })
+            };
         };
     };
 

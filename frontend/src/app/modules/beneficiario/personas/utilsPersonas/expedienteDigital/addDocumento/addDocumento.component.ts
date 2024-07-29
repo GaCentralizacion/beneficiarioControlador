@@ -52,6 +52,10 @@ export class AddDocumentoComponent implements OnInit {
     filteredDocumentos: Observable<any[]>;
     @ViewChild('documentoSelect') documentoSelect: MatSelect;
 
+    empresaFilterCtrl = new FormControl();
+    filteredEmpresas: Observable<any[]>;
+    @ViewChild('empresaSelect') empresaSelect: MatSelect;
+
 	constructor(
 		public dialog: MatDialog,
 		private _formBuilder: FormBuilder,
@@ -67,6 +71,7 @@ export class AddDocumentoComponent implements OnInit {
 		});
 
         this.filteredDocumentos = this.documentosFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterDocumentos(value)));
+        this.filteredEmpresas = this.empresaFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterEmpresas(value)));
 	};
 
 	ngOnInit() {
@@ -80,6 +85,10 @@ export class AddDocumentoComponent implements OnInit {
         this.filteredDocumentos = this.documentosFilterCtrl.valueChanges.pipe(
             startWith(''),
             map(documentos => (documentos ? this.filterDocumentos(documentos) : this.allDocumentos?.slice()))
+        );
+        this.filteredEmpresas = this.empresaFilterCtrl.valueChanges.pipe(
+            startWith(''),
+            map(empresas => (empresas ? this.filterEmpresas(empresas) : this.allEmpresas?.slice()))
         );
 	};
 
@@ -250,10 +259,12 @@ export class AddDocumentoComponent implements OnInit {
 			denyButtonText: `Cancelar`,
 		}).then((result) => {
 			if (result.isConfirmed) {
+                const archivoidExpMul = this.allEmpresas?.filter(x => x.IdPersonaMoral === this.documentosForm.controls.idEmpresaMoral.value);
+                const nombreArchivo = this.dataDocumento[0].Multiple === 1 ? archivoidExpMul[0].Archivo : this.dataDocumento[0].Archivo;
 				const data = {
 					b64File: this.filedata,
 					IdDocumento: this.documentosForm.controls.idDocumento.value,
-					nombreArchivo: this.regresaNombreDocumento(this.documentosForm.controls.idDocumento.value,this.dataDocumento[0].Archivo),
+					nombreArchivo: nombreArchivo,
 					carpetaPersona: this.dataDocumento[0].Carpeta,
 					idPersona: this.dataDocumento[0].IdPersona,
 					rutaGuardado: this.dataDocumento[0].RutaGuardado,
@@ -262,7 +273,7 @@ export class AddDocumentoComponent implements OnInit {
 					CarpetaHeredado: this.dataDocumento[0].CarpetaHeredado,
 					vigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].Vigencia : null,
 					tipoVigenciaDinamica: this.vigenciaActual.length > 0 ? this.vigenciaActual[0].VigenciaTipo : null,
-                    IdEmpresaEscrituraPublica: this.documentosForm.controls.idEmpresaMoral.value
+                    IdExpMulPer: archivoidExpMul ? archivoidExpMul[0].IdExpMulPer : null
 				};
 
 				this.spinner.show();
@@ -420,12 +431,19 @@ export class AddDocumentoComponent implements OnInit {
         return this.allDocumentos?.filter(documentos => documentos.Documento.toLowerCase().includes(filterValue));
     };
 
+    filterEmpresas(value: string): any[] {
+        const filterValue = value.toLowerCase();
+        return this.allEmpresas?.filter(empresas => empresas.Nombre_RazonSocial.toLowerCase().includes(filterValue));
+    };
+
     eraseDocumentos(){
         this.documentosForm.controls.idDocumento.setValue(0);
         this.documentosForm.controls.idVigencias.setValue(null);
         this.documentosForm.controls.fechaDocumento.setValue(null);
+        this.documentosForm.controls.idEmpresaMoral.setValue(0);
         this.showFechaDocumento = false;
         this.vigenciaDinamica = false;
+        this.escrituraPublica = false;
         if (this.documentoSelect) {
             this.documentoSelect.close();
         };
@@ -437,15 +455,28 @@ export class AddDocumentoComponent implements OnInit {
         }, 200);
     };
 
-    regresaNombreDocumento = (idDocumento, nombre) => {
-        console.log( 'nombre', nombre )
-        if(idDocumento === 16){
-            const complemento = this.allEmpresas.filter(x => x.IdPersonaMoral === this.documentosForm.controls.idEmpresaMoral.value);
-            console.log( 'complemento', complemento )
-            const nombreRazonSocialConGuionesBajos = complemento[0].Nombre_RazonSocial.trim().replace(/[^a-zA-Z0-9\s_]/g, '').replace(/\s+/g, '_');
-            nombre = nombre.replace(".pdf", `_${nombreRazonSocialConGuionesBajos}.pdf`)
-        };
-        console.log( 'nombre', nombre )
-        return nombre;
+    onMatSelectBlurEmpresas = e => {
+        setTimeout(() => {
+            this.empresaFilterCtrl.setValue('');
+        }, 200);
     };
+
+    eraseEmpresas(){
+        this.documentosForm.controls.idEmpresaMoral.setValue(0);
+        if (this.empresaSelect) {
+            this.empresaSelect.close();
+        };
+    };
+
+    // regresaNombreDocumento = (idDocumento, nombre) => {
+    //     console.log( 'nombre', nombre )
+    //     if(idDocumento === 16){
+    //         const complemento = this.allEmpresas.filter(x => x.IdPersonaMoral === this.documentosForm.controls.idEmpresaMoral.value);
+    //         console.log( 'complemento', complemento )
+    //         const nombreRazonSocialConGuionesBajos = complemento[0].Nombre_RazonSocial.trim().replace(/[^a-zA-Z0-9\s_]/g, '').replace(/\s+/g, '_');
+    //         nombre = nombre.replace(".pdf", `_${nombreRazonSocialConGuionesBajos}.pdf`)
+    //     };
+    //     console.log( 'nombre', nombre )
+    //     return nombre;
+    // };
 };

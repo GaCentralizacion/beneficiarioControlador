@@ -56,7 +56,6 @@ export class ShowMultipleDocumentoComponent implements OnInit {
         setTimeout(() => {
             this.showDocumentoFn();
         }, 10);
-        console.log( 'this.allDataDocumento ', this.allDataDocumento  )
     };
 
     showDocumentoFn = () => {

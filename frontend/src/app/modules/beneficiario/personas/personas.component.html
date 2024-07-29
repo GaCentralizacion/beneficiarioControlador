@@ -118,7 +118,7 @@
                                     <div [ngClass]="actualizarPersona && moralInterna && cambioRazon ? 'col-sm-10 col-md-10 col-lg-10 col-xl-10' : 'col-sm-12 col-md-12 col-lg-12 col-xl-12'">
                                         <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
                                         <mat-form-field appearance="fill">
-                                            <input [readonly]="moralInterna" matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off" maxlength="150">
+                                            <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off" maxlength="150">
                                             <mat-error>
                                                 Ingrese el nombre o razón
                                             </mat-error>

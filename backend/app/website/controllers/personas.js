@@ -352,7 +352,7 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
         CarpetaHeredado,
         vigenciaDinamica,
         tipoVigenciaDinamica,
-        IdEmpresaEscrituraPublica
+        IdExpMulPer
     } = req.body;
     
     const resLogic = await logicSave.saveDocumentoLogic(b64File, nombreArchivo, carpetaPersona, rutaGuardado);
@@ -367,7 +367,7 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
                     { name: 'FechaDocumento', value: fechaDocumento, type: self.model.types.STRING },
                     { name: 'vigenciaDinamica', value: vigenciaDinamica, type: self.model.types.INT },
                     { name: 'tipoVigenciaDinamica', value: tipoVigenciaDinamica, type: self.model.types.STRING },
-                    { name: 'IdEmpresaEscrituraPublica', value: IdEmpresaEscrituraPublica, type: self.model.types.INT },
+                    { name: 'IdExpMulPer', value: IdExpMulPer, type: self.model.types.INT },
                 ];
 
                 this.model.queryAllRecordSet('[dbo].[Ins_DocumentosPersona]', params, function (error, result) {
@@ -753,27 +753,6 @@ personas.prototype.post_insRazonSocial = function (req, res, next) {
     ];
 
     this.model.queryAllRecordSet('[dbo].[Ins_PersonaCambioRazon]', params, async function (error, result) {
-        self.view.expositor(res, {
-            error: error,
-            result: result
-        });
-    });
-};
-
-personas.prototype.post_selDocumentosMultiplesExpediente = function (req, res, next) {
-    var self = this;
-
-    const {
-        IdPersona,
-        IdDocumento
-    } = req.body
-
-    var params = [
-        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
-        { name: 'IdDocumento', value: IdDocumento, type: self.model.types.INT },
-    ];
-
-    this.model.queryAllRecordSet('[dbo].[Sel_DocumentosMultiplePersona]', params, function (error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
