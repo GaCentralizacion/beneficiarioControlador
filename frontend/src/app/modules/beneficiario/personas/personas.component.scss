@@ -85,4 +85,18 @@ agm-map {
   color: #fff;
 }
 
+::ng-deep .search-container {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    // padding: 8px 5px;  /* Añadir más padding horizontal */
+    // border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+}
 
+.updateButtons {
+    margin-right: 10px; /* Puedes ajustar el valor según tus necesidades */
+}

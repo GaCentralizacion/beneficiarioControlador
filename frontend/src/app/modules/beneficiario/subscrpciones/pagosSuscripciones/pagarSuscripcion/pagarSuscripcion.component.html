@@ -104,8 +104,8 @@
 								<div class="col-md-3">
 									<mat-form-field appearance="fill" floatLabel="always">
 										<mat-label>Fecha pago</mat-label>
-										<input readonly [min]="limitDay" [max]="today" matInput [matDatepicker]="picker"
-											formControlName="fechaPago" placeholder="Fecha pago">
+										<input [min]="limitDay" [max]="today" matInput [matDatepicker]="picker"
+											formControlName="fechaPago" placeholder="Fecha pago" maxlength="10">
 										<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 										<mat-datepicker #picker></mat-datepicker>
 										<mat-error>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 
 import { BeneficiarioRoutingModule } from './beneficiario-routing.module';
 import { SharedModule } from 'app/shared/shared.module';
@@ -31,6 +31,24 @@ import { ContactosModalComponent } from './personas/utilsPersonas/contactosPerso
 import { DomiciliosPersonaUpdComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosPersonaUpd.component';
 import { DomiciliosModalComponent } from './personas/utilsPersonas/domiciliosPersonaUpd/domiciliosModal/domiciliosModal.component';
 import { AddAccionesComponent } from './subscrpciones/addAcciones/addAcciones.component';
+import { RazonesSocialesComponent } from './personas/utilsPersonas/razonesSociales/razonesSociales.component';
+import { RazonesSocialesUpdComponent } from './personas/utilsPersonas/razonesSocialesUpd/razonesSocialesUpd.component';
+import { ModalDocsMultiplesComponent } from './personas/utilsPersonas/expedienteDigital/modalDocsMultiples/modalDocsMultiples.component'
+import { ShowMultipleDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/showMultipleDocumento/showMultipleDocumento.component';
+import { UpdateMultipleDocumentoComponent } from './personas/utilsPersonas/expedienteDigital/updateMultipleDocumento/updateMultipleDocumento.component';
+
+import { CustomDateAdapter } from '../../utilerias/pipes/custom-date-adapter';
+const CUSTOM_DATE_FORMATS = {
+    parse: {
+      dateInput: 'DD/MM/YYYY',
+    },
+    display: {
+      dateInput: 'DD/MM/YYYY',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'DD/MM/YYYY',
+      monthYearA11yLabel: 'MMMM YYYY',
+    }
+  };
 
 @NgModule({
     declarations: [
@@ -57,7 +75,12 @@ import { AddAccionesComponent } from './subscrpciones/addAcciones/addAcciones.co
         ContactosModalComponent,
         DomiciliosPersonaUpdComponent,
         DomiciliosModalComponent,
-        AddAccionesComponent
+        AddAccionesComponent,
+        RazonesSocialesComponent,
+        RazonesSocialesUpdComponent,
+        ModalDocsMultiplesComponent,
+        ShowMultipleDocumentoComponent,
+        UpdateMultipleDocumentoComponent
     ],
     imports: [
         CommonModule,
@@ -66,6 +89,8 @@ import { AddAccionesComponent } from './subscrpciones/addAcciones/addAcciones.co
         NgxMaskModule.forRoot()
     ],
     providers: [
+        { provide: DateAdapter, useClass: CustomDateAdapter },
+        { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // SE AGREGA PARA LA FECHA DE LSO DATE PIKCER
         CurrencyPipe //Se agrega para poder usar el currency.transform
     ]

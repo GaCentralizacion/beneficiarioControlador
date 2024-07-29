@@ -1,10 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ViewChild  } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { environment } from 'environments/environment';
 import { NgxSpinnerService } from "ngx-spinner";
+import { Observable, BehaviorSubject } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { MatSelect } from '@angular/material/select';
 
 /**
  * Obtenemos el Mensaje a mostrar
@@ -26,7 +29,7 @@ export class AddSubscripcionesComponent implements OnInit {
 	dataEmpresa: any
 	subscripcionesForm: FormGroup;
 	allSubscriptores: any;
-	personaSubscriptora: any;
+	personaSubscriptora: any = [];
 	showSelectConceptos: boolean = false;
 	allConceptos: any;
 	conceptoSelecionado: any;
@@ -49,6 +52,14 @@ export class AddSubscripcionesComponent implements OnInit {
 	serieSeleccionadaTransformacion: any;
 	readOnlyValorUnitario: boolean = true;
 
+    // VARIABLES DE FILTRO
+    subscriptorFilterCtrl = new FormControl();
+    destinatarioFilterCtrl = new FormControl();
+    filteredSubscriptores: Observable<any[]>;
+    filteredDestinatarios: Observable<any[]>;
+    @ViewChild('suscriptorSelect') suscriptorSelect: MatSelect;
+    @ViewChild('destinatarioSelect') destinatarioSelect: MatSelect;
+
 	constructor(
 		public dialog: MatDialog,
 		private _formBuilder: FormBuilder,
@@ -59,6 +70,8 @@ export class AddSubscripcionesComponent implements OnInit {
 	) {
 		this.titulo = data.title;
 		this.dataEmpresa = data.dataEmpresa;
+        this.filteredSubscriptores = this.subscriptorFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterSubscriptores(value)));
+        this.filteredDestinatarios = this.subscriptorFilterCtrl.valueChanges.pipe(startWith(''), map(value => this.filterDestinatarios(value)));
 	};
 
 	ngOnInit() {
@@ -106,6 +119,10 @@ export class AddSubscripcionesComponent implements OnInit {
 			if (res[0].length > 0) {
 				this.allSubscriptores = res[0];
 				this.subscripcionesForm.controls.subscriptor.setValue(0);
+                this.filteredSubscriptores = this.subscriptorFilterCtrl.valueChanges.pipe(
+                    startWith(''),
+                    map(subscriptor => (subscriptor ? this.filterSubscriptores(subscriptor) : this.allSubscriptores?.slice()))
+                );
 			} else {
 				Swal.fire({
 					title: '¡Alto!',
@@ -127,6 +144,12 @@ export class AddSubscripcionesComponent implements OnInit {
 	getAllConceptos = e => {
 		this.clearAllForm();
 		this.personaSubscriptora = [];
+        this.showAllFrom = false;
+        this.showSelectConceptos = false;
+        this.showSerieDestino = false;
+        this.showSelectPersonaDestino = false;
+        this.showAllfields = false;
+        this.showFieldsImportePrecioVenta = false;
 		if (e !== 0) {
 			this.personaSubscriptora = this.allSubscriptores.filter(x => x.IdPersonaSubscripcion === e);
 			const data = {
@@ -140,7 +163,10 @@ export class AddSubscripcionesComponent implements OnInit {
 					this.allConceptos = res[0];
 					this.subscripcionesForm.controls.concepto.setValue(0);
 					this.showAllFrom = true;
+                    this.showSelectConceptos = true;
 				} else {
+                    this.allConceptos = [];
+			        this.showSelectConceptos = false;
 					Swal.fire({
 						title: '¡Alto!',
 						text: 'No se obtuvieron los conceptos del suscriptor',
@@ -149,6 +175,8 @@ export class AddSubscripcionesComponent implements OnInit {
 					});
 				};
 			}, (error: any) => {
+                this.allConceptos = [];
+                this.showSelectConceptos = false;
 				Swal.fire({
 					title: '¡Error!',
 					text: error.error.text,
@@ -156,16 +184,21 @@ export class AddSubscripcionesComponent implements OnInit {
 					confirmButtonText: 'Cerrar'
 				});
 			});
-			this.showSelectConceptos = true;
 		} else {
 			this.showAllFrom = false;
 			this.showSelectConceptos = false;
+            this.showSerieDestino = false;
+            this.showSelectPersonaDestino = false;
+            this.showAllfields = false;
+            this.showFieldsImportePrecioVenta = false;
+            this.clearAllForm();
 		};
 	};
 
 	getAllPersonasDestino = e => {
 		this.showSerieDestino = false;
 		this.readOnlyValorUnitario = true;
+        this.subscripcionesForm.controls.personaDestino.setValue(0);
 		this.subscripcionesForm.controls.serieDestino.setValue('');
 		this.subscripcionesForm.controls.serieDestino.clearValidators()
 		this.subscripcionesForm.controls.serieDestino.updateValueAndValidity();
@@ -178,6 +211,7 @@ export class AddSubscripcionesComponent implements OnInit {
 		this.subscripcionesForm.controls.aplicaDictamen.setValue(false);
 		this.conceptoSelecionado = []
 		this.conceptoSelecionado = this.allConceptos.filter(x => x.IdConcepto === e);
+        this.destinatarioFilterCtrl.setValue('');
 		if (e === 8) {
 			this.showSerieDestino = true;
 			this.subscripcionesForm.controls.serieDestino.addValidators(Validators.required);
@@ -186,43 +220,55 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.subscripcionesForm.controls.serieDestino.markAsTouched();
 			this.allSeriesTransformacion = [];
 		};
-		if (this.conceptoSelecionado[0].AplicaPersonaDestino !== 0) {
-			const data = {
-				Opcion: 3,
-				IdPersona: this.dataEmpresa.IdPersona,
-				IdPersonaSubscripcion: this.personaSubscriptora[0].IdPersonaSubscripcion,
-				IdConcepto: this.conceptoSelecionado[0].IdConcepto
-			};
-			this.gaService.postService('suscripciones/selAllTransacciones', data).subscribe((res: any) => {
-				if (res.length > 0) {
-					this.allPersonasDestino = res[0];
-					this.subscripcionesForm.controls.personaDestino.setValue(0);
-					this.subscripcionesForm.controls.fechaAdqusicion.setValue(this.fechaAquisicionInput);
-					this.showSelectPersonaDestino = true;
-				} else {
-					Swal.fire({
-						title: '¡Alto!',
-						text: 'No se obtuvieron las personas destino',
-						icon: 'warning',
-						confirmButtonText: 'Cerrar'
-					});
-				};
-			}, (error: any) => {
-				Swal.fire({
-					title: '¡Error!',
-					text: error.error.text,
-					icon: 'error',
-					confirmButtonText: 'Cerrar'
-				});
-			});
-			this.getAllSeries();
-		} else {
-			this.subscripcionesForm.controls.fechaAdqusicion.setValue(this.fechaAquisicionInput);
-			this.showSelectPersonaDestino = false;
-			this.subscripcionesForm.controls.personaDestino.clearValidators()
-			this.subscripcionesForm.controls.personaDestino.updateValueAndValidity();
-			this.getAllSeries();
-		};
+        if(this.conceptoSelecionado.length > 0){
+            if (this.conceptoSelecionado[0]?.AplicaPersonaDestino !== 0) {
+                const data = {
+                    Opcion: 3,
+                    IdPersona: this.dataEmpresa.IdPersona,
+                    IdPersonaSubscripcion: this.personaSubscriptora[0].IdPersonaSubscripcion,
+                    IdConcepto: this.conceptoSelecionado[0].IdConcepto
+                };
+                this.gaService.postService('suscripciones/selAllTransacciones', data).subscribe((res: any) => {
+                    if (res.length > 0) {
+                        this.allPersonasDestino = res[0];
+                        this.subscripcionesForm.controls.personaDestino.setValue(0);
+                        this.subscripcionesForm.controls.fechaAdqusicion.setValue(this.fechaAquisicionInput);
+                        this.showSelectPersonaDestino = true;
+                        this.filteredDestinatarios = this.destinatarioFilterCtrl.valueChanges.pipe(
+                            startWith(''),
+                            map(destinatario => (destinatario ? this.filterDestinatarios(destinatario) : this.allPersonasDestino?.slice()))
+                        );
+                    } else {
+                        Swal.fire({
+                            title: '¡Alto!',
+                            text: 'No se obtuvieron las personas destino',
+                            icon: 'warning',
+                            confirmButtonText: 'Cerrar'
+                        });
+                    };
+                }, (error: any) => {
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: error.error.text,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
+                });
+                this.getAllSeries();
+            } else {
+                this.subscripcionesForm.controls.fechaAdqusicion.setValue(this.fechaAquisicionInput);
+                this.showSelectPersonaDestino = false;
+                this.subscripcionesForm.controls.personaDestino.clearValidators()
+                this.subscripcionesForm.controls.personaDestino.updateValueAndValidity();
+                this.getAllSeries();
+            };
+        }else{
+            this.showSerieDestino = false;
+            this.showSelectPersonaDestino = false;
+            this.showAllfields = false;
+            this.showFieldsImportePrecioVenta = false;
+            this.clearAllForm();
+        };
 	};
 
 	getAllSeries = () => {
@@ -283,6 +329,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.subscripcionesForm.controls.valorUnitario.setValue(this.serieSeleccionada[0].ValorUnitario);
 			this.subscripcionesForm.controls.cantidad.setValue(null);
 			this.subscripcionesForm.controls.importe.setValue(null);
+            this.subscripcionesForm.controls.precioVenta.setValue(null);
 			this.subscripcionesForm.controls.cantidad.clearValidators()
 			this.subscripcionesForm.controls.cantidad.updateValueAndValidity();
 			setTimeout(() => {
@@ -298,6 +345,7 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.placeHolderCantidad = 'Máximo';
 			this.readOnlyeCantidad = true;
 			this.subscripcionesForm.controls.cantidad.setValue(null);
+            this.subscripcionesForm.controls.precioVenta.setValue(null);
 			this.subscripcionesForm.controls.cantidad.markAsTouched();
 			this.subscripcionesForm.controls.valorUnitario.setValue(null);
 			this.subscripcionesForm.controls.valorUnitario.markAsTouched();
@@ -334,6 +382,17 @@ export class AddSubscripcionesComponent implements OnInit {
 			this.subscripcionesForm.controls.importeVenta.setValue(null);
 		};
 	};
+
+    valorUnitarioOnChangeEvent = e =>{
+        if(this.subscripcionesForm.controls.concepto.value === 8 ){
+            if (e !== 0 || e !== '' || e !== null || e !== undefined) {
+                let importe = (this.subscripcionesForm.controls.cantidad.value * this.getValFloat(e));
+                this.subscripcionesForm.controls.importe.setValue(importe);
+            }else{
+                this.subscripcionesForm.controls.importe.setValue(null);
+            };
+        };
+    };
 
 	getSeriesTransformacion = () => {
 		const data = {
@@ -415,7 +474,6 @@ export class AddSubscripcionesComponent implements OnInit {
 					ValorUnitarioDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.valorUnitario.value.toFixed(2) : null,
 					SerieDestino: this.conceptoSelecionado[0].IdConcepto === 8 ? this.subscripcionesForm.controls.serieDestino.value : null
 				};
-
 				this.gaService.postService('suscripciones/insSuscripciones', dataSend).subscribe((res: any) => {
 					this.spinner.hide();
 					if (res[0][0].Codigo < 0) {
@@ -465,6 +523,8 @@ export class AddSubscripcionesComponent implements OnInit {
 		this.subscripcionesForm.controls.precioVenta.setValue(null);
 		this.subscripcionesForm.controls.importeVenta.setValue(null);
 		this.subscripcionesForm.controls.fechaAdqusicion.setValue("");
+        this.subscriptorFilterCtrl.setValue('');
+        this.subscripcionesForm.controls.aplicaDictamen.setValue(false);
 	};
 
 	closeDialog = data => {
@@ -477,13 +537,66 @@ export class AddSubscripcionesComponent implements OnInit {
 
 	getValFloat(valor) {
 		let val = valor.toString().replace("$", "");
-		val = val.replace(",", "");
+		val = val.toString().replace(/\$/g, "").replace(/,/g, "");
 		return parseFloat(val);
 	};
 
 	getValInt(valor) {
 		let val = valor.toString().replace("$", "");
-		val = val.replace(",", "");
+		val = val.toString().replace(/\$/g, "").replace(/,/g, "");
 		return parseInt(val);
 	};
+
+    filterSubscriptores(value: string): any[] {
+        const filterValue = value.toLowerCase();
+        return this.allSubscriptores?.filter(subscriptor => subscriptor.Nombre.toLowerCase().includes(filterValue));
+    };
+
+    filterDestinatarios(value: string): any[] {
+        const filterValue = value.toLowerCase();
+        return this.allPersonasDestino?.filter(destinatario => destinatario.Nombre.toLowerCase().includes(filterValue));
+    };
+
+    eraseSuscriptor(){
+        this.subscripcionesForm.controls.subscriptor.setValue(0);
+        this.allConceptos = [];
+        this.showSelectConceptos = false;
+        this.showSerieDestino = false;
+        this.showSelectPersonaDestino = false;
+        this.showAllfields = false;
+        this.showFieldsImportePrecioVenta = false;
+        this.clearAllForm();
+        if (this.suscriptorSelect) {
+            this.suscriptorSelect.close();
+        };
+    };
+
+    eraseDestinatario(){
+        this.subscripcionesForm.controls.personaDestino.setValue(0);
+        this.showSerieDestino = false;
+        this.showAllfields = false;
+        this.showFieldsImportePrecioVenta = false;
+        if (this.destinatarioSelect) {
+            this.destinatarioSelect.close();
+        };
+    };
+
+    onMatSelectBlur = e => {
+        setTimeout(() => {
+            this.subscriptorFilterCtrl.setValue('');
+        }, 200);
+    };
+
+    onMatSelectBlurDestinatario = e => {
+        setTimeout(() => {
+            this.destinatarioFilterCtrl.setValue('');
+        }, 200);
+    };
+
+    setDataFomulario = () => {
+        this.subscripcionesForm.controls.cantidad.setValue(null);
+        this.subscripcionesForm.controls.aplicaDictamen.setValue(false);
+        this.getAllSeries();
+    };
+
 };

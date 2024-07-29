@@ -23,35 +23,37 @@
                 <span *ngIf="contactosPersonaForm.controls.idTipCont.value === 3">Teléfono</span>
             </mat-label>
             <mat-form-field id="{{validaFormDato}}_component" appearance="fill">
-                <input *ngIf="contactosPersonaForm.controls.idTipCont.value === 2" 
-                [type]="datoType" 
-                matInput 
-                [placeholder]="datoPlaceHolder" 
-                formControlName="dato" 
-                autocomplete="off">
-                <input *ngIf="contactosPersonaForm.controls.idTipCont.value !== 2" 
-                [type]="datoType" 
-                matInput 
-                [placeholder]="datoPlaceHolder" 
-                formControlName="dato" 
-                autocomplete="off" 
-                onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57">
+                <input *ngIf="contactosPersonaForm.controls.idTipCont.value === 2"
+                [type]="datoType"
+                matInput
+                [placeholder]="datoPlaceHolder"
+                formControlName="dato"
+                autocomplete="off"
+                maxlength="150">
+                <input *ngIf="contactosPersonaForm.controls.idTipCont.value !== 2"
+                [type]="datoType"
+                matInput
+                [placeholder]="datoPlaceHolder"
+                formControlName="dato"
+                autocomplete="off"
+                onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+                maxlength="150">
                 <mat-error>
                 </mat-error>
-            </mat-form-field>            
+            </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>
                 Persona a contactar
             </mat-label>
             <mat-form-field appearance="fill">
-                <input type="text" matInput placeholder="Persona a contactar" formControlName="personaContactar" autocomplete="off">
-            </mat-form-field>            
+                <input type="text" matInput placeholder="Persona a contactar" formControlName="personaContactar" autocomplete="off" maxlength="150">
+            </mat-form-field>
         </div>
         <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <mat-label>Extensión</mat-label>
             <mat-form-field appearance="fill">
-                <input matInput placeholder="Extensión" formControlName="ext" autocomplete="off">
+                <input matInput placeholder="Extensión" formControlName="ext" autocomplete="off" maxlength="50">
             </mat-form-field>
         </div>
         <!-- <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">

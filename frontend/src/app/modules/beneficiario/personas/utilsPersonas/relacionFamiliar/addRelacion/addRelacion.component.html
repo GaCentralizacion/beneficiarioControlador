@@ -22,12 +22,21 @@
 						<div class="col-md-3">
 							<mat-form-field appearance="fill">
 								<mat-label>Familiar</mat-label>
-								<mat-select formControlName="familiar">
-									<mat-option [value]="0">
+								<mat-select #familiarSelect formControlName="familiar">
+                                    <div class="search-container">
+                                        <mat-form-field appearance="standard" style="flex: 1; margin-right: 8px;">
+                                            <mat-label>Buscar familiar</mat-label>
+                                            <input matInput [formControl]="familiarFilterCtrl" (focusout)="onMatSelectBlur($event)">
+                                            <mat-icon matPrefix>search</mat-icon>
+                                        </mat-form-field>
+                                        <button mat-button (click)="eraseFamiliar()">
+                                            <i class="fas fa-eraser"></i>
+                                        </button>
+                                    </div>
+									<mat-option *ngIf="this.relacionForm.controls.familiar.value === 0" [value]="0">
 										Seleccione una opción
 									</mat-option>
-									<mat-option *ngFor="let relacion of allPersonasRelacionar"
-										[value]="relacion.IdPersona">
+									<mat-option *ngFor="let relacion of filteredFamiliares | async" [value]="relacion.IdPersona">
 										{{relacion.Nombre}}
 									</mat-option>
 								</mat-select>
@@ -43,8 +52,7 @@
 									<mat-option [value]="0">
 										Seleccione una opción
 									</mat-option>
-									<mat-option *ngFor="let relacionFamiliar of catRelacionFamiliar"
-										[value]="relacionFamiliar.IdRelFamiliar">
+									<mat-option *ngFor="let relacionFamiliar of catRelacionFamiliar" [value]="relacionFamiliar.IdRelFamiliar">
 										{{relacionFamiliar.Descripcion}}
 									</mat-option>
 								</mat-select>

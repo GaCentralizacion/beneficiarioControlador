@@ -33,7 +33,6 @@ export class GaService {
 	}
 
 	postServiceBuffer(ruta: string, body?: any, headers?: any) {
-		//console.log(this.urlsparrow + ruta);
 		return this.http.post(this.urlsparrow + ruta, body, { responseType: "arraybuffer" });
 	}
 	postServiceSparrow(ruta: string, body?: any, headers?: HttpHeaders) {

@@ -516,6 +516,10 @@ export class SubscripcionesComponent implements OnInit, OnDestroy {
                 dataField: 'Serie'
             },
             {
+                caption: 'Razón Social',
+                dataField: 'RazonSocial'
+            },
+            {
                 caption: 'Cantidad',
                 dataType: TiposdeDato.number,
                 format: TiposdeFormato.numberMask,

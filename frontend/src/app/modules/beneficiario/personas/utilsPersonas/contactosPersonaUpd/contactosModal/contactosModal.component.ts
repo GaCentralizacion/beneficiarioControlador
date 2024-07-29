@@ -131,7 +131,7 @@ export class ContactosModalComponent implements OnInit {
 					PersonaContacto: this.contactoForm.controls.personaContactar.value,
 					Usuario: this.dataUsuario.IdUsuario
 				};
-				console.log('data', data)
+
 				this.gaService.postService('personas/insContactoPersona', data).subscribe((res: any) => {
 					this.spinner.hide();
 					if (res[0][0].Codigo < 0) {
@@ -163,7 +163,7 @@ export class ContactosModalComponent implements OnInit {
 			} else if (result.isDenied) {
 				Swal.fire({
 					title: '¡Información!',
-					text: 'No se guardo guardo el contacto.',
+					text: 'No se guardo el contacto.',
 					icon: 'info',
 					confirmButtonText: 'Cerrar'
 				});

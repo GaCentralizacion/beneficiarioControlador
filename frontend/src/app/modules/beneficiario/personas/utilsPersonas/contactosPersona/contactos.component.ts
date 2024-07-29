@@ -182,7 +182,7 @@ export class ContactosComponent implements OnInit, OnDestroy {
         let idDivDato = `${component.id}_divDato`;
         let idComponentPadreTipo = `${component.id}_tipo_component`;
         let idComponentPadreDato = `${component.id}_dato_component`;
-        console
+
         if (component.data.idTipCont === 0 || component.data.idTipCont === undefined || component.data.idTipCont === null) {
         } else {
             let dynamicDivTipo = document.getElementById(idDivTipo);

@@ -26,13 +26,21 @@
 						<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
 							<mat-form-field appearance="fill" floatLabel="always">
 								<mat-label>Persona de suscripción</mat-label>
-								<mat-select formControlName="subscriptor"
-									(selectionChange)="getAllConceptos($event.value)">
-									<mat-option [value]="0">
-										Seleccione una opción
-									</mat-option>
-									<mat-option *ngFor="let subscriptor of allSubscriptores"
-										[value]="subscriptor.IdPersonaSubscripcion">
+								<mat-select #suscriptorSelect formControlName="subscriptor" (selectionChange)="getAllConceptos($event.value)">
+                                    <div class="search-container">
+                                        <mat-form-field appearance="standard" style="flex: 1; margin-right: 8px;">
+                                            <mat-label>Buscar suscriptor</mat-label>
+                                            <input matInput [formControl]="subscriptorFilterCtrl" (focusout)="onMatSelectBlur($event)">
+                                            <mat-icon matPrefix>search</mat-icon>
+                                        </mat-form-field>
+                                        <button mat-button (click)="eraseSuscriptor()">
+                                            <i class="fas fa-eraser"></i>
+                                        </button>
+                                    </div>
+                                    <mat-option *ngIf="this.subscripcionesForm.controls.subscriptor.value === 0" [value]="0">
+                                        Seleccione una opción
+                                    </mat-option>
+									<mat-option *ngFor="let subscriptor of filteredSubscriptores | async" [value]="subscriptor.IdPersonaSubscripcion">
 										{{subscriptor.Nombre}}
 									</mat-option>
 								</mat-select>
@@ -44,8 +52,7 @@
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showSelectConceptos && showAllFrom">
 							<mat-form-field appearance="fill" floatLabel="always">
 								<mat-label>Concepto</mat-label>
-								<mat-select formControlName="concepto"
-									(selectionChange)="getAllPersonasDestino($event.value)">
+								<mat-select formControlName="concepto" (selectionChange)="getAllPersonasDestino($event.value)">
 									<mat-option [value]="0">
 										Seleccione una opción
 									</mat-option>
@@ -62,12 +69,21 @@
 							*ngIf="showSelectPersonaDestino  && showAllFrom">
 							<mat-form-field appearance="fill" floatLabel="always">
 								<mat-label>Persona Destino</mat-label>
-								<mat-select formControlName="personaDestino">
-									<mat-option [value]="0">
+								<mat-select #destinatarioSelect formControlName="personaDestino" (selectionChange)="setDataFomulario($event.value)">
+                                    <div class="search-container">
+                                        <mat-form-field appearance="standard" style="flex: 1; margin-right: 8px;">
+                                            <mat-label>Buscar destinatario</mat-label>
+                                            <input matInput [formControl]="destinatarioFilterCtrl" (focusout)="onMatSelectBlurDestinatario($event)">
+                                            <mat-icon matPrefix>search</mat-icon>
+                                        </mat-form-field>
+                                        <button mat-button (click)="eraseDestinatario()">
+                                            <i class="fas fa-eraser"></i>
+                                        </button>
+                                    </div>
+									<mat-option *ngIf="this.subscripcionesForm.controls.personaDestino.value === 0" [value]="0">
 										Seleccione una opción
 									</mat-option>
-									<mat-option *ngFor="let personaDestino of allPersonasDestino"
-										[value]="personaDestino.IdPersonaDestino">
+									<mat-option *ngFor="let personaDestino of filteredDestinatarios | async" [value]="personaDestino.IdPersonaDestino">
 										{{personaDestino.Nombre}}
 									</mat-option>
 								</mat-select>
@@ -95,8 +111,8 @@
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom && showSerieDestino">
 							<mat-label>Serie destino</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
-								<input matInput type="text" placeholder="Serie destino" formControlName="serieDestino" [matAutocomplete]="autoSerie" 
-								autocomplete="off" (ngModelChange)="changeSerieTransformacion($event)">
+								<input matInput type="text" placeholder="Serie destino" formControlName="serieDestino" [matAutocomplete]="autoSerie"
+								autocomplete="off" (ngModelChange)="changeSerieTransformacion($event)" maxlength="30">
 								<mat-autocomplete #autoSerie="matAutocomplete">
 									<mat-option *ngFor="let option of allSeriesTransformacion" [value]="option.Serie">
 									  {{option.Serie}}
@@ -114,7 +130,7 @@
 								<i matPrefix class="fa-solid fa-dollar-sign"></i>
 								<input [readonly]="readOnlyValorUnitario" matInput currencyMask
 									[options]="{ prefix: '', thousands: ',', decimal: '.' }" type="text"
-									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off">
+									placeholder="Valor unitario" formControlName="valorUnitario" autocomplete="off" (keyup)="valorUnitarioOnChangeEvent($event.target.value)">
 								<mat-error>
 									Seleccione una serie para obtener un valor unitario
 								</mat-error>
@@ -175,8 +191,8 @@
 						<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" *ngIf="showAllfields && showAllFrom">
 							<mat-label>Fecha adquisición</mat-label>
 							<mat-form-field appearance="fill" floatLabel="always">
-								<input readonly [max]="today" matInput 
-								[matDatepicker]="picker" formControlName="fechaAdqusicion" placeholder="Fecha adquisición">
+								<input [max]="today" matInput
+								[matDatepicker]="picker" formControlName="fechaAdqusicion" placeholder="Fecha adquisición" maxlength="10">
 								<!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
 								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 								<mat-datepicker #picker></mat-datepicker>

@@ -9,6 +9,10 @@ import { GaService } from 'app/services/ga.service';
 import Swal from 'sweetalert2';
 import { AddDocumentoComponent } from './addDocumento/addDocumento.component';
 import { ShowDocumentoComponent } from './showDocumento/showDocumento.component';
+import { NgxSpinnerService } from "ngx-spinner";
+import { ModalDocsMultiplesComponent } from './modalDocsMultiples/modalDocsMultiples.component';
+import { ShowMultipleDocumentoComponent } from './showMultipleDocumento/showMultipleDocumento.component';
+import { UpdateMultipleDocumentoComponent } from './updateMultipleDocumento/updateMultipleDocumento.component';
 
 /**IMPORTS GRID */
 import {
@@ -58,6 +62,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     allDocumentos: any = [];
     accionesUsuario: any;
     nombrePersona: string = ''
+    dataDocsMultiples: any;
 
     constructor(
         private fb: FormBuilder,
@@ -65,7 +70,8 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
-        private gaService: GaService
+        private gaService: GaService,
+        private spinner: NgxSpinnerService,
     ) { }
 
     ngOnDestroy(): void {
@@ -87,6 +93,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
         };
         this.gaService.postService('personas/selDocumentosExpediente', data).subscribe((res: any) => {
             this.allDocumentos = res[0];
+            this.dataDocsMultiples = res[1];
             this.allDocumentos.forEach((value, key) => {
                 if ((key % 2) == 0) {
                     value.backgroundcolor = '#F4F6F6';
@@ -96,7 +103,7 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
         }, (error: any) => {
             Swal.fire({
                 title: '¡Error!',
-                text: 'Error 500 al regresar los documentos del usuario.',
+                text: 'Error 500 al regresar los documentos del accionista.',
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
@@ -104,24 +111,37 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
     };
 
     verDocumentoExpDigCargado = data => {
-        const dialogRef = this.dialog.open(ShowDocumentoComponent, {
-            width: '100%',
-            height: '95%',
-            disableClose: true,
-            data: {
-                title: data.data.Documento,
-                urlGet: `${data.data.RutaLectura}#toolbar=0`,
-                allDataDocumento: data.data
-            }
-        });
+        if(data.data.Multiple === 0){
+            const dialogRef = this.dialog.open(ShowDocumentoComponent, {
+                width: '100%',
+                height: '95%',
+                disableClose: true,
+                data: {
+                    title: data.data.Documento,
+                    urlGet: `${data.data.RutaLectura}#toolbar=0`,
+                    allDataDocumento: data.data
+                }
+            });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                if (result.success === 1) {
-                    this.getAllDocuments();
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    if (result.success === 1) {
+                        this.getAllDocuments();
+                    };
                 };
+            });
+        }else{
+            if( this.dataDocsMultiples.length > 0 ){
+                this.showDocsMultiples()
+            }else{
+                Swal.fire({
+                    title: '¡Alto!',
+                    text: 'No existen documentos para mostrar.',
+                    icon: 'warning',
+                    confirmButtonText: 'Cerrar'
+                });
             };
-        });
+        };
     };
 
     addDocumento = () => {
@@ -231,6 +251,62 @@ export class ExpedienteDigitalComponent implements OnInit, OnDestroy {
         */
         this.scroll = { mode: 'standard' };
         this.muestraGrid = true;
+    };
+
+    showDocsMultiples = () =>{
+        const dialogRef = this.dialog.open(ModalDocsMultiplesComponent, {
+            width: '90%',
+            disableClose: true,
+            data: {
+                title: 'Documentos ',
+                dataDocs: this.dataDocsMultiples,
+                nombreDoc: this.dataDocsMultiples[0].Documento
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (result.success === 1) {
+                    const dialogRefShow = this.dialog.open(ShowMultipleDocumentoComponent, {
+                        width: '100%',
+                        height: '95%',
+                        disableClose: true,
+                        data: {
+                            title: `${result.data.Documento} ${result.data.Nombre_RazonSocial}`,
+                            urlGet: `${result.data.RutaLectura}#toolbar=0`,
+                            allDataDocumento: result.data
+                        }
+                    });
+
+                    dialogRefShow.afterClosed().subscribe(resultShow => {
+                        if (resultShow) {
+                            if (resultShow.success === 1) {
+                                this.getAllDocuments();
+                            };
+                        };
+                    });
+                };
+
+                if (result.success === 2) {
+                    const dialogRedupdate = this.dialog.open(UpdateMultipleDocumentoComponent, {
+                        width: '90%',
+                        disableClose: true,
+                        data: {
+                            title: `Actualizar documento ${result.data.Documento}`,
+                            allDataDocumento: result.data
+                        }
+                    });
+
+                    dialogRedupdate.afterClosed().subscribe(resultShow => {
+                        if (resultShow) {
+                            if (resultShow.success === 1) {
+                                this.getAllDocuments();
+                            };
+                        };
+                    });
+                };
+            };
+        });
     };
 
     redirect(url: string) {

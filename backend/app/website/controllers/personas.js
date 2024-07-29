@@ -3,6 +3,7 @@ var personasView = require('../views/referencia'),
 
 var logicSave = require('../utils/logicSaveFile');
 var fs = require("fs");
+const confParams = require('../../../conf.json');
 
 var personas = function (conf) {
     this.conf = conf || {};
@@ -350,11 +351,12 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
         idUsuario,
         CarpetaHeredado,
         vigenciaDinamica,
-        tipoVigenciaDinamica
+        tipoVigenciaDinamica,
+        IdExpMulPer
     } = req.body;
-
+    
     const resLogic = await logicSave.saveDocumentoLogic(b64File, nombreArchivo, carpetaPersona, rutaGuardado);
-
+    
     if (resLogic.success === 1) {
         if (fs.existsSync(`${rutaGuardado}${carpetaPersona}\\\\${nombreArchivo}`)) {
             if (CarpetaHeredado === '') {
@@ -364,7 +366,8 @@ personas.prototype.post_saveDocumentoExpediente = async function (req, res, next
                     { name: 'IdDocumento', value: IdDocumento, type: self.model.types.INT },
                     { name: 'FechaDocumento', value: fechaDocumento, type: self.model.types.STRING },
                     { name: 'vigenciaDinamica', value: vigenciaDinamica, type: self.model.types.INT },
-                    { name: 'tipoVigenciaDinamica', value: tipoVigenciaDinamica, type: self.model.types.STRING }
+                    { name: 'tipoVigenciaDinamica', value: tipoVigenciaDinamica, type: self.model.types.STRING },
+                    { name: 'IdExpMulPer', value: IdExpMulPer, type: self.model.types.INT },
                 ];
 
                 this.model.queryAllRecordSet('[dbo].[Ins_DocumentosPersona]', params, function (error, result) {
@@ -711,6 +714,131 @@ personas.prototype.post_selVigenciasDinamicas = function (req, res, next) {
             result: result
         });
     });
+};
+
+personas.prototype.post_selEmpresasAccionista = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdPersona
+    } = req.body
+
+    var params = [
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Sel_EmpresasAccionista]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+personas.prototype.post_insRazonSocial = function (req, res, next) {
+    var self = this;
+
+    const {
+        IdPersona,
+        RazonSocial,
+        Fecha_Cambio,
+        Usuario
+    } = req.body
+
+    var params = [
+        { name: 'IdPersona', value: IdPersona, type: self.model.types.INT },
+        { name: 'RazonSocial', value: RazonSocial, type: self.model.types.STRING },
+        { name: 'Fecha_Cambio', value: Fecha_Cambio, type: self.model.types.STRING },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Ins_PersonaCambioRazon]', params, async function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+personas.prototype.post_aprobarRechazarMultiDocumento = function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        Usuario,
+        IdExpMulPer,
+        FechaDocumento,
+        IdEstatusArchivo,
+        Observacion
+    } = req.body
+
+    var params = [
+        { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+        { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+        { name: 'IdExpMulPer', value: IdExpMulPer, type: self.model.types.INT },
+        { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
+        { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
+        { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('[dbo].[Upd_MultiDocumentosPersona]', params, function (error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+personas.prototype.post_updateMultiDocumento = async function (req, res, next) {
+    var self = this;
+
+    const {
+        Opcion,
+        Usuario,
+        IdExpMulPer,
+        IdEstatusArchivo,
+        Observacion,
+        nombreDocumento,
+        nombreDocumentoRespaldo,
+        carpeta,
+        idDocumento,
+        idPersona,
+        rutaGuardado,
+        rutaRespaldo,
+        b64File,
+        IdPersonaMoral,
+        FechaDocumento
+    } = req.body
+
+    const logicSaveRes = await logicSave.updateLogicDocumento(b64File, nombreDocumento, carpeta, rutaGuardado, nombreDocumentoRespaldo, rutaRespaldo);
+    if (logicSaveRes.success === 1) {
+        if (fs.existsSync(`${rutaGuardado}${carpeta}\\\\${nombreDocumento}`)) {
+            var params = [
+                { name: 'Opcion', value: Opcion, type: self.model.types.INT },
+                { name: 'Usuario', value: Usuario, type: self.model.types.INT },
+                { name: 'IdExpMulPer', value: IdExpMulPer, type: self.model.types.INT },
+                { name: 'FechaDocumento', value: FechaDocumento, type: self.model.types.STRING },
+                { name: 'IdEstatusArchivo', value: IdEstatusArchivo, type: self.model.types.INT },
+                { name: 'Observacion', value: Observacion, type: self.model.types.STRING }
+            ];
+        
+            this.model.queryAllRecordSet('[dbo].[Upd_MultiDocumentosPersona]', params, function (error, result) {
+                self.view.expositor(res, {
+                    error: error,
+                    result: result
+                });
+            });
+        } else {
+            self.view.expositor(res, {
+                result: [[{ Codigo: -1, Mensaje: 'Error al guardar el archivo' }]]
+            });
+        };
+    } else {
+        self.view.expositor(res, {
+            result: [[{ Codigo: -1, Mensaje: logicSaveRes.msg }]]
+        });
+    };
+
 };
 
 module.exports = personas;

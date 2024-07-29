@@ -29,8 +29,7 @@
 
 <div class="containerAll" [hidden]="!showAddPersona">
     <mat-card>
-        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs"
-        (selectedTabChange)="onTabChanged($event);">
+        <mat-tab-group class="sm:px-2" [animationDuration]="'0'" [(selectedIndex)]="focusTabs" (selectedTabChange)="onTabChanged($event);">
             <!-- Datos Generales -->
             <mat-tab label="Datos de persona">
                 <mat-card>
@@ -115,18 +114,27 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Nombre_RazonSocial?.length === 0">
-                                <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
-                                <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off">
-                                    <mat-error>
-                                        Ingrese el nombre o razón
-                                    </mat-error>
-                                </mat-form-field>
+                                <div class="row">
+                                    <div [ngClass]="actualizarPersona && moralInterna && cambioRazon ? 'col-sm-10 col-md-10 col-lg-10 col-xl-10' : 'col-sm-12 col-md-12 col-lg-12 col-xl-12'">
+                                        <mat-label>{{Nombre_RazonSocial?.Nombre}}</mat-label>
+                                        <mat-form-field appearance="fill">
+                                            <input matInput placeholder="{{Nombre_RazonSocial?.Nombre}}" formControlName="nombre_razon" autocomplete="off" maxlength="150">
+                                            <mat-error>
+                                                Ingrese el nombre o razón
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="actualizarPersona && moralInterna && cambioRazon" class="col-sm-2 col-md-2 col-lg-2 col-xl-2 d-flex align-items-center justify-content-center">
+                                        <button class="btn btn-circle btns-grids btn-hover" (click)="showAllRazones()">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="APaterno?.length === 0">
                                 <mat-label>{{APaterno?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{APaterno?.Nombre}}" formControlName="apellidoPaterno" autocomplete="off">
+                                    <input matInput placeholder="{{APaterno?.Nombre}}" formControlName="apellidoPaterno" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el apellido paterno
                                     </mat-error>
@@ -135,7 +143,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="AMaterno?.length === 0">
                                 <mat-label>{{AMaterno?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{AMaterno?.Nombre}}" formControlName="apellidoMaterno" autocomplete="off">
+                                    <input matInput placeholder="{{AMaterno?.Nombre}}" formControlName="apellidoMaterno" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el apellido materno
                                     </mat-error>
@@ -144,7 +152,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Alias?.length === 0">
                                 <mat-label>{{Alias?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Alias?.Nombre}}" formControlName="alias" autocomplete="off">
+                                    <input matInput placeholder="{{Alias?.Nombre}}" formControlName="alias" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el alias
                                     </mat-error>
@@ -153,7 +161,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"[hidden]="Fecha_nacimiento_Constitucion?.length === 0">
                                 <mat-label>{{Fecha_nacimiento_Constitucion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input readonly [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="{{Fecha_nacimiento_Constitucion?.Nombre}}">
+                                    <input [max]="today" matInput [matDatepicker]="picker" formControlName="fechaNacimiento" placeholder="{{Fecha_nacimiento_Constitucion?.Nombre}}" maxlength="10">
                                     <!-- <mat-hint>DD/MM/YYYY</mat-hint> -->
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
@@ -165,7 +173,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Registro_de_poblacion?.length === 0">
                                 <mat-label>{{Registro_de_poblacion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Registro_de_poblacion?.Nombre}}" formControlName="curp_registroPob" autocomplete="off">
+                                    <input matInput placeholder="{{Registro_de_poblacion?.Nombre}}" formControlName="curp_registroPob" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese el curp o registro de población
                                     </mat-error>
@@ -174,7 +182,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="RFC?.length === 0">
                                 <mat-label>{{RFC?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput [maxlength]="rfcMaxLenght" placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off">
+                                    <input matInput [maxlength]="rfcMaxLenght" placeholder="{{RFC?.Nombre}}" formControlName="rfc_identificacion" autocomplete="off" maxlength="13">
                                     <mat-error>
                                         Ingrese el RFC
                                     </mat-error>
@@ -183,11 +191,21 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="IdPaisNacimiento?.length === 0">
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdPaisNacimiento?.Nombre}}</mat-label>
-                                    <mat-select formControlName="IdPaisNacimiento" (selectionChange)="paisSeleccionadoFn($event.value)">
-                                        <mat-option [value]="0">
+                                    <mat-select #paisNacimientoSelect formControlName="IdPaisNacimiento" (selectionChange)="paisSeleccionadoFn($event.value)">
+                                        <div class="search-container">
+                                            <mat-form-field appearance="standard" style="flex: 1; margin-right: 8px;">
+                                                <mat-label>Buscar País</mat-label>
+                                                <input matInput [formControl]="paisNacimientoFilterCtrl" (focusout)="onMatSelectBlurPaisNacimiento($event)">
+                                                <mat-icon matPrefix>search</mat-icon>
+                                            </mat-form-field>
+                                            <button mat-button (click)="erasePaisNacimiento()">
+                                                <i class="fas fa-eraser"></i>
+                                            </button>
+                                        </div>
+                                        <mat-option *ngIf="this.personaForm.controls.IdPaisNacimiento.value === 0" [value]="0">
                                             Seleccione una opción
                                         </mat-option>
-                                        <mat-option *ngFor="let pais of catPais" [value]="pais.IdPais">
+                                        <mat-option *ngFor="let pais of filteredPaisNacimiento | async" [value]="pais.IdPais">
                                             {{pais.Descripcion}}
                                         </mat-option>
                                     </mat-select>
@@ -200,9 +218,6 @@
                                 <mat-form-field appearance="fill">
                                     <mat-label>{{IdPais?.Nombre}}</mat-label>
                                     <mat-select formControlName="idPais" multiple [disabled]="paisSeleccionado">
-                                        <!-- <mat-option [value]="0">
-                                            Seleccione una opción
-                                        </mat-option> -->
                                         <mat-option *ngFor="let pais of catNacionalidadesAdicionales" [value]="pais.IdPais">
                                             {{pais.Descripcion}}
                                         </mat-option>
@@ -249,8 +264,7 @@
                             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3" [hidden]="Identificiacion?.length === 0">
                                 <mat-label>{{Identificiacion?.Nombre}}</mat-label>
                                 <mat-form-field appearance="fill">
-                                    <input matInput placeholder="{{Identificiacion?.Nombre}}"
-                                        formControlName="datoIdentificacion" autocomplete="off">
+                                    <input matInput placeholder="{{Identificiacion?.Nombre}}" formControlName="datoIdentificacion" autocomplete="off" maxlength="100">
                                     <mat-error>
                                         Ingrese la clave de la identificación
                                     </mat-error>
@@ -262,8 +276,8 @@
                                         {{EsAccionista?.Nombre}}
                                     </mat-label>
                                 </mat-slide-toggle>
-                                <label style="font-size: 13px; color: gray;" *ngIf="!personaForm.controls.esAccionista.value">(No puede comprar acciones)</label> 
-                                <label style="font-size: 13px; color: green;" *ngIf="personaForm.controls.esAccionista.value">(Puede comprar acciones)</label> 
+                                <label style="font-size: 13px; color: gray;" *ngIf="!personaForm.controls.esAccionista.value">(No puede comprar acciones)</label>
+                                <label style="font-size: 13px; color: green;" *ngIf="personaForm.controls.esAccionista.value">(Puede comprar acciones)</label>
                             </div>
                         </div>
                     </form>
@@ -388,6 +402,10 @@
                 <button *ngIf="accionesUsuario?.editarPersona === 1 && focusTabs === 0" class="btn btn-success pull-right"
                     (click)="updatePersona()" [hidden]="!actualizarPersona">
                     Actualizar <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+                <button *ngIf="accionesUsuario?.editarPersona === 1 && focusTabs === 0 && moralInterna" class="btn btn-success pull-right updateButtons"
+                    (click)="updateRazpnSocial()" [hidden]="!actualizarPersona">
+                    Editar Razón Social <i class="fa-solid fa-file-pen"></i>
                 </button>
             </div>
         </div>
