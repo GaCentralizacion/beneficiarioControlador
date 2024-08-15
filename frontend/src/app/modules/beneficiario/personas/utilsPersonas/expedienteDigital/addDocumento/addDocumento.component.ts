@@ -201,7 +201,16 @@ export class AddDocumentoComponent implements OnInit {
                         this.documentosForm.controls.idEmpresaMoral.addValidators(Validators.min(1));
                         this.documentosForm.controls.idEmpresaMoral.updateValueAndValidity();
                         this.escrituraPublica = true;
-                        this.allEmpresas = res[0];
+                        if(res[0].length > 0){
+                            this.allEmpresas = res[0];
+                        }else{
+                            Swal.fire({
+                                title: 'Alto!',
+                                text: 'El accionista no tiene empresas para cargar este documento.',
+                                icon: 'warning',
+                                confirmButtonText: 'Cerrar'
+                            });
+                        };
                     }, (error: any) => {
                         this.spinner.hide();
                         Swal.fire({
