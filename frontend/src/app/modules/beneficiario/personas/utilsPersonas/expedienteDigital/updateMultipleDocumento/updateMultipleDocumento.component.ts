@@ -43,7 +43,6 @@ export class UpdateMultipleDocumentoComponent implements OnInit {
         private snackBar: MatSnackBar,
         private gaService: GaService,
         private spinner: NgxSpinnerService) {
-        console.log( 'data', data )
         this.title = data.title;
         this.allDataDocumento = data.allDataDocumento;
     };
