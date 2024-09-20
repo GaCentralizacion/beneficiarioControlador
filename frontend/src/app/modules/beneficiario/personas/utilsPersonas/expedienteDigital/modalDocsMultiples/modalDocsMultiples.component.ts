@@ -96,6 +96,10 @@ export class ModalDocsMultiplesComponent implements OnInit {
                 cellTemplate: 'estatusDocumento'
             },
             {
+                caption: 'Observación',
+                dataField: 'Observacion'
+            },
+            {
                 caption: 'Editar',
                 allowEditing: false,
                 cellTemplate: 'editarDocumentoMultipeExpDig',
